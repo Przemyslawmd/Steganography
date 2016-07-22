@@ -7,14 +7,7 @@ namespace Compression
         public NodeDecompress( byte byteValue, Boolean isLeaf ) : base( isLeaf )
         {
             this.byteValue = byteValue;            
-        }
-
-        /*
-        public byte ByteValue
-        {
-            get { return byteValue; }            
-        }
-        */
+        }        
 
         public NodeDecompress Left
         {
@@ -26,9 +19,8 @@ namespace Compression
         {
             get { return right; }
             set { right = value; }
-        }        
+        }
 
-        //byte byteValue;        
         NodeDecompress left;
         NodeDecompress right;       
     }
