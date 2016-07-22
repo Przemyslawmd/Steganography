@@ -143,21 +143,17 @@ namespace Compression
                 for (int j = 0; j < 8; j++)
                 {                                        
                     if ( ( mask[j] & sourceData[i] ) == 0 )
-                    {                        
-                        if ( node == null )                            
-                            break;                             
-                             
+                    {
                         node = node.Left;
 
                         if ( node.Leaf )                            
                         {
-                            decompressedData.Add(node.ByteValue);                            
+                            decompressedData.Add( node.ByteValue );                            
                             if ( ++Count == DataCount )
                                 return decompressedData.ToArray();
-                            node = null;                                
+                            node = null;                                                           
                         }                                              
-                    }                    
-                    
+                    }         
                     else
                     {                        
                         if ( node == null )
@@ -165,20 +161,18 @@ namespace Compression
                             node = root;
                             continue;
                         }
-
                         node = node.Right;
                             
                         if (node.Leaf)
                         {
-                            decompressedData.Add(node.ByteValue);                            
+                            decompressedData.Add( node.ByteValue );                            
                             if ( ++Count == DataCount )
                                 return decompressedData.ToArray();
-                            node = null;
+                            node = null;                            
                         }                                              
                     }  
                 }
-            }                        
-            
+            }                       
             return decompressedData.ToArray();
         } 
         
