@@ -142,7 +142,7 @@ namespace Debug
             if ( Node != null )
             {
                 InOrderTreeCompression( Node.Left, Stream );
-                Stream.WriteLine( " Value: {0,4:X}; Count: {1,4}; IsLeaf: {2,4}", Node.ByteValue, Node.Count, Node.IsLeaf );
+                Stream.WriteLine( " Value: {0,4:X}; Count: {1,4}; IsLeaf: {2,4}", Node.ByteValue, Node.Count, Node.Leaf );
                 InOrderTreeCompression( Node.Right, Stream );
             }
         }

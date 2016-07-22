@@ -1,42 +1,29 @@
 ﻿using System;
-using System.Text;
 
 namespace Compression
 {
-    class NodeCompress
+    class NodeCompress : Node
     {
-        public NodeCompress( int count, byte byteValue )
+        public NodeCompress( int count, byte byteValue ) : base( true )
         {
             this.byteValue = byteValue;
             this.count = count;
             this.isLeaf = true;
         }
 
-        public NodeCompress( int count, NodeCompress left, NodeCompress right )
+        public NodeCompress( int count, NodeCompress left, NodeCompress right ) : base( false )
         {
             this.count = count;
             this.left = left;
-            this.right = right;
-            this.isLeaf = false;
-        }
-
-        public Boolean IsLeaf
-        {
-            get { return isLeaf; }
-        }
+            this.right = right;            
+        }        
         
         public int Count
         {
             get { return count; }
             set { count = value; }
         }
-
-        public byte ByteValue
-        {
-            get { return byteValue; }
-            set { byteValue = value; }
-        }
-
+        
         public NodeCompress Left
         {
             get { return left; }
@@ -59,10 +46,8 @@ namespace Compression
         {
             count++;
         }
-
-        byte byteValue;
-        int count;
-        bool isLeaf;
+        
+        int count;        
         NodeCompress left;
         NodeCompress right;
         NodeCompress parent; 

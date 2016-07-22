@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Text;
 
 namespace Compression
 {
-    class NodeDecompress
+    class NodeDecompress : Node
     {
-        public NodeDecompress( byte byteValue, Boolean isLeaf )
+        public NodeDecompress( byte byteValue, Boolean isLeaf ) : base( isLeaf )
         {
-            this.byteValue = byteValue;
-            this.isLeaf = isLeaf;
+            this.byteValue = byteValue;            
         }
 
+        /*
         public byte ByteValue
         {
             get { return byteValue; }            
         }
+        */
 
         public NodeDecompress Left
         {
@@ -26,16 +26,10 @@ namespace Compression
         {
             get { return right; }
             set { right = value; }
-        }
+        }        
 
-        public Boolean Leaf
-        {
-            get { return isLeaf; }
-        }
-
-        byte byteValue;        
+        //byte byteValue;        
         NodeDecompress left;
-        NodeDecompress right;
-        Boolean isLeaf;
+        NodeDecompress right;       
     }
 }

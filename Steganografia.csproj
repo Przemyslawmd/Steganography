@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\Node.cs" />
     <Compile Include="Covering.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Compression\Compress.cs" />

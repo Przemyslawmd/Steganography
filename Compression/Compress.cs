@@ -118,7 +118,7 @@ namespace Compression
                 GenerateCodes( node.Left, '0' );
             if ( node.Right != null )
                 GenerateCodes( node.Right, '1' );
-            if ( node.IsLeaf) 
+            if ( node.Leaf ) 
                 codes.Add( node.ByteValue, String.Concat( tempCode ) );
             tempCode.RemoveAt( tempCode.Count - 1 );            
         }        
