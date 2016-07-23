@@ -50,7 +50,7 @@ namespace Stegan
             {
                 for ( int x = 0; x < Image.Width; x++ )
                 {
-	                color = Image.GetPixel(x, y);                             
+                    color = Image.GetPixel(x, y);                             
                                         
                     if ( CheckBitNumber( dataToCover ) == false )                        
                         return;
@@ -73,7 +73,7 @@ namespace Stegan
                     Image.SetPixel(x, y, Color.FromArgb( red, green, blue ));                 
                 }            
             }
-	        return;
+            return;
         }    
    
    /**********************************************************************************************************************************/
@@ -88,20 +88,20 @@ namespace Stegan
             // Getting size of covered data
             for ( int x = 0; x < 6; x++ )
 	        {	
-		        color = Image.GetPixel(x, 0);
+                color = Image.GetPixel(x, 0);
 
-		        if (( color.R % 2 ) == 1 )
-			        dataCount |= MASK_1;
-		        dataCount <<= 1;
+                if (( color.R % 2 ) == 1 )
+	                dataCount |= MASK_1;
+                dataCount <<= 1;
 
-		        if (( color.G % 2 ) == 1 )
-			        dataCount |= MASK_1;
-		        dataCount <<= 1;
+                if (( color.G % 2 ) == 1 )
+	                dataCount |= MASK_1;
+                dataCount <<= 1;
 
-		        if (( color.B % 2 ) == 1 )
-			        dataCount |= MASK_1;
+                if (( color.B % 2 ) == 1 )
+	                dataCount |= MASK_1;
 		
-		        if (x != 5) dataCount <<= 1;
+                if (x != 5) dataCount <<= 1;
 	        }
 
             byte[] DataBuffer = new byte[dataCount];          
@@ -114,9 +114,9 @@ namespace Stegan
             // Uncovering data
             for ( int y = 1; y < Image.Height; y++) 
 	        {
-		        for (int x = 0; x < Image.Width; x++)
-		        {
-			        color = Image.GetPixel( x, y );                   
+                for (int x = 0; x < Image.Width; x++)
+                {
+	                color = Image.GetPixel( x, y );                   
 
                     if ( UncoverDataFromPixel( color.R, DataBuffer ) == false )
                         return DataBuffer;
@@ -126,7 +126,7 @@ namespace Stegan
 
                     if ( UncoverDataFromPixel( color.B, DataBuffer ) == false )
                         return DataBuffer;               			                   
-		        }
+                }
 	        }
             return DataBuffer;
         }
