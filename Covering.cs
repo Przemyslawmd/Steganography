@@ -26,7 +26,7 @@ namespace Stegan
             
             for (int x = 0; x < 6; x++)
 	        {	
-		        color = Image.GetPixel(x, 0);
+                color = Image.GetPixel(x, 0);
                 red = ChangeColorCoveringSize( color.R );
                 green = ChangeColorCoveringSize( color.G );
                 blue = ChangeColorCoveringSize( color.B );        
@@ -46,11 +46,11 @@ namespace Stegan
             // NumOfBit starts with value less than zero in order to get byte at the beginning
             bitNumber = -1;
 	
-	        for ( int y = 1; y < Image.Height; y++ )
-	        {
-		        for ( int x = 0; x < Image.Width; x++ )
+            for ( int y = 1; y < Image.Height; y++ )
+            {
+                for ( int x = 0; x < Image.Width; x++ )
                 {
-			        color = Image.GetPixel(x, y);                             
+	                color = Image.GetPixel(x, y);                             
                                         
                     if ( CheckBitNumber( dataToCover ) == false )                        
                         return;
@@ -72,7 +72,7 @@ namespace Stegan
                     blue = ChangeColorCoveringData( color.B );                    
                     Image.SetPixel(x, y, Color.FromArgb( red, green, blue ));                 
                 }            
-	        }
+            }
 	        return;
         }    
    
