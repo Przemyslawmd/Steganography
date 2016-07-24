@@ -14,7 +14,7 @@ namespace Stegan
         {
             InitializeComponent();
             label = new Labels();
-            label.SetEng(ref labMenu, ref labHelp, ref labMes, ref labAbout, ref labSettings);            
+            label.SetEng(ref labMenu, ref labMes, ref labAbout, ref labSettings);            
             SetLabels();
         }
 
@@ -24,7 +24,7 @@ namespace Stegan
         private void SetPolish()
         {          
             isPolish = true;
-            label.SetPol(ref labMenu, ref labHelp, ref labMes, ref labAbout, ref labSettings);
+            label.SetPol(ref labMenu, ref labMes, ref labAbout, ref labSettings);
             SetLabels();
         }
 
@@ -34,7 +34,7 @@ namespace Stegan
         private void SetEnglish()
         {           
             isPolish = false;
-            label.SetEng(ref labMenu, ref labHelp, ref labMes, ref labAbout, ref labSettings);
+            label.SetEng(ref labMenu, ref labMes, ref labAbout, ref labSettings);
             SetLabels();
         }   
 
@@ -331,35 +331,8 @@ namespace Stegan
         {
             foreach (ToolStripMenuItem menu in menus)
                 menu.Enabled = false;
-        }     
-        
-        /*****************************************************************************************************************************/
-        /* HELP WINDOW ****************************************************************************************************************/       
-        
-        private void ShowHelp(object sender, EventArgs e)
-        {          
-            Form Form = new Form();           
-            Form.Width = 460;
-            Form.Height = 470;
-            Form.Text = labMenu["help"];
-            Form.BackColor = Color.White;
-            Form.MaximizeBox = false;
-            Form.MinimizeBox = false;
-            Form.ShowIcon = false;
-            Form.FormBorderStyle = FormBorderStyle.FixedSingle;
-
-            WebBrowser browser = new WebBrowser();
-            browser.Dock = DockStyle.Fill;
-            browser.DocumentText = htmlBegin + labHelp["openG"] + labHelp["coverText"] + labHelp["coverData"] + 
-                labHelp["unCover"] + labHelp["unCoverT"] + labHelp["unCoverD"] +  
-                labHelp["compress"] + "<br/></body></html>";                                                        
-            Form.Controls.Add(browser);            
-            
-            Form.Disposed += (object obj, EventArgs eventA) => { menuStripOne.Enabled = true; };
-            menuStripOne.Enabled = false;
-            Form.Show();             
-        }       
-        
+        }
+               
         /*****************************************************************************************************************************/
         /* ABOUT WINDOW **************************************************************************************************************/
 
@@ -368,7 +341,7 @@ namespace Stegan
             Form Form = new Form();
             Form.Width = 400;
             Form.Height = 260;
-            Form.Text = labMenu["about"];
+            Form.Text = labMenu["info"];
             Form.BackColor = Color.White;
             Form.MaximizeBox = false;
             Form.MinimizeBox = false;
@@ -378,12 +351,11 @@ namespace Stegan
             WebBrowser browser = new WebBrowser();
             browser.Dock = DockStyle.Fill;
             browser.DocumentText = "<html><body style='font-size:11px; font-family:Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
-                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>SteganP  1.1.6</p>" + 
+                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>version  1.1.6</p>" + 
                 labAbout["description"] +  
                 labAbout["author"] + 
-                "<pre>Email:          przemyslawmad@op.pl</pre>" +
-                labAbout["web"] + 
-                labAbout["license"] + "</body></html>"; 
+                "<pre>Email:          przemyslawmd@gmail.com</pre>" +
+                labAbout["web"] + "</body></html>"; 
             Form.Controls.Add(browser);
 
             Form.Disposed += (object obj, EventArgs eventA) => { menuStripOne.Enabled = true; };
@@ -412,9 +384,7 @@ namespace Stegan
             menuDiscoverText.Text = labMenu["uncoverT"];
 
             settingsMenuStripOne.Text = labMenu["set"];
-            infoMenuStrip.Text = labMenu["info"];
-            menuAbout.Text = labMenu["about"];
-            menuHelp.Text = labMenu["help"];
+            infoMenuStrip.Text = labMenu["info"];                       
         }        
         
         /*******************************************************************************************************************************/
@@ -425,8 +395,7 @@ namespace Stegan
         private Boolean isCompress = false; 
         private Boolean isPolish = false;
 
-        Dictionary<String, String> labMenu = null;
-        Dictionary<String, String> labHelp = null;
+        Dictionary<String, String> labMenu = null;        
         Dictionary<String, String> labAbout = null;
         Dictionary<String, String> labSettings = null;
         Dictionary<String, String> labMes = null;

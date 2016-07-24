@@ -53,10 +53,7 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.menuUncoverFile = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuStripOne = new System.Windows.Forms.ToolStripMenuItem();
-            this.infoMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuHelp = new System.Windows.Forms.ToolStripMenuItem(); 
-            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem(); 
+            this.infoMenuStrip = new System.Windows.Forms.ToolStripMenuItem();                   
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.textControl = new System.Windows.Forms.TextBox();
             this.fileNameControl = new System.Windows.Forms.Label();
@@ -189,21 +186,15 @@
             ////////////////////////////////////////////////////////////////////////////////////////////////////// 
                         
             this.infoMenuStrip.Size = new System.Drawing.Size(12, 20);
-            this.infoMenuStrip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuHelp,
-            this.toolStripSeparator10,
-            this.menuAbout
-            });
-
-            // MENU HELP
-                        
-            this.menuHelp.Size = new System.Drawing.Size(12, 20);
-            this.menuHelp.Click += new System.EventHandler(this.ShowHelp);
+            this.infoMenuStrip.Click += new System.EventHandler( this.ShowAbout );
+            //this.infoMenuStrip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {            
+            //this.menuAbout
+            //});            
             
             // MENU ABOUT
                       
-            this.menuAbout.Size = new System.Drawing.Size(12, 20);
-            this.menuAbout.Click += new System.EventHandler(this.ShowAbout);
+            //this.menuAbout.Size = new System.Drawing.Size(12, 20);
+            //this.menuAbout.Click += new System.EventHandler(this.ShowAbout);
                       
             
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -296,8 +287,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;        
 
         private System.Windows.Forms.ToolStripMenuItem menuCoverText;        
         private System.Windows.Forms.ToolStripMenuItem menuDiscoverText;
@@ -305,11 +295,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuUncoverFile;
 
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.TextBox textControl;
-
-        private System.Windows.Forms.ToolStripMenuItem menuHelp;
-        private System.Windows.Forms.ToolStripMenuItem menuAbout;
-        
+        private System.Windows.Forms.TextBox textControl;      
+                
         private System.Windows.Forms.Label fileNameControl;
         private System.Windows.Forms.Panel panel1;
                 
