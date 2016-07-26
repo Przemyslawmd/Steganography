@@ -31,26 +31,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStripOne = new System.Windows.Forms.MenuStrip();
             this.fileMenuStripOne = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuOpenGraphic = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuOpenFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuSaveGraphic = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuSaveData = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuRemoveGraphic = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuRemoveData = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuOpenGraphic = new System.Windows.Forms.ToolStripMenuItem();           
+            this.menuOpenFile = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuSaveGraphic = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuSaveData = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuRemoveGraphic = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuRemoveData = new System.Windows.Forms.ToolStripMenuItem();            
             this.menuClearText = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenuStripOne = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuCoverText = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuCoverFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuDiscoverText = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuCoverText = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuCoverFile = new System.Windows.Forms.ToolStripMenuItem();            
+            this.menuDiscoverText = new System.Windows.Forms.ToolStripMenuItem();            
             this.menuUncoverFile = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuStripOne = new System.Windows.Forms.ToolStripMenuItem();
             this.infoMenuStrip = new System.Windows.Forms.ToolStripMenuItem();                   
@@ -81,18 +72,18 @@
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             
             this.fileMenuStripOne.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuOpenGraphic,
-            this.toolStripSeparator1,
-            this.menuOpenFile,
-            this.toolStripSeparator2,
+            this.menuOpenGraphic,            
+            new System.Windows.Forms.ToolStripSeparator(),
+            this.menuOpenFile,                
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuSaveGraphic,
-            this.toolStripSeparator3,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuSaveData,
-            this.toolStripSeparator4,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuRemoveGraphic,
-            this.toolStripSeparator5,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuRemoveData,
-            this.toolStripSeparator6,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuClearText});            
             this.fileMenuStripOne.Size = new System.Drawing.Size(12, 20);            
            
@@ -142,11 +133,11 @@
             
             this.actionMenuStripOne.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCoverText,
-            this.toolStripSeparator7,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuCoverFile,
-            this.toolStripSeparator8,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuDiscoverText,
-            this.toolStripSeparator9,
+            new System.Windows.Forms.ToolStripSeparator(),
             this.menuUncoverFile});            
             this.actionMenuStripOne.Size = new System.Drawing.Size(12, 20);
              
@@ -186,17 +177,8 @@
             ////////////////////////////////////////////////////////////////////////////////////////////////////// 
                         
             this.infoMenuStrip.Size = new System.Drawing.Size(12, 20);
-            this.infoMenuStrip.Click += new System.EventHandler( this.ShowAbout );
-            //this.infoMenuStrip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {            
-            //this.menuAbout
-            //});            
-            
-            // MENU ABOUT
-                      
-            //this.menuAbout.Size = new System.Drawing.Size(12, 20);
-            //this.menuAbout.Click += new System.EventHandler(this.ShowAbout);
-                      
-            
+            this.infoMenuStrip.Click += new System.EventHandler( this.ShowAbout );                  
+                                             
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // PICTURE BOX
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -277,18 +259,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuSaveData;
         private System.Windows.Forms.ToolStripMenuItem menuRemoveGraphic;
         private System.Windows.Forms.ToolStripMenuItem menuRemoveData;
-        private System.Windows.Forms.ToolStripMenuItem menuClearText;
-        
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;        
-
+        private System.Windows.Forms.ToolStripMenuItem menuClearText;        
+              
         private System.Windows.Forms.ToolStripMenuItem menuCoverText;        
         private System.Windows.Forms.ToolStripMenuItem menuDiscoverText;
         private System.Windows.Forms.ToolStripMenuItem menuCoverFile;
