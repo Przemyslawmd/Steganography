@@ -19,29 +19,28 @@ namespace Stegan
         }
 
         /*************************************************************************************************************/
-        /*************************************************************************************************************/
+        /* SET LANGUAGE **********************************************************************************************/
 
         private void SetPolish()
         {          
             isPolish = true;
-            label.SetPol(ref labMenu, ref labMes, ref labAbout, ref labSettings);
+            label.SetPol( ref labMenu, ref labMes, ref labAbout, ref labSettings );
             SetLabels();
         }
-
-        /***********************************************************************************************************/
+        
         /***********************************************************************************************************/
 
         private void SetEnglish()
         {           
             isPolish = false;
-            label.SetEng(ref labMenu, ref labMes, ref labAbout, ref labSettings);
+            label.SetEng( ref labMenu, ref labMes, ref labAbout, ref labSettings );
             SetLabels();
         }   
 
         /************************************************************************************************************/ 
         /* OPENS A GRAPHICAL FLE  ***********************************************************************************/
 
-        private void openGraphicFile(object sender, EventArgs e)
+        private void OpenGraphicFile( object sender, EventArgs e )
         {            
             String dialogTitle = null;
             Bitmap bitmap = null;
@@ -53,51 +52,50 @@ namespace Stegan
                 open.Title = dialogTitle;
                 open.Filter = labMes["filterG"]; 
                 
-                if (open.ShowDialog() == DialogResult.OK)
+                if ( open.ShowDialog() == DialogResult.OK )
                 {
-                    bitmap = new Bitmap(open.FileName);
+                    bitmap = new Bitmap( open.FileName );
                     
-                    if ((bitmap.Height > 316) || (bitmap.Width > 527)) 
+                    if (( bitmap.Height > 316 ) || ( bitmap.Width > 527 )) 
                         pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                     else
                         pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
                     pictureBox.Image = bitmap;
                     heightImage = bitmap.Height;
-                    widthImage = bitmap.Width;
-                    enableMenuFile(menuSaveGraphic, menuRemoveGraphic);
-                    disableMenuFile(menuOpenGraphic);
-                    enableMenuAction(menuCoverText, menuUncoverFile, menuDiscoverText);
+                    widthImage = bitmap.Width;                    
+                    EnableMenu( false, menuOpenGraphic );
+                    EnableMenu( true, menuCoverText, menuUncoverFile, menuDiscoverText, menuSaveGraphic, menuRemoveGraphic );
 
-                    if (DataBuffer != null)
+                    if ( DataBuffer != null )
                         menuCoverFile.Enabled = true;
                  }
             }
-            catch (Exception ex)
+            catch( Exception ex )
             {
-                MessageBox.Show(labMes["failureG"]);               
+                MessageBox.Show( labMes["failureG"] );               
             }
         }
 
         /*****************************************************************************************************************/
         /* SAVES GRAPHIC WITH HIDDEN DATA ********************************************************************************/
 
-        private void saveGraphic(object sender, EventArgs e)
+        private void SaveGraphic( object sender, EventArgs e )
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "PNG|*.png|BMP|*.bmp";            
             saveFileDialog.Title = labMenu["saveG"];
             saveFileDialog.ShowDialog();
 
-            if (saveFileDialog.FileName != "")
+            if ( saveFileDialog.FileName != "" )
             {
-                switch (saveFileDialog.FilterIndex)
+                switch ( saveFileDialog.FilterIndex )
                 {
                     case 1:
-                        pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Png);
+                        pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Png );
                         break;
                     case 2:
-                        pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Bmp);
+                        pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Bmp );
                         break;
                 }
             }
@@ -106,43 +104,42 @@ namespace Stegan
         /****************************************************************************************************************************/
         /* REMOVES GRAPHIC **********************************************************************************************************/
 
-        private void removeGraphic(object sender, EventArgs e)
+        private void RemoveGraphic( object sender, EventArgs e )
         {
             pictureBox.Image = null;
             pictureBox.Invalidate();
             widthImage = 0;
             heightImage = 0;
-            enableMenuFile(menuOpenGraphic);
-            disableMenuFile(menuSaveGraphic, menuRemoveGraphic);            
-            disableMenuAction(menuCoverText, menuCoverFile, menuUncoverFile, menuDiscoverText);
+            EnableMenu( true, menuOpenGraphic );
+            EnableMenu( false, menuSaveGraphic, menuRemoveGraphic, menuCoverText, menuCoverFile, menuUncoverFile, menuDiscoverText );         
         }    
         
         /****************************************************************************************************************/
         /* OPENS A FILE TO BE HIDDEN ************************************************************************************/
         /* Reads data from a file to byte array *************************************************************************/
         
-        private void openFile(object sender, EventArgs e)
+        private void OpenFile( object sender, EventArgs e )
         {            
             try
             {
                 OpenFileDialog open = new OpenFileDialog();
                 open.Title = labMenu["openFile"];
-                if (open.ShowDialog() == DialogResult.OK)
+                if ( open.ShowDialog() == DialogResult.OK )
                 {
-                    FileStream fileStream = new FileStream(open.FileName, FileMode.Open, FileAccess.Read);
-                    BinaryReader binary = new BinaryReader(fileStream);
-                    long numBytes = new FileInfo(open.FileName).Length;
-                    FileBuffer = binary.ReadBytes((int)numBytes);
-                    FileInfo fileInfo = new FileInfo(open.FileName);
+                    FileStream fileStream = new FileStream( open.FileName, FileMode.Open, FileAccess.Read );
+                    BinaryReader binary = new BinaryReader( fileStream );
+                    long numBytes = new FileInfo( open.FileName ).Length;
+                    FileBuffer = binary.ReadBytes( (int)numBytes );
+                    FileInfo fileInfo = new FileInfo( open.FileName );
                     fileNameControl.Text = labMes["fileLoaded"] + fileInfo.Name;
-                    enableMenuFile(menuRemoveData);
-                    disableMenuFile(menuOpenFile);
+                    EnableMenu( true, menuRemoveData );
+                    EnableMenu( false, menuOpenFile );
 
                     if (pictureBox.Image != null)
                         menuCoverFile.Enabled = true;
                 }
             }
-            catch (Exception ex)
+            catch( Exception ex )
             {
                 MessageBox.Show(labMes["failureF"]);
             }
@@ -151,32 +148,32 @@ namespace Stegan
         /*******************************************************************************************************************/
         /* GETS DATA FROM FILE AND COVERS IT  ******************************************************************************/
         
-        private void StartCoverFile(object sender, EventArgs e)
+        private void StartCoverFile( object sender, EventArgs e )
         {            
-            if (FileBuffer == null)
+            if ( FileBuffer == null )
             {
-                MessageBox.Show("No file to hide");
+                MessageBox.Show( "No file to hide" );
                 return;
             }            
             
             DataBuffer = new byte[FileBuffer.Length];
-            System.Buffer.BlockCopy(FileBuffer, 0, DataBuffer, 0, DataBuffer.Length);
+            System.Buffer.BlockCopy( FileBuffer, 0, DataBuffer, 0, DataBuffer.Length );
             CoverData();                      
         }
 
         /********************************************************************************************************************/
         /* GETS DATA FROM TEXTBOX CONTROL AND COVERS IT  ********************************************************************/
 
-        private void StartCoverText(object sender, EventArgs e)
+        private void StartCoverText( object sender, EventArgs e )
         {
-            if (textControl.Text.Equals(""))
+            if ( textControl.Text.Equals("") )
             {
                 MessageBox.Show(labMes["noText"]);
                 return;
             }
             
             DataBuffer = new byte[textControl.Text.Length * sizeof(char)];         
-            System.Buffer.BlockCopy(textControl.Text.ToCharArray(), 0, DataBuffer, 0, DataBuffer.Length);
+            System.Buffer.BlockCopy( textControl.Text.ToCharArray(), 0, DataBuffer, 0, DataBuffer.Length );
             CoverData();                              
         }
         
@@ -189,16 +186,16 @@ namespace Stegan
             {                
                 try
                 {
-                    DataBuffer = new Compress().CompressData(DataBuffer);
+                    DataBuffer = new Compress().CompressData( DataBuffer );
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message.ToString());
+                    MessageBox.Show( e.Message.ToString() );
                     return;
                 }
             }
             
-            if ((DataBuffer.Length * 8) > ((heightImage - 1) * widthImage))
+            if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage))
             {
                 MessageBox.Show(labMes["toManyData"]);
                 return;
@@ -206,34 +203,34 @@ namespace Stegan
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData(ref bitmap, DataBuffer, isCompress);
+            new Covering().CoverData( ref bitmap, DataBuffer, isCompress );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
-            MessageBox.Show(labMes["dataCovered"]);
+            MessageBox.Show( labMes["dataCovered"] );
         }
         
         /**********************************************************************************************************************/
         /* STARTS UNCOVERS TO FILE ********************************************************************************************/
         
-        private void StartUncoverFile(object sender, EventArgs e)
+        private void StartUncoverFile( object sender, EventArgs e )
         {            
-            if (!UncoverData())
+            if ( UncoverData() == false )
                 return;
 
             FileBuffer = new byte[DataBuffer.Length];
-            System.Buffer.BlockCopy(DataBuffer, 0, FileBuffer, 0, FileBuffer.Length);
+            System.Buffer.BlockCopy( DataBuffer, 0, FileBuffer, 0, FileBuffer.Length );
             fileNameControl.Text = labMes["numUncover"] + DataBuffer.Length.ToString();
-            enableMenuFile(menuRemoveData, menuSaveData);          
+            EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
         /************************************************************************************************************************/
         /* STARTS UNCOVERS DATA TO TEXT *****************************************************************************************/
 
-        private void StartUncoverText(object sender, EventArgs e)
+        private void StartUncoverText( object sender, EventArgs e )
         {
-            if (!UncoverData())
+            if ( UncoverData() == false )
                 return;
-            textControl.Text = System.Text.Encoding.Unicode.GetString(DataBuffer);
+            textControl.Text = System.Text.Encoding.Unicode.GetString( DataBuffer );
             return;
         }      
         
@@ -247,9 +244,9 @@ namespace Stegan
 
             try
             {
-                DataBuffer = new Covering().UncoverData(bitmap, ref flagCompress);
+                DataBuffer = new Covering().UncoverData( bitmap, ref flagCompress );
                 if (flagCompress)
-                    DataBuffer = new Decompress().decompressData(DataBuffer);
+                    DataBuffer = new Decompress().decompressData( DataBuffer );
             }
             catch (Exception)
             {
@@ -259,9 +256,9 @@ namespace Stegan
         }
         
         /*********************************************************************************************************/
-        /* SAVES UNCOVERED DATA **********************************************************************************/
+        /* SAVE UNCOVERED DATA ***********************************************************************************/
 
-        private void saveUncoveredData(object sender, EventArgs e)
+        private void SaveUncoveredData( object sender, EventArgs e )
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = labMenu["saveFile"];
@@ -269,23 +266,22 @@ namespace Stegan
 
             if (saveFileDialog.FileName != "")
             {
-                FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
-                FileStream fileStream = fileInfo.Open(FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
-                fileStream.Write(FileBuffer, 0, FileBuffer.Length);                
+                FileInfo fileInfo = new FileInfo( saveFileDialog.FileName );
+                FileStream fileStream = fileInfo.Open( FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None );
+                fileStream.Write( FileBuffer, 0, FileBuffer.Length );                
                 fileStream.Close();          
             }
         }
 
         /*********************************************************************************************************/
-        /* REMOVES DATA UNCOVERED/TO HIDE ************************************************************************/
+        /* REMOVE DATA UNCOVERED/TO HIDE *************************************************************************/
 
-        private void removeData(object sender, EventArgs e)
+        private void RemoveData( object sender, EventArgs e )
         {
             DataBuffer = null;
             fileNameControl.Text = "";
-            enableMenuFile(menuOpenFile);
-            disableMenuFile(menuRemoveData, menuSaveData);
-            disableMenuAction(menuCoverFile);            
+            EnableMenu( true, menuOpenFile );
+            EnableMenu( false, menuRemoveData, menuSaveData, menuCoverFile );                        
         }      
         
         /*************************************************************************************************************/
@@ -295,43 +291,16 @@ namespace Stegan
         {
             textControl.Text = "";
             return;
-        }        
-        
-        /*************************************************************************************************************/
-        /* ENABLES FILE MENU******************************************************************************************/
-
-        private void enableMenuFile(params ToolStripMenuItem[] menus)
-        {
-            foreach (ToolStripMenuItem menu in menus)
-                menu.Enabled = true;       
-        }
-
-        /*************************************************************************************************************/
-        /* DISABLES FILE MENU******************************************************************************************/
-
-        private void disableMenuFile(params ToolStripMenuItem[] menus)
-        {
-            foreach (ToolStripMenuItem menu in menus)
-                menu.Enabled = false;
-        }
+        }              
 
         /***************************************************************************************************************/
-        /* ENABLES ACTION MENU *****************************************************************************************/
+        /* ENABLE/DISABLE MENU *****************************************************************************************/
 
-        private void enableMenuAction(params ToolStripMenuItem[] menus)
+        private void EnableMenu( bool state, params ToolStripMenuItem[] menus )
         {
-            foreach (ToolStripMenuItem menu in menus)
-                menu.Enabled = true;
-        }
-
-        /***************************************************************************************************************************/
-        /* DISABLES ACTION MENU*****************************************************************************************************/
-
-        private void disableMenuAction(params ToolStripMenuItem[] menus)
-        {
-            foreach (ToolStripMenuItem menu in menus)
-                menu.Enabled = false;
-        }
+            foreach ( ToolStripMenuItem menu in menus )
+                menu.Enabled = state;
+        }        
                
         /*****************************************************************************************************************************/
         /* ABOUT WINDOW **************************************************************************************************************/

@@ -85,47 +85,47 @@
             this.menuRemoveData,
             new System.Windows.Forms.ToolStripSeparator(),
             this.menuClearText});            
-            this.fileMenuStripOne.Size = new System.Drawing.Size(12, 20);            
+            this.fileMenuStripOne.Size = new System.Drawing.Size( 12, 20 );            
            
             // MENU OPEN GRAPHIC             
             
-            this.menuOpenGraphic.Size = new System.Drawing.Size(67, 22);
-            this.menuOpenGraphic.Click += new System.EventHandler(this.openGraphicFile);              
+            this.menuOpenGraphic.Size = new System.Drawing.Size( 67, 22 );
+            this.menuOpenGraphic.Click += new System.EventHandler( this.OpenGraphicFile );              
              
             // MENU OPEN FILE             
                         
-            this.menuOpenFile.Size = new System.Drawing.Size(67, 22);
-            this.menuOpenFile.Click += new System.EventHandler(this.openFile);                   
+            this.menuOpenFile.Size = new System.Drawing.Size( 67, 22 );
+            this.menuOpenFile.Click += new System.EventHandler( this.OpenFile );                   
            
             // MENU SAVE GRAPHIC
             
             this.menuSaveGraphic.Enabled = false;
             this.menuSaveGraphic.ShowShortcutKeys = false;
-            this.menuSaveGraphic.Size = new System.Drawing.Size(67, 22);
-            this.menuSaveGraphic.Click += new System.EventHandler(this.saveGraphic);                  
+            this.menuSaveGraphic.Size = new System.Drawing.Size( 67, 22 );
+            this.menuSaveGraphic.Click += new System.EventHandler( this.SaveGraphic );                  
              
             // MENU SAVE DATA
              
             this.menuSaveData.Enabled = false;            
-            this.menuSaveData.Size = new System.Drawing.Size(67, 22);
-            this.menuSaveData.Click += new System.EventHandler(this.saveUncoveredData);            
+            this.menuSaveData.Size = new System.Drawing.Size( 67, 22 );
+            this.menuSaveData.Click += new System.EventHandler( this.SaveUncoveredData );            
              
             // MENU REMOVE GRAPHIC
              
             this.menuRemoveGraphic.Enabled = false;            
-            this.menuRemoveGraphic.Size = new System.Drawing.Size(67, 22);
-            this.menuRemoveGraphic.Click += new System.EventHandler(this.removeGraphic);             
+            this.menuRemoveGraphic.Size = new System.Drawing.Size( 67, 22 );
+            this.menuRemoveGraphic.Click += new System.EventHandler( this.RemoveGraphic );             
                          
             // MENU REMOVE DATA
              
             this.menuRemoveData.Enabled = false;            
-            this.menuRemoveData.Size = new System.Drawing.Size(67, 22);
-            this.menuRemoveData.Click += new System.EventHandler(this.removeData);                   
+            this.menuRemoveData.Size = new System.Drawing.Size( 67, 22 );
+            this.menuRemoveData.Click += new System.EventHandler( this.RemoveData );                   
             
             // MENU CLEAR TEXT            
             
-            this.menuClearText.Size = new System.Drawing.Size(67, 22);
-            this.menuClearText.Click += new System.EventHandler(this.removeText);
+            this.menuClearText.Size = new System.Drawing.Size( 67, 22 );
+            this.menuClearText.Click += new System.EventHandler( this.removeText );
             
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MENU ACTION
