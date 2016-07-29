@@ -244,8 +244,8 @@ namespace Stegan
 
             try
             {
-                DataBuffer = new Covering().UncoverData( bitmap, ref flagCompress );
-                if (flagCompress)
+                DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress );
+                if ( flagCompress )
                     DataBuffer = new Decompress().decompressData( DataBuffer );
             }
             catch (Exception)
