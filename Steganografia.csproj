@@ -66,8 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Covering\BaseCover.cs" />
     <Compile Include="Compression\Node.cs" />
-    <Compile Include="Covering.cs" />
+    <Compile Include="Covering\Covering.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Compression\Compress.cs" />
     <Compile Include="Compression\Decompress.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Uncovering.cs" />
+    <Compile Include="Covering\Uncovering.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

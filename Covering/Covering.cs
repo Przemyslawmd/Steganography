@@ -2,26 +2,19 @@
 using System.Drawing;
 
 namespace Stegan
-{
-    /*
-     This is main class responsible for covering/uncovering data into/from an image
-    */
-     
-    class Covering
+{     
+    class Covering : BaseCover
     {        
         /***************************************************************************************************************************/
-        /* COVERS DATA IN A IMAGE **************************************************************************************************/
+        /* COVER DATA IN A IMAGE ***************************************************************************************************/
         
         public void CoverData( ref Bitmap Image, byte[] dataToCover, Boolean isCompress ) 
-        {         
-            byteNumber = 0;	         
+        {         	         
             byteCover = 0;
             dataCount = dataToCover.Length;
 
-            // Saving data size                                                       
-            // Number of bytes to be covered is stored in 6 pixels, therefore 18 bites is intended for data size                                    
-
-            // Size is stored from last bit of three bytes structure
+            // SAVING DATA SIZE TO BE COVERED                                                      
+            // Number of bytes to be covered is stored in 6 pixels, therefore 18 bites is intended for data size                                   
             bitNumber = 17;            
             
             for (int x = 0; x < 6; x++)
@@ -33,17 +26,13 @@ namespace Stegan
                 Image.SetPixel( x, 0, Color.FromArgb( red, green, blue ) );
             }            
             
-            // Saving information whwther data is compressed                          
-            // This information is included in a red component of seventh pixel in first row  
-
+            // Saving information whwther data is compressed                         
             color = Image.GetPixel( COMPRESS_PIXEL, 0 );
             red = ( isCompress ) ? ( color.R | MASK_1 ) : ( color.R & MASK_0 );          
             Image.SetPixel( COMPRESS_PIXEL, 0, Color.FromArgb( red, color.G, color.B));
             
-            // Covering data                                        
-            // it starts from second row of bitmap       
-            
-            // NumOfBit starts with value less than zero in order to get byte at the beginning
+            // COVERING DATA : it starts from a second row of a bitmap                   
+            // Value of bitNumber starts with value less than zero in order to get a byte at the beginning
             bitNumber = -1;
 	
             for ( int y = 1; y < Image.Height; y++ )
@@ -62,6 +51,7 @@ namespace Stegan
                         Image.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ) );
                         return;
                     }
+
                     green = ChangeColorCoveringData( color.G );         
                                       
                     if ( CheckBitNumber( dataToCover ) == false )
@@ -69,6 +59,7 @@ namespace Stegan
                         Image.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
                     }
+
                     blue = ChangeColorCoveringData( color.B );                    
                     Image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
@@ -77,7 +68,7 @@ namespace Stegan
         }
         
         /*****************************************************************************************************************************/
-        /* CHECKS BIT NUMBER IN COVERING BYTE *****************************************************************************************/
+        /* CHECK A BIT NUMBER IN COVERING BYTE ***************************************************************************************/
 
         private bool CheckBitNumber( byte[] dataToCover )
         {
@@ -93,7 +84,7 @@ namespace Stegan
         }
 
         /*****************************************************************************************************************************/
-        /* CHANGES CHOOSEN RGB COMPONENT WHILE COVERING DATA SIZE ********************************************************************/
+        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA SIZE *********************************************************************/
 
         private int ChangeColorCoveringSize( byte componentRGB )
         {
@@ -104,7 +95,7 @@ namespace Stegan
         }
 
         /*****************************************************************************************************************************/
-        /* CHANGES CHOOSEN RGB COMPONENT WHILE COVERING DATA *************************************************************************/
+        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA **************************************************************************/
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
@@ -123,11 +114,5 @@ namespace Stegan
         private int dataCount;              // Size of data to be covered
         private byte byteCover;             // Byte to be covered or unvovered, it depends on method
         private Color color;
-        private int red;
-        private int green;
-        private int blue;
-        private readonly byte MASK_1 = 1;
-        private readonly byte MASK_0 = 0;
-        private readonly int COMPRESS_PIXEL = 6; 
     }
 }

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Stegan
 {
-    class Uncovering
+    class Uncovering : BaseCover
     {        
         /**********************************************************************************************************************************/
         /* UNCOVER DATA FROM AN IMAGE *****************************************************************************************************/
@@ -11,10 +11,9 @@ namespace Stegan
         public byte[] UncoverData( Bitmap Image, ref Boolean CompressFlag )
         {
             dataCount = 0;
-            byteNumber = 0;
             bitNumber = 0;
 
-            // Getting size of covered data
+            // Getting a size of covered data
             for ( int x = 0; x < 6; x++ )
             {
                 color = Image.GetPixel( x, 0 );
@@ -35,7 +34,7 @@ namespace Stegan
 
             byte[] DataBuffer = new byte[dataCount];
 
-            // Getting compression flag            
+                      
             CompressFlag = ((Image.GetPixel( COMPRESS_PIXEL, 0 ).R % 2) == 1) ? true : false;
 
             byteCover = 0;
@@ -89,16 +88,8 @@ namespace Stegan
 
         private int bitNumber;              // Number of bite in byte
         private readonly int LAST_BIT = 7;
-        private int byteNumber;             // Number of byte in an array of data to be covered
         private int dataCount;              // Size of data to be covered
         private byte byteCover;             // Byte to be covered or unvovered, it depends on method
         private Color color;
-        private int red;
-        private int green;
-        private int blue;
-        private readonly byte MASK_1 = 1;
-        private readonly byte MASK_0 = 0;
-        private readonly int COMPRESS_PIXEL = 6;
-
     }
 }
