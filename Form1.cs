@@ -67,7 +67,7 @@ namespace Stegan
                         menuCoverFile.Enabled = true;
                  }
             }
-            catch( Exception ex )
+            catch( Exception )
             {
                 MessageBox.Show( labMessage["errorLoadGraphic"] );               
             }            
@@ -323,7 +323,7 @@ namespace Stegan
             WebBrowser browser = new WebBrowser();
             browser.Dock = DockStyle.Fill;
             browser.DocumentText = "<html><body style='font-size:11px; font-family:Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
-                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>version  1.1.6</p>" + 
+                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>version  1.2</p>" + 
                 labAbout["description"] +  
                 labAbout["author"] + 
                 "<pre>Email:          przemyslawmd@gmail.com</pre>" +
