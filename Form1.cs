@@ -142,7 +142,7 @@ namespace Stegan
                         menuCoverFile.Enabled = true;
                 }
             }
-            catch( Exception ex )
+            catch( Exception )
             {
                 MessageBox.Show(labMessage["errorLoadFile"]);
             }

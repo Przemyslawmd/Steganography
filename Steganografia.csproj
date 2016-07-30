@@ -78,7 +78,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphic.cs" />
     <Compile Include="Compression\NodeCompress.cs" />
     <Compile Include="Labels.cs" />
     <Compile Include="Compression\NodeDecompress.cs" />
