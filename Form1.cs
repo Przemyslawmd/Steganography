@@ -14,7 +14,7 @@ namespace Stegan
         {
             InitializeComponent();
             label = new Labels();
-            label.SetEng(ref labMenu, ref labMes, ref labAbout, ref labSettings);            
+            label.SetEng(ref labMenu, ref labMessage, ref labAbout, ref labSettings);            
             SetLabels();
         }
 
@@ -24,7 +24,7 @@ namespace Stegan
         private void SetPolish()
         {          
             isPolish = true;
-            label.SetPol( ref labMenu, ref labMes, ref labAbout, ref labSettings );
+            label.SetPol( ref labMenu, ref labMessage, ref labAbout, ref labSettings );
             SetLabels();
         }
         
@@ -33,7 +33,7 @@ namespace Stegan
         private void SetEnglish()
         {           
             isPolish = false;
-            label.SetEng( ref labMenu, ref labMes, ref labAbout, ref labSettings );
+            label.SetEng( ref labMenu, ref labMessage, ref labAbout, ref labSettings );
             SetLabels();
         }   
 
@@ -41,20 +41,16 @@ namespace Stegan
         /* OPENS A GRAPHICAL FLE  ***********************************************************************************/
 
         private void OpenGraphicFile( object sender, EventArgs e )
-        {            
-            String dialogTitle = null;
-            Bitmap bitmap = null;
-            dialogTitle = labMenu["openG"];                     
-            
+        {        
             try
             {
                 OpenFileDialog open = new OpenFileDialog();
-                open.Title = dialogTitle;
-                open.Filter = labMes["filterG"]; 
+                open.Title = menuOpenGraphic.Text;
+                open.Filter = labMessage["filterG"]; 
                 
                 if ( open.ShowDialog() == DialogResult.OK )
                 {
-                    bitmap = new Bitmap( open.FileName );
+                    Bitmap bitmap = new Bitmap( open.FileName );
                     
                     if (( bitmap.Height > 316 ) || ( bitmap.Width > 527 )) 
                         pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -73,8 +69,8 @@ namespace Stegan
             }
             catch( Exception ex )
             {
-                MessageBox.Show( labMes["failureG"] );               
-            }
+                MessageBox.Show( labMessage["errorLoadGraphic"] );               
+            }            
         }
 
         /*****************************************************************************************************************/
@@ -84,20 +80,27 @@ namespace Stegan
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "PNG|*.png|BMP|*.bmp";            
-            saveFileDialog.Title = labMenu["saveG"];
+            saveFileDialog.Title = labMenu["saveGraphic"];
             saveFileDialog.ShowDialog();
 
-            if ( saveFileDialog.FileName != "" )
+            try
             {
-                switch ( saveFileDialog.FilterIndex )
+                if ( saveFileDialog.FileName != "" )
                 {
-                    case 1:
-                        pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Png );
-                        break;
-                    case 2:
-                        pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Bmp );
-                        break;
+                    switch ( saveFileDialog.FilterIndex )
+                    {
+                        case 1:
+                            pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Png );
+                            break;
+                        case 2:
+                            pictureBox.Image.Save( saveFileDialog.FileName, ImageFormat.Bmp );
+                            break;
+                    }
                 }
+            }
+            catch ( Exception )
+            {
+                MessageBox.Show( labMessage["errorSaveGraphic"] );
             }
         }
 
@@ -123,7 +126,7 @@ namespace Stegan
             try
             {
                 OpenFileDialog open = new OpenFileDialog();
-                open.Title = labMenu["openFile"];
+                open.Title = menuOpenFile.Text;
                 if ( open.ShowDialog() == DialogResult.OK )
                 {
                     FileStream fileStream = new FileStream( open.FileName, FileMode.Open, FileAccess.Read );
@@ -131,7 +134,7 @@ namespace Stegan
                     long numBytes = new FileInfo( open.FileName ).Length;
                     FileBuffer = binary.ReadBytes( (int)numBytes );
                     FileInfo fileInfo = new FileInfo( open.FileName );
-                    fileNameControl.Text = labMes["fileLoaded"] + fileInfo.Name;
+                    fileNameControl.Text = labMessage["fileLoaded"] + fileInfo.Name;
                     EnableMenu( true, menuRemoveData );
                     EnableMenu( false, menuOpenFile );
 
@@ -141,7 +144,7 @@ namespace Stegan
             }
             catch( Exception ex )
             {
-                MessageBox.Show(labMes["failureF"]);
+                MessageBox.Show(labMessage["errorLoadFile"]);
             }
         }
 
@@ -168,7 +171,7 @@ namespace Stegan
         {
             if ( textControl.Text.Equals("") )
             {
-                MessageBox.Show(labMes["noText"]);
+                MessageBox.Show(labMessage["noText"]);
                 return;
             }
             
@@ -197,7 +200,7 @@ namespace Stegan
             
             if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage))
             {
-                MessageBox.Show(labMes["toManyData"]);
+                MessageBox.Show(labMessage["toManyData"]);
                 return;
             }
 
@@ -206,7 +209,7 @@ namespace Stegan
             new Covering().CoverData( ref bitmap, DataBuffer, isCompress );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
-            MessageBox.Show( labMes["dataCovered"] );
+            MessageBox.Show( labMessage["dataCovered"] );
         }
         
         /**********************************************************************************************************************/
@@ -219,7 +222,7 @@ namespace Stegan
 
             FileBuffer = new byte[DataBuffer.Length];
             System.Buffer.BlockCopy( DataBuffer, 0, FileBuffer, 0, FileBuffer.Length );
-            fileNameControl.Text = labMes["numUncover"] + DataBuffer.Length.ToString();
+            fileNameControl.Text = labMessage["numUncover"] + DataBuffer.Length.ToString();
             EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
@@ -338,9 +341,9 @@ namespace Stegan
         private void SetLabels()
         {
             fileMenuStripOne.Text = labMenu["file"];
-            menuOpenGraphic.Text = labMenu["openG"];
+            menuOpenGraphic.Text = labMenu["openGraphic"];
             menuOpenFile.Text = labMenu["openFile"];
-            menuSaveGraphic.Text = labMenu["saveG"];
+            menuSaveGraphic.Text = labMenu["saveGraphic"];
             menuSaveData.Text = labMenu["saveFile"];
             menuRemoveGraphic.Text = labMenu["remG"];
             menuRemoveData.Text = labMenu["remF"];
@@ -367,7 +370,7 @@ namespace Stegan
         Dictionary<String, String> labMenu = null;        
         Dictionary<String, String> labAbout = null;
         Dictionary<String, String> labSettings = null;
-        Dictionary<String, String> labMes = null;
+        Dictionary<String, String> labMessage = null;
         
         Labels label;
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";

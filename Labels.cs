@@ -47,12 +47,12 @@ namespace Stegan
 
             menuPl.Add("file", "Plik");
             menuEn.Add("file", "File");
-            menuPl.Add("openG", "Otwórz plik graficzny");
-            menuEn.Add("openG", "Open Graphical File");
+            menuPl.Add("openGraphic", "Otwórz plik graficzny");
+            menuEn.Add("openGraphic", "Open Graphical File");
             menuPl.Add("openFile", "Otwórz plik do ukrycia");
             menuEn.Add("openFile", "Open File to Cover");
-            menuPl.Add("saveG", "Zapisz plik graficzny");
-            menuEn.Add("saveG", "Save Graphical File");
+            menuPl.Add("saveGraphic", "Zapisz plik graficzny");
+            menuEn.Add("saveGraphic", "Save Graphical File");
             menuPl.Add("saveFile", "Zapisz odkryte dane w pliku");
             menuEn.Add("saveFile", "Save Uncovered Data as File");
             menuPl.Add("remG", "Usuń plik graficzny");
@@ -87,26 +87,26 @@ namespace Stegan
             mesPl = new Dictionary<String, String>(8);
             mesEn = new Dictionary<String, String>(8);
 
-            mesPl.Add("noText", "Brak tekstu do ukrycia.");
-            mesEn.Add("noText", "There is no text to hide.");
-            mesPl.Add("toManyData", "Za duża liczba bajtów dla wczytanej grafiki.");
-            mesEn.Add("toManyData", "Too many data to be hidden into a loaded graphic.");
-            mesPl.Add("dataCovered", "Dane zostały ukryte w pliku graficznym.");
-            mesEn.Add("dataCovered", "Data was covered in a graphical file successfully.");
-            mesPl.Add("mes6", "Niepoprawne dane wejściowe.");
-            mesEn.Add("mes6", "Improper input data.");
-            mesPl.Add("fileLoaded", "Wczytano plik: ");
-            mesEn.Add("fileLoaded", "A file was loaded: ");
-            mesPl.Add("numUncover", "Liczba odkrytych bajtów: ");
-            mesEn.Add("numUncover", "Number of uncovered bytes: ");
-            mesPl.Add("failureG", "Niepowodzenie wczytania grafiki");
-            mesEn.Add("failureG", "Loading graphic failed");
-            mesPl.Add("failureF", "Niepowodzenie wczytania pliku");
-            mesEn.Add("failureF", "Loading file failed");
-
+            mesPl.Add( "noText", "Brak tekstu do ukrycia" );
+            mesEn.Add( "noText", "There is no text to hide" );
+            mesPl.Add( "toManyData", "Za duża liczba bajtów dla wczytanej grafiki" );
+            mesEn.Add( "toManyData", "Too many data to be hidden into a loaded graphic" );
+            mesPl.Add( "dataCovered", "Dane zostały ukryte w pliku graficznym" );
+            mesEn.Add( "dataCovered", "Data was covered in a graphical file successfully" );            
+            mesPl.Add( "fileLoaded", "Wczytano plik: " );
+            mesEn.Add( "fileLoaded", "A file was loaded: " );
+            mesPl.Add( "numUncover", "Liczba odkrytych bajtów: " );
+            mesEn.Add( "numUncover", "Number of uncovered bytes: " );
+            mesPl.Add( "errorLoadGraphic", "Niepowodzenie wczytania grafiki" );
+            mesEn.Add( "errorLoadGraphic", "Loading graphic failed" );
+            mesPl.Add( "errorLoadFile", "Niepowodzenie wczytania pliku" );
+            mesEn.Add( "errorLoadFile", "Loading file failed" );
+            mesPl.Add( "errorSaveGraphic", "Błąd w przypadku zapisywania grafiki pod tą samą nazwą" );
+            mesEn.Add( "errorSaveGraphic", "En error when graphis is being saved with the same name" );
+            
             // In messages, because there is no worth to maintain one pair of Dictionary for one content
-            mesPl.Add("filterG", "Plik graficzny|*.jpg; *.jpeg; *.gif; *.bmp; *.png");
-            mesEn.Add("filterG", "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png");
+            mesPl.Add( "filterG", "Plik graficzny|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
+            mesEn.Add( "filterG", "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
         }        
         
         /******************************************************************************************************************************/

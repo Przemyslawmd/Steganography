@@ -63,8 +63,7 @@ namespace Stegan
                     blue = ChangeColorCoveringData( color.B );                    
                     Image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
-            }
-            return;
+            }            
         }
         
         /*****************************************************************************************************************************/
