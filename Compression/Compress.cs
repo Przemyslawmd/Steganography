@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Windows.Forms;
 using System.Linq;
-//using Debug;
 
 namespace Compression
 {
     class Compress
     {
         /**********************************************************************************************************************************/
-        /* PUBLIC INTERFACE OF THIS CLASS *************************************************************************************************/
-        /* Class has no other public methods **********************************************************************************************/
-        
+        /* MAIN COMPRESS METOHD ***********************************************************************************************************/
+                
         public byte[] CompressData( byte[] source )
-        {        
-            // One element array for Buffer.BlockCopy method 
-            int[] DataCount  = new int[1] { source.Length }; 
-                        
+        {
+            int dataCount = source.Length;
             CreateNodes( source );            
             nodes.OrderBy( x => x.Count );            
             BuildTree(); 
 
-            // codes and tempCode are used in generateCodes method, but must be declared out this method, because this method is recursive
+            // codes and tempCode are used only in generateCodes, but are declared out of this method, because it's recursive method
             codes = new Dictionary<byte, String>();
             tempCode = new List<Char>();
             GenerateCodes( nodes[0], '1' );
@@ -33,14 +26,14 @@ namespace Compression
             byte[] header = codesData.ToArray();    
             byte[] finalData = new byte[source.Length + header.Length + 4];           
             Buffer.BlockCopy(header, 0, finalData, 0, header.Length);
-            Buffer.BlockCopy(DataCount, 0, finalData, header.Length, 4);            
-            Buffer.BlockCopy(source, 0, finalData, header.Length + 4, source.Length);
+            Buffer.BlockCopy( new int[1] { dataCount }, 0, finalData, header.Length, 4 );
+            Buffer.BlockCopy( source, 0, finalData, header.Length + 4, source.Length );
             
             return finalData;           
         }    
        
-        /********************************************************************************************************************************/
-        /* CREATE LIST OF NODECOMPRESS OBJECTS ******************************************************************************************/
+        /*****************************************************************************************************************************/
+        /* CREATE LIST OF NODECOMPRESS OBJECTS ***************************************************************************************/
              
         private void CreateNodes( byte[] buffer )
         {

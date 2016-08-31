@@ -137,22 +137,14 @@ namespace Compression
             int Count = 0;
 
             // Get byte from data to be decompressed
-            for (int i = dataIndex + 1; i < sourceData.Length; i++)            
+            for ( int i = dataIndex + 1; i < sourceData.Length; i++ )            
             {
-                // Check each bite of byte and traverse Hufmann tree
-                for (int j = 0; j < 8; j++)
+                // Check each bite in a byte and traverse tree
+                for ( int j = 0; j < 8; j++ )
                 {                                        
                     if ( ( mask[j] & sourceData[i] ) == 0 )
                     {
-                        node = node.Left;
-
-                        if ( node.Leaf )                            
-                        {
-                            decompressedData.Add( node.ByteValue );                            
-                            if ( ++Count == DataCount )
-                                return decompressedData.ToArray();
-                            node = null;                                                           
-                        }                                              
+                        node = node.Left;                                                                 
                     }         
                     else
                     {                        
@@ -161,16 +153,16 @@ namespace Compression
                             node = root;
                             continue;
                         }
-                        node = node.Right;
-                            
-                        if (node.Leaf)
-                        {
-                            decompressedData.Add( node.ByteValue );                            
-                            if ( ++Count == DataCount )
-                                return decompressedData.ToArray();
-                            node = null;                            
-                        }                                              
-                    }  
+                        node = node.Right;                                                                  
+                    }
+
+                    if ( node.Leaf )
+                    {
+                        decompressedData.Add( node.ByteValue );
+                        if ( ++Count == DataCount )
+                            return decompressedData.ToArray();
+                        node = null;
+                    }
                 }
             }                       
             return decompressedData.ToArray();
