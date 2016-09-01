@@ -27,7 +27,7 @@ namespace Compression
         
         private void GetCodesFromSource( byte[] data )
         {
-            // Get number of codes from source data, this is stored in first four bytes            
+            // Get count of codes from source data, this value is stored in first four bytes            
             int codesCount = 0;
             for ( int i = 0; i < 3; i++ )
             {
@@ -38,43 +38,39 @@ namespace Compression
 
             byteValue = new List<byte>( codesCount );
             codeValue = new List<char[]>( codesCount ); 
-
-            // Filling Dictionary with values
+                        
             byte tempByte;
             int index = 4;
             int codeInt = 0;
             List<char> code = new List<char>();
             
             for (int i = 0; i < codesCount; i++)
-            {
-                // Get byte value
+            {                
                 tempByte = data[index++];
 
-                // Get code saved as int
+                // Get code as an integer
                 for ( int j = 0; j < 3; j++ )
                 {
                     codeInt += (int)data[index++];
                     codeInt <<= 8;
                 }
                 
-                // Last byte for last code - without index incrementation
-                if (i == ( codesCount - 1 ))
-                    codeInt += (int)data[index];
-                else
-                    codeInt += (int)data[index++];
+                codeInt += (int)data[index];
+                if (i != ( codesCount - 1 ))
+                    index++;
                 
-                // Casting code from into char array                
-                while (codeInt != 0)
+                // Change code from an integer into an array of char                
+                while ( codeInt != 0 )
                 {
-                    if ((codeInt % 2) == 0)
-                        code.Insert(0, '0');
+                    if (( codeInt % 2 ) == 0 )
+                        code.Insert( 0, '0' );
                     else
-                        code.Insert(0, '1');
+                        code.Insert( 0, '1' );
                     codeInt >>= 1;
                 }
 
-                byteValue.Add(tempByte);
-                codeValue.Add(code.ToArray());               
+                byteValue.Add( tempByte );
+                codeValue.Add( code.ToArray() );               
                 code.Clear();
             }
 
@@ -97,8 +93,7 @@ namespace Compression
                 node = root;
                 tempCode = codeValue[i];
 
-                // Traverse via char in code in exception of first char - each code begins with '1
-                // And of last char - action after iteration
+                // Traverse chars in code in exception of first char - each code begins with '1'
                 for ( int j = 1; j < tempCode.Length - 1; j++ )
                 {
                     if ( tempCode[j] == '0' )
@@ -116,15 +111,14 @@ namespace Compression
                     }
                 }
 
-                // Checking last char in code - adding leaves
+                // Check last char in code - add leaves
                 if ( tempCode[tempCode.Length - 1] == '0' )                
                     node.Left = new NodeDecompress( byteValue[i], true );                   
                 else if ( tempCode[tempCode.Length - 1] == '1' )                
                     node.Right = new NodeDecompress( byteValue[i], true );                  
              }           
-        }       
-         
-        
+        }     
+                 
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         
