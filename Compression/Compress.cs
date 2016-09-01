@@ -58,7 +58,6 @@ namespace Compression
                 
                 isFound = false;
             }            
-            return;
         }
         
         /***********************************************************************************************************************************/
@@ -80,7 +79,7 @@ namespace Compression
         }
 
         /**********************************************************************************************************************************/
-        /* INNER METHOD OF BUILD TREE METHOD **********************************************************************************************/
+        /* INSERT NODE INTO A TREE ********************************************************************************************************/
 
         private void InsertNodeIntoTree( NodeCompress newNode )
         {
@@ -111,13 +110,14 @@ namespace Compression
                 GenerateCodes( node.Left, '0' );
             if ( node.Right != null )
                 GenerateCodes( node.Right, '1' );
-            if ( node.Leaf ) 
+            else           
                 codes.Add( node.ByteValue, String.Concat( tempCode ) );
+
             tempCode.RemoveAt( tempCode.Count - 1 );            
         }        
         
         /****************************************************************************************************************************/
-        /* MAIN ACTIVITY FOR COMPRESSING DATA ***************************************************************************************/
+        /* MAIN ACTIVITY FOR COMPRESSING ********************************************************************************************/
 
         private byte[] StartCompress( byte[] source )
         {
@@ -128,7 +128,7 @@ namespace Compression
             
             for (int i = 0; i < source.Length; i++)
             {
-                // Gets code for byte from an uncompressed data
+                // Get code for byte 
                 code = codes[source[i]].ToCharArray();
                
                 for (int j = 0; j < code.Length; j++)
@@ -147,7 +147,7 @@ namespace Compression
                 }
             }     
             
-            // Some data remains, there is a need to add alignment
+            // Some data remains, there is a need to add an alignment
             if ( bitShift != 0 )           
             {
                 temp <<= ( BITS_IN_BYTE - bitShift );
@@ -158,7 +158,7 @@ namespace Compression
         }
 
         /**************************************************************************************************/
-        /* GETS CODES FROM DICTIONARY AND MERGE IT WITH COMPRESSED DATA ***********************************/
+        /* GET CODES FROM DICTIONARY AND MERGE IT WITH COMPRESSED DATA ************************************/
         
         private void InsertCodes()
         {
@@ -171,11 +171,9 @@ namespace Compression
             temp = codes.Count;
             for ( int i = 0, j = 24; i < 4; i++, j -= BITS_IN_BYTE )
                 codesData.Add(( byte )( temp >> j ));
-
-            // Bytes values are copied into separate 
-            codes.Keys.CopyTo( keys, 0 );
+                        
+            codes.Keys.CopyTo( keys, 0 );            
             
-            // Codes (bytes values plus codes) are added into data
             for ( int i = 0; i < codes.Count; i++ )
             {
                 codesData.Add(keys[i]);
@@ -194,21 +192,16 @@ namespace Compression
 
                 for ( int k = 0, j = 24; k < 4; k++, j -= BITS_IN_BYTE )
                     codesData.Add(( byte )( temp >> j ));
-            }
-
-            return; 
+            }           
         }
 
         /****************************************************************************************************************/
         /****************************************************************************************************************/
 
         private List<byte> codesData;
-        private List<byte> compressedData;        
-        
-        // Contains final codes which means byte value bounded with sequence of bits
-        private Dictionary<byte, String> codes;
-        // tempCode is used while building final codes
-        private List<Char> tempCode;        
+        private List<byte> compressedData;     
+        private Dictionary<byte, String> codes;     // final codes : byte values with bit sequences       
+        private List<Char> tempCode;                // using while creating final codes   
         private List<NodeCompress> nodes;
         private int BITS_IN_BYTE = 8;     
     }
