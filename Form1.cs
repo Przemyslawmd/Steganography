@@ -14,7 +14,7 @@ namespace Stegan
         {
             InitializeComponent();
             label = new Labels();
-            label.SetEng(ref labMenu, ref labMessage, ref labAbout, ref labSettings);            
+            label.SetEng(ref labMenu, ref labMessage );            
             SetLabels();
         }
 
@@ -24,7 +24,7 @@ namespace Stegan
         private void SetPolish()
         {          
             isPolish = true;
-            label.SetPol( ref labMenu, ref labMessage, ref labAbout, ref labSettings );
+            label.SetPol( ref labMenu, ref labMessage );
             SetLabels();
         }
         
@@ -33,7 +33,7 @@ namespace Stegan
         private void SetEnglish()
         {           
             isPolish = false;
-            label.SetEng( ref labMenu, ref labMessage, ref labAbout, ref labSettings );
+            label.SetEng( ref labMenu, ref labMessage );
             SetLabels();
         }   
 
@@ -311,9 +311,8 @@ namespace Stegan
         private void ShowAbout(object sender, EventArgs e)
         {
             Form Form = new Form();
-            Form.Width = 400;
+            Form.Width = 470;
             Form.Height = 260;
-            Form.Text = labMenu["info"];
             Form.BackColor = Color.White;
             Form.MaximizeBox = false;
             Form.MinimizeBox = false;
@@ -322,15 +321,15 @@ namespace Stegan
             
             WebBrowser browser = new WebBrowser();
             browser.Dock = DockStyle.Fill;
-            browser.DocumentText = "<html><body style='font-size:11px; font-family:Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
-                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>version  1.2</p>" + 
-                labAbout["description"] +  
-                labAbout["author"] + 
-                "<pre>Email:          przemyslawmd@gmail.com</pre>" +
-                labAbout["web"] + "</body></html>"; 
+            browser.DocumentText = "<html><body style='font-size:11px; font-family: Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
+                "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>Steganography application</p>" + 
+                "<pre>Version 1.2</pre>" +
+                "<pre>Author:           Przemyslaw Madej, Cracow 2016 </pre>" + 
+                "<pre>Email:            przemyslawmd@gmail.com</pre>" +
+                "<pre>Home page:        http://www.przemeknet.pl/steganEn.aspx</pre></body></html>"; 
             Form.Controls.Add(browser);
 
-            Form.Disposed += (object obj, EventArgs eventA) => { menuStripOne.Enabled = true; };
+            Form.Disposed += ( object obj, EventArgs eventA ) => { menuStripOne.Enabled = true; };
             menuStripOne.Enabled = false;
             Form.Show();
         }       
@@ -367,9 +366,7 @@ namespace Stegan
         private Boolean isCompress = false; 
         private Boolean isPolish = false;
 
-        Dictionary<String, String> labMenu = null;        
-        Dictionary<String, String> labAbout = null;
-        Dictionary<String, String> labSettings = null;
+        Dictionary<String, String> labMenu = null;      
         Dictionary<String, String> labMessage = null;
         
         Labels label;

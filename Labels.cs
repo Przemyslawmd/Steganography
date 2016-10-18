@@ -9,32 +9,24 @@ namespace Stegan
         public Labels()
         {
             InitializeMenu();
-            InitializeMessages();
-            InitializeAbout();
-            InitializeSettings();            
+            InitializeMessages();                                 
         }
         
         /********************************************************************************************************************************/
         /********************************************************************************************************************************/
 
-        public void SetPol( ref Dictionary<String, String> menu, ref Dictionary<String, String> mes, 
-                            ref Dictionary<String, String> about, ref Dictionary<String, String> set)
+        public void SetPol( ref Dictionary<String, String> menu, ref Dictionary<String, String> mes )                            
         {
             menu = menuPl;            
-            mes = mesPl;
-            about = aboutPl;
-            set = setPl;            
+            mes = mesPl;                               
         }
 
         /*********************************************************************************************************************************/
         
-        public void SetEng( ref Dictionary<String, String> menu, ref Dictionary<String, String> mes,
-                            ref Dictionary<String, String> about, ref Dictionary<String, String> set)
+        public void SetEng( ref Dictionary<String, String> menu, ref Dictionary<String, String> mes )
         {
             menu = menuEn;            
-            mes = mesEn;
-            about = aboutEn;
-            set = setEn;            
+            mes = mesEn;                                  
         }
         
         /********************************************************************************************************************************/
@@ -107,50 +99,14 @@ namespace Stegan
             // In messages, because there is no worth to maintain one pair of Dictionary for one content
             mesPl.Add( "filterG", "Plik graficzny|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
             mesEn.Add( "filterG", "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
-        }        
-        
-        /******************************************************************************************************************************/
-        /* ABOUT **********************************************************************************************************************/
-
-        private void InitializeAbout()
-        {
-            aboutPl = new Dictionary<String, String>(4);
-            aboutEn = new Dictionary<String, String>(4);            
-            
-            aboutPl.Add("description", "<pre>Aplikacja do steganografii</pre>");
-            aboutEn.Add("description", "<pre>Steganography application</pre>");
-            aboutPl.Add("author", "<pre>Autor:          Przemysław Madej, Kraków 2016</pre>");
-            aboutEn.Add("author", "<pre>Author:         Przemysław Madej, Cracow 2016</pre>");
-            aboutPl.Add("web", "<pre>Strona domowa:  http://przemeknet.pl</pre>");
-            aboutEn.Add("web", "<pre>Home page:      http://przemeknet.pl</pre>");            
-        }
-
-        /******************************************************************************************************************************/
-        /* SETTINGS********************************************************************************************************************/
-
-        private void InitializeSettings()
-        {
-            setPl = new Dictionary<String, String>(3);
-            setEn = new Dictionary<String, String>(3);
-            
-            setPl.Add("lan", "Język");
-            setEn.Add("lan", "Language");
-            setPl.Add("accept", "Akceptuj");
-            setEn.Add("accept", "Accept");
-            setPl.Add("compress", "Kompresja danych");
-            setEn.Add("compress", "Data compression");
-        }
-
+        }    
+               
         /********************************************************************************************************************************/
         /********************************************************************************************************************************/
 
         Dictionary<String, String> menuPl;
-        Dictionary<String, String> menuEn;
-        Dictionary<String, String> aboutPl;
-        Dictionary<String, String> aboutEn;
+        Dictionary<String, String> menuEn;        
         Dictionary<String, String> mesPl;
-        Dictionary<String, String> mesEn;        
-        Dictionary<String, String> setPl;
-        Dictionary<String, String> setEn;
+        Dictionary<String, String> mesEn;     
     }
 }
