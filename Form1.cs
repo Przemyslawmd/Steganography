@@ -38,7 +38,7 @@ namespace Stegan
         }   
 
         /************************************************************************************************************/ 
-        /* OPENS A GRAPHICAL FLE  ***********************************************************************************/
+        /* OPEN A GRAPHIC FILE **************************************************************************************/
 
         private void OpenGraphicFile( object sender, EventArgs e )
         {        
@@ -46,7 +46,7 @@ namespace Stegan
             {
                 OpenFileDialog open = new OpenFileDialog();
                 open.Title = menuOpenGraphic.Text;
-                open.Filter = labMessage["filterG"]; 
+                open.Filter = "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png"; 
                 
                 if ( open.ShowDialog() == DialogResult.OK )
                 {
@@ -69,18 +69,18 @@ namespace Stegan
             }
             catch( Exception )
             {
-                MessageBox.Show( labMessage["errorLoadGraphic"] );               
+                MessageBox.Show( "Loading graphic failed" );               
             }            
         }
 
         /*****************************************************************************************************************/
-        /* SAVES GRAPHIC WITH HIDDEN DATA ********************************************************************************/
+        /* SAVE GRAPHIC WITH HIDDEN DATA *********************************************************************************/
 
         private void SaveGraphic( object sender, EventArgs e )
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "PNG|*.png|BMP|*.bmp";            
-            saveFileDialog.Title = labMenu["saveGraphic"];
+            saveFileDialog.Title = "Save Graphic File";
             saveFileDialog.ShowDialog();
 
             try
@@ -100,12 +100,12 @@ namespace Stegan
             }
             catch ( Exception )
             {
-                MessageBox.Show( labMessage["errorSaveGraphic"] );
+                MessageBox.Show( "An error because a new graphic is being saved with the same name as original name" );
             }
         }
 
         /****************************************************************************************************************************/
-        /* REMOVES GRAPHIC **********************************************************************************************************/
+        /* REMOVE GRAPHIC ***********************************************************************************************************/
 
         private void RemoveGraphic( object sender, EventArgs e )
         {
@@ -118,8 +118,8 @@ namespace Stegan
         }    
         
         /****************************************************************************************************************/
-        /* OPENS A FILE TO BE HIDDEN ************************************************************************************/
-        /* Reads data from a file to byte array *************************************************************************/
+        /* OPEN A FILE TO BE HIDDEN *************************************************************************************/
+        /* Read data from a file and write it to a byte array ***********************************************************/
         
         private void OpenFile( object sender, EventArgs e )
         {            
@@ -134,7 +134,7 @@ namespace Stegan
                     long numBytes = new FileInfo( open.FileName ).Length;
                     FileBuffer = binary.ReadBytes( (int)numBytes );
                     FileInfo fileInfo = new FileInfo( open.FileName );
-                    fileNameControl.Text = labMessage["fileLoaded"] + fileInfo.Name;
+                    fileNameControl.Text = "A file was loaded: " + fileInfo.Name;
                     EnableMenu( true, menuRemoveData );
                     EnableMenu( false, menuOpenFile );
 
@@ -144,12 +144,12 @@ namespace Stegan
             }
             catch( Exception )
             {
-                MessageBox.Show(labMessage["errorLoadFile"]);
+                MessageBox.Show( "Loading file failed" );
             }
         }
 
         /*******************************************************************************************************************/
-        /* GETS DATA FROM FILE AND COVERS IT  ******************************************************************************/
+        /* GET DATA FROM A FILE AND COVER IT  ******************************************************************************/
         
         private void StartCoverFile( object sender, EventArgs e )
         {            
@@ -165,7 +165,7 @@ namespace Stegan
         }
 
         /********************************************************************************************************************/
-        /* GETS DATA FROM TEXTBOX CONTROL AND COVERS IT  ********************************************************************/
+        /* GET DATA FROM A TEXTBOX CONTROL AND COVER IT  ********************************************************************/
 
         private void StartCoverText( object sender, EventArgs e )
         {
@@ -181,7 +181,7 @@ namespace Stegan
         }
         
         /******************************************************************************************************************/
-        /* COVERS DATA ****************************************************************************************************/
+        /* COVER DATA *****************************************************************************************************/
 
         private void CoverData()
         {
@@ -213,7 +213,7 @@ namespace Stegan
         }
         
         /**********************************************************************************************************************/
-        /* STARTS UNCOVERS TO FILE ********************************************************************************************/
+        /* START UNCOVERING PROCESS TO A FILE *********************************************************************************/
         
         private void StartUncoverFile( object sender, EventArgs e )
         {            
@@ -227,7 +227,7 @@ namespace Stegan
         }
 
         /************************************************************************************************************************/
-        /* STARTS UNCOVERS DATA TO TEXT *****************************************************************************************/
+        /* START UNCOVERING PROCESS TO TEXT CONTROL *****************************************************************************/
 
         private void StartUncoverText( object sender, EventArgs e )
         {
@@ -288,7 +288,7 @@ namespace Stegan
         }      
         
         /*************************************************************************************************************/
-        /* REMOVES TEXT **********************************************************************************************/
+        /* REMOVE TEXT FROM CONTROL **********************************************************************************/
 
         private void removeText(object sender, EventArgs e)
         {
@@ -305,8 +305,8 @@ namespace Stegan
                 menu.Enabled = state;
         }        
                
-        /*****************************************************************************************************************************/
-        /* ABOUT WINDOW **************************************************************************************************************/
+        /*******************************************************************************************************************/
+        /* ABOUT WINDOW ****************************************************************************************************/
 
         private void ShowAbout(object sender, EventArgs e)
         {
@@ -335,7 +335,7 @@ namespace Stegan
         }       
         
         /******************************************************************************************************************************/
-        /* SETS TEXT IN CONTROLS ******************************************************************************************************/
+        /* SET TEXT IN CONTROLS *******************************************************************************************************/
 
         private void SetLabels()
         {

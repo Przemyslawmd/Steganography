@@ -42,9 +42,7 @@ namespace Stegan
             menuPl.Add("openGraphic", "Otwórz plik graficzny");
             menuEn.Add("openGraphic", "Open Graphical File");
             menuPl.Add("openFile", "Otwórz plik do ukrycia");
-            menuEn.Add("openFile", "Open File to Cover");
-            menuPl.Add("saveGraphic", "Zapisz plik graficzny");
-            menuEn.Add("saveGraphic", "Save Graphical File");
+            menuEn.Add("openFile", "Open File to Cover");            
             menuPl.Add("saveFile", "Zapisz odkryte dane w pliku");
             menuEn.Add("saveFile", "Save Uncovered Data as File");
             menuPl.Add("remG", "Usuń plik graficzny");
@@ -88,17 +86,7 @@ namespace Stegan
             mesPl.Add( "fileLoaded", "Wczytano plik: " );
             mesEn.Add( "fileLoaded", "A file was loaded: " );
             mesPl.Add( "numUncover", "Liczba odkrytych bajtów: " );
-            mesEn.Add( "numUncover", "Number of uncovered bytes: " );
-            mesPl.Add( "errorLoadGraphic", "Niepowodzenie wczytania grafiki" );
-            mesEn.Add( "errorLoadGraphic", "Loading graphic failed" );
-            mesPl.Add( "errorLoadFile", "Niepowodzenie wczytania pliku" );
-            mesEn.Add( "errorLoadFile", "Loading file failed" );
-            mesPl.Add( "errorSaveGraphic", "Błąd w przypadku zapisywania grafiki pod tą samą nazwą" );
-            mesEn.Add( "errorSaveGraphic", "En error when graphis is being saved with the same name" );
-            
-            // In messages, because there is no worth to maintain one pair of Dictionary for one content
-            mesPl.Add( "filterG", "Plik graficzny|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
-            mesEn.Add( "filterG", "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png" );
+            mesEn.Add( "numUncover", "Number of uncovered bytes: " );         
         }    
                
         /********************************************************************************************************************************/
