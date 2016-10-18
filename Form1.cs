@@ -342,7 +342,6 @@ namespace Stegan
             fileMenuStripOne.Text = labMenu["file"];
             menuOpenGraphic.Text = labMenu["openGraphic"];
             menuOpenFile.Text = labMenu["openFile"];
-            menuSaveGraphic.Text = labMenu["saveGraphic"];
             menuSaveData.Text = labMenu["saveFile"];
             menuRemoveGraphic.Text = labMenu["remG"];
             menuRemoveData.Text = labMenu["remF"];
