@@ -79,7 +79,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Compression\NodeCompress.cs" />
-    <Compile Include="Labels.cs" />
     <Compile Include="Compression\NodeDecompress.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

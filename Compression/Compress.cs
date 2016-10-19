@@ -45,15 +45,22 @@ namespace Compression
             {                
                 for ( int j = 0; j < nodes.Count; j++ )
                 {                    
-                    if ( nodes[j].ByteValue == buffer[i] )
+                    if ( buffer[i] == nodes[j].ByteValue )
                     {
                         nodes[j].Increment();
                         isFound = true;
                         break;                                           
-                    }                    
+                    }
+
+                    if ( buffer[i] < nodes[j].ByteValue )
+                    {
+                        nodes.Insert( j, new NodeCompress( 1, buffer[i] ) );
+                        isFound = true;
+                        break;
+                    }                   
                 }
                 
-                if (!isFound)
+                if ( !isFound )
                     nodes.Add( new NodeCompress( 1, buffer[i] ) );                    
                 
                 isFound = false;
