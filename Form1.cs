@@ -12,30 +12,8 @@ namespace Stegan
     {
         public Form1()
         {
-            InitializeComponent();
-            label = new Labels();
-            label.SetEng(ref labMenu );            
-            SetLabels();
-        }
-
-        /*************************************************************************************************************/
-        /* SET LANGUAGE **********************************************************************************************/
-
-        private void SetPolish()
-        {          
-            isPolish = true;
-            label.SetPol( ref labMenu );
-            SetLabels();
-        }
-        
-        /***********************************************************************************************************/
-
-        private void SetEnglish()
-        {           
-            isPolish = false;
-            label.SetEng( ref labMenu );
-            SetLabels();
-        }   
+            InitializeComponent();            
+        }        
 
         /************************************************************************************************************/ 
         /* OPEN A GRAPHIC FILE **************************************************************************************/
@@ -333,32 +311,15 @@ namespace Stegan
             Form.Disposed += ( object obj, EventArgs eventA ) => { menuStripOne.Enabled = true; };
             menuStripOne.Enabled = false;
             Form.Show();
-        }       
-        
-        /******************************************************************************************************************************/
-        /* SET TEXT IN CONTROLS *******************************************************************************************************/
-
-        private void SetLabels()
-        {            
-            menuOpenGraphic.Text = labMenu["openGraphic"];
-            menuOpenFile.Text = labMenu["openFile"];               
-            menuCoverFile.Text = labMenu["coverF"];
-            menuCoverText.Text = labMenu["coverT"];            
-            menuUncoverFile.Text = labMenu["uncoverF"];
-            menuDiscoverText.Text = labMenu["uncoverT"];                              
-        }        
-        
+        }     
+               
         /*******************************************************************************************************************************/
         /*******************************************************************************************************************************/
         
         private int heightImage;
         private int widthImage;
-        private Boolean isCompress = false; 
-        private Boolean isPolish = false;
-
-        Dictionary<String, String> labMenu = null;      
-                
-        Labels label;
+        private Boolean isCompress = false;       
+                                  
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
         byte[] FileBuffer;
