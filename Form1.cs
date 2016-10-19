@@ -14,7 +14,7 @@ namespace Stegan
         {
             InitializeComponent();
             label = new Labels();
-            label.SetEng(ref labMenu, ref labMessage );            
+            label.SetEng(ref labMenu );            
             SetLabels();
         }
 
@@ -24,7 +24,7 @@ namespace Stegan
         private void SetPolish()
         {          
             isPolish = true;
-            label.SetPol( ref labMenu, ref labMessage );
+            label.SetPol( ref labMenu );
             SetLabels();
         }
         
@@ -33,7 +33,7 @@ namespace Stegan
         private void SetEnglish()
         {           
             isPolish = false;
-            label.SetEng( ref labMenu, ref labMessage );
+            label.SetEng( ref labMenu );
             SetLabels();
         }   
 
@@ -171,7 +171,7 @@ namespace Stegan
         {
             if ( textControl.Text.Equals("") )
             {
-                MessageBox.Show(labMessage["noText"]);
+                MessageBox.Show( "There is no text to hide" );
                 return;
             }
             
@@ -185,22 +185,23 @@ namespace Stegan
 
         private void CoverData()
         {
-            if (isCompress)
+            if ( isCompress )
             {                
                 try
                 {
                     DataBuffer = new Compress().CompressData( DataBuffer );
                 }
-                catch (Exception e)
+                catch ( Exception e )
                 {
                     MessageBox.Show( e.Message.ToString() );
                     return;
                 }
             }
-            
+
+            // 8 value means bites in byte
             if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage))
             {
-                MessageBox.Show(labMessage["toManyData"]);
+                MessageBox.Show( "Too many data to be hidden into a loaded graphic" );
                 return;
             }
 
@@ -209,7 +210,7 @@ namespace Stegan
             new Covering().CoverData( ref bitmap, DataBuffer, isCompress );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
-            MessageBox.Show( labMessage["dataCovered"] );
+            MessageBox.Show( "Data was covered in a graphic file successfully" );
         }
         
         /**********************************************************************************************************************/
@@ -222,7 +223,7 @@ namespace Stegan
 
             FileBuffer = new byte[DataBuffer.Length];
             System.Buffer.BlockCopy( DataBuffer, 0, FileBuffer, 0, FileBuffer.Length );
-            fileNameControl.Text = labMessage["numUncover"] + DataBuffer.Length.ToString();
+            fileNameControl.Text = "Number of uncovered bytes: " + DataBuffer.Length.ToString();
             EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
@@ -233,8 +234,8 @@ namespace Stegan
         {
             if ( UncoverData() == false )
                 return;
-            textControl.Text = System.Text.Encoding.Unicode.GetString( DataBuffer );
-            return;
+
+            textControl.Text = System.Text.Encoding.Unicode.GetString( DataBuffer );            
         }      
         
         /***********************************************************************************************************/
@@ -251,7 +252,7 @@ namespace Stegan
                 if ( flagCompress )
                     DataBuffer = new Decompress().decompressData( DataBuffer );
             }
-            catch (Exception)
+            catch ( Exception )
             {
                 return false;
             }
@@ -264,10 +265,10 @@ namespace Stegan
         private void SaveUncoveredData( object sender, EventArgs e )
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = labMenu["saveFile"];
+            saveFileDialog.Title = "Save Uncovered Data as File";
             saveFileDialog.ShowDialog();           
 
-            if (saveFileDialog.FileName != "")
+            if ( saveFileDialog.FileName != "" )
             {
                 FileInfo fileInfo = new FileInfo( saveFileDialog.FileName );
                 FileStream fileStream = fileInfo.Open( FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None );
@@ -338,23 +339,13 @@ namespace Stegan
         /* SET TEXT IN CONTROLS *******************************************************************************************************/
 
         private void SetLabels()
-        {
-            fileMenuStripOne.Text = labMenu["file"];
+        {            
             menuOpenGraphic.Text = labMenu["openGraphic"];
-            menuOpenFile.Text = labMenu["openFile"];
-            menuSaveData.Text = labMenu["saveFile"];
-            menuRemoveGraphic.Text = labMenu["remG"];
-            menuRemoveData.Text = labMenu["remF"];
-            menuClearText.Text = labMenu["remT"];
-
-            actionMenuStripOne.Text = labMenu["act"];
+            menuOpenFile.Text = labMenu["openFile"];               
             menuCoverFile.Text = labMenu["coverF"];
             menuCoverText.Text = labMenu["coverT"];            
             menuUncoverFile.Text = labMenu["uncoverF"];
-            menuDiscoverText.Text = labMenu["uncoverT"];
-
-            settingsMenuStripOne.Text = labMenu["set"];
-            infoMenuStrip.Text = labMenu["info"];                       
+            menuDiscoverText.Text = labMenu["uncoverT"];                              
         }        
         
         /*******************************************************************************************************************************/
@@ -366,8 +357,7 @@ namespace Stegan
         private Boolean isPolish = false;
 
         Dictionary<String, String> labMenu = null;      
-        Dictionary<String, String> labMessage = null;
-        
+                
         Labels label;
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
