@@ -12,30 +12,30 @@ namespace Stegan
         {
             Color color;
             
-            // Getting a size of covered data
+            // Get a size of covered data
             for ( int x = 0; x < DATA_SIZE_PIXEL; x++ )
             {
                 color = Image.GetPixel( x, 0 );
 
-                if ( (color.R % 2) == 1 )
+                if (( color.R % 2) == 1 )
                     byteCount |= MASK_1;
                 byteCount <<= 1;
 
-                if ( (color.G % 2) == 1 )
+                if (( color.G % 2) == 1 )
                     byteCount |= MASK_1;
                 byteCount <<= 1;
 
-                if ( (color.B % 2) == 1 )
+                if (( color.B % 2) == 1 )
                     byteCount |= MASK_1;
 
-                if ( x != ( DATA_SIZE_PIXEL - 1 ) )
+                if ( x != ( DATA_SIZE_PIXEL - 1 ))
                     byteCount <<= 1;
             }
 
             byte[] DataBuffer = new byte[byteCount];                      
-            CompressFlag = ((Image.GetPixel( COMPRESS_PIXEL, 0 ).R % 2) == 1) ? true : false;                      
+            CompressFlag = (( Image.GetPixel( COMPRESS_PIXEL, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
-            // Uncovering data
+            // Uncover data
             for ( int y = 1; y < Image.Height; y++ )
             {
                 for ( int x = 0; x < Image.Width; x++ )
@@ -56,7 +56,7 @@ namespace Stegan
         }        
         
         /*****************************************************************************************************************************/
-        /* UNCOVER BIT DATA FROM A PIXEL *********************************************************************************************/
+        /* UNCOVER BIT FROM A PIXEL **************************************************************************************************/
 
         private bool UncoverDataFromPixel( byte componentRGB, byte[] buffer )
         {
@@ -64,7 +64,7 @@ namespace Stegan
                 byteValue |= MASK_1;
             bitNumber++;
 
-            if ( bitNumber == (LAST_BIT + 1) )
+            if ( bitNumber == ( LAST_BIT + 1 ))
             {
                 buffer[byteNumber++] = byteValue;
                 if ( byteNumber == byteCount )

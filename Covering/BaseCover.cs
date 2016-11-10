@@ -6,8 +6,8 @@ namespace Stegan
     {
         protected int bitNumber;            // Number of bit in a byte 
         protected int byteCount;            // Count of bytes in a stream of data to be covered / uncovered                        
-        protected int byteNumber;           // Number of byte in a stream of data to be covered/uncovered
-        protected byte byteValue;           // One byte covered/uncovered and intended to be inserted into an image/buffer
+        protected int byteNumber;           // Number of byte in a stream of data to be covered / uncovered
+        protected byte byteValue;           
         protected int red;
         protected int green;
         protected int blue;
