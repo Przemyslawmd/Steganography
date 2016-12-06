@@ -72,6 +72,9 @@
     <Compile Include="Debug.cs" />
     <Compile Include="Compression\Compress.cs" />
     <Compile Include="Compression\Decompress.cs" />
+    <Compile Include="Cryptography\Decryption.cs" />
+    <Compile Include="Cryptography\Encryption.cs" />
+    <Compile Include="Cryptography\Key.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +138,7 @@
   <ItemGroup>
     <Content Include="Icon1.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
