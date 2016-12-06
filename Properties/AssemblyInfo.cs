@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SteganP")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Przemyslaw Madej")]
+[assembly: AssemblyCopyright( "Copyright ©  2016 Przemyslaw Madej" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
