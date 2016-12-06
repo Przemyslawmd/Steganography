@@ -8,7 +8,7 @@ namespace Stegan
         /***************************************************************************************************************************/
         /* COVER DATA IN A IMAGE ***************************************************************************************************/
         
-        public void CoverData( ref Bitmap Image, byte[] dataToCover, Boolean isCompress ) 
+        public void CoverData( Bitmap Image, byte[] dataToCover, Boolean isCompress ) 
         {
             Color color;
             byteCount = dataToCover.Length;

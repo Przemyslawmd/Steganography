@@ -177,7 +177,7 @@ namespace Stegan
             }
 
             // 8 value means bites in byte
-            if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage))
+            if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage ))
             {
                 MessageBox.Show( "Too many data to be hidden into a loaded graphic" );
                 return;
@@ -185,7 +185,7 @@ namespace Stegan
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData( ref bitmap, DataBuffer, isCompress );
+            new Covering().CoverData( bitmap, DataBuffer, isCompress );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
             MessageBox.Show( "Data was covered in a graphic file successfully" );
