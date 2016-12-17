@@ -6,7 +6,7 @@ namespace Cryptography
 {
     class Decryption
     {
-        public byte[] Decrypt( byte[] source )
+        public List<byte> Decrypt( List<byte> source )
         {
             return null;
         }

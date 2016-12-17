@@ -71,6 +71,7 @@
     <Compile Include="Covering\BaseCover.cs" />
     <Compile Include="Compression\Node.cs" />
     <Compile Include="Covering\Covering.cs" />
+    <Compile Include="Cryptography\BaseCryptography.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Compression\Compress.cs" />
     <Compile Include="Compression\Decompress.cs" />
