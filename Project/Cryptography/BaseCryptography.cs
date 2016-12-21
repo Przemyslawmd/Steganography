@@ -8,5 +8,11 @@ namespace Cryptography
     {
         protected readonly int keyLength = 128;
         protected readonly int blockLength = 128;
+        protected readonly int roundCount = 10;
+
+        protected void AddRoundKey( int round )
+        {
+
+        }
     }
 }

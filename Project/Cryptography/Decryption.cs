@@ -10,5 +10,21 @@ namespace Cryptography
         {
             return null;
         }
+
+
+        private void InvShiftRows()
+        {
+
+        }
+
+        private void InvSubbytes()
+        {
+
+        }
+
+        private void InvMixColumns()
+        {
+
+        }
     }
 }

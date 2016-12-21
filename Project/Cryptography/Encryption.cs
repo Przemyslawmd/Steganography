@@ -15,9 +15,6 @@ namespace Cryptography
             return null;
         }
 
-
-
-
         /* ALIGN DATA ********************************************************************************/
         /* Add additional byte for data to be divided by block size                                  */
 
@@ -29,6 +26,23 @@ namespace Cryptography
                 source.Add( 0x00 );
 
             source.Add( (byte)alignment );
+        }
+
+        private void ShiftRows()
+        {
+
+        }
+
+
+        private void Subbytes()
+        {
+
+        }
+
+
+        private void MixColumns()
+        {
+
         }
     }
 }
