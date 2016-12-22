@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
+
 namespace Compression
 {
     class Compress
     {
         /**********************************************************************************************************************************/
-        /* MAIN COMPRESS METOHD ***********************************************************************************************************/
+        /* MAIN COMPRESS METHOD ***********************************************************************************************************/
                 
         public byte[] CompressData( byte[] source )
-        {
-            int dataCount = source.Length;
-            CreateNodes( source );            
+        {            
+            nodes = CreateNodes( source );            
             nodes.OrderBy( x => x.Count );            
             BuildTree(); 
 
@@ -26,7 +27,7 @@ namespace Compression
             byte[] header = codesData.ToArray();    
             byte[] finalData = new byte[source.Length + header.Length + 4];           
             Buffer.BlockCopy(header, 0, finalData, 0, header.Length);
-            Buffer.BlockCopy( new int[1] { dataCount }, 0, finalData, header.Length, 4 );
+            Buffer.BlockCopy( new int[1] { source.Length }, 0, finalData, header.Length, 4 );
             Buffer.BlockCopy( source, 0, finalData, header.Length + 4, source.Length );
             
             return finalData;           
@@ -35,36 +36,37 @@ namespace Compression
         /*****************************************************************************************************************************/
         /* CREATE LIST OF NODECOMPRESS OBJECTS ***************************************************************************************/
              
-        private void CreateNodes( byte[] buffer )
+        private List<NodeCompress> CreateNodes( byte[] buffer )
         {
-            nodes = new List< NodeCompress >();
-            nodes.Add( new NodeCompress( 1, buffer[0] ) );            
+            List<NodeCompress> list = new List< NodeCompress >();
+            list.Add( new NodeCompress( 1, buffer[0] ) );            
             Boolean isFound = false;
                        
             for ( int i = 1; i < buffer.Length; i++ )
             {                
-                for ( int j = 0; j < nodes.Count; j++ )
+                for ( int j = 0; j < list.Count; j++ )
                 {                    
-                    if ( buffer[i] == nodes[j].ByteValue )
+                    if ( buffer[i] == list[j].ByteValue )
                     {
-                        nodes[j].Increment();
+                        list[j].Increment();
                         isFound = true;
                         break;                                           
                     }
 
-                    if ( buffer[i] < nodes[j].ByteValue )
+                    if ( buffer[i] < list[j].ByteValue )
                     {
-                        nodes.Insert( j, new NodeCompress( 1, buffer[i] ) );
+                        list.Insert( j, new NodeCompress( 1, buffer[i] ) );
                         isFound = true;
                         break;
                     }                   
                 }
                 
                 if ( !isFound )
-                    nodes.Add( new NodeCompress( 1, buffer[i] ) );                    
+                    list.Add( new NodeCompress( 1, buffer[i] ) );                    
                 
                 isFound = false;
-            }            
+            }
+            return list;
         }
         
         /***********************************************************************************************************************************/
