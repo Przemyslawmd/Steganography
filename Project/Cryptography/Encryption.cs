@@ -12,6 +12,21 @@ namespace Cryptography
         {
             AlignData( source );
 
+            AddRoundKey( 0 );
+
+            for ( int i = 1; i < roundCount - 1; i++ )
+            {
+                SubBytes();
+                ShiftRows();
+                MixColumns();
+                AddRoundKey( i );
+            }
+
+            // Last round without MixColumns 
+            SubBytes();
+            ShiftRows();
+            AddRoundKey(roundCount - 1);
+            
             return null;
         }
 
@@ -34,7 +49,7 @@ namespace Cryptography
         }
 
 
-        private void Subbytes()
+        private void SubBytes()
         {
 
         }
