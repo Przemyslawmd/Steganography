@@ -12,24 +12,25 @@ namespace Compression
         /* MAIN COMPRESS METHOD ***********************************************************************************************************/
                 
         public byte[] CompressData( byte[] source )
-        {            
+        {
+            int sizeBeforeCompress = source.Length;
             nodes = CreateNodes( source );            
-            nodes.OrderBy( x => x.Count );            
+            nodes = nodes.OrderBy( x => x.Count ).ToList();            
             BuildTree(); 
 
             // codes and tempCode are used only in generateCodes, but are declared out of this method, because it's recursive method
             codes = new Dictionary<byte, String>();
             tempCode = new List<Char>();
             GenerateCodes( nodes[0], '1' );
-            source = StartCompress( source );     
+            source = StartCompress( source );                    
             InsertCodes();
 
             byte[] header = codesData.ToArray();    
             byte[] finalData = new byte[source.Length + header.Length + 4];           
-            Buffer.BlockCopy(header, 0, finalData, 0, header.Length);
-            Buffer.BlockCopy( new int[1] { source.Length }, 0, finalData, header.Length, 4 );
+            Buffer.BlockCopy( header, 0, finalData, 0, header.Length );
+            Buffer.BlockCopy( new int[1] { sizeBeforeCompress }, 0, finalData, header.Length, 4 );
             Buffer.BlockCopy( source, 0, finalData, header.Length + 4, source.Length );
-            
+           
             return finalData;           
         }    
        
