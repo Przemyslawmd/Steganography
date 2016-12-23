@@ -9,6 +9,8 @@ namespace Tests
     [TestClass]
     public class TestCompression
     {
+        /********************************************************************************************/
+        /* TEST CREATING NODES USED TO BUILD HUFFMAN TREE *******************************************/
         [TestMethod]
         public void TestOrderedNodesForHuffmanTree()
         {
@@ -23,6 +25,39 @@ namespace Tests
             Assert.AreEqual( nodes[0].ByteValue, 0x10 );
             Assert.AreEqual( nodes[3].ByteValue, 0xDA );
             Assert.AreEqual( nodes[5].ByteValue, 0x12 );
+        }
+
+        /*********************************************************************************************/
+        /* TEST BUILDING HUFFMAN TREE ****************************************************************/
+        [TestMethod]
+        public void TestBuildingHuffmanTree()
+        {
+            PrivateObject obj = new PrivateObject( new Compress() );
+            
+            // Create a list of NodeCompress objects sorted by count member class 
+            List<NodeCompress> nodes = new List<NodeCompress>();
+            nodes.Add( new NodeCompress( 1, 0x10 ));
+            nodes.Add( new NodeCompress( 1, 0x11 ));
+            nodes.Add( new NodeCompress( 2, 0x12 ));
+            nodes.Add( new NodeCompress( 2, 0x13 ));
+            nodes.Add( new NodeCompress( 3, 0x14 ));
+
+            obj.Invoke( "BuildTree", nodes );
+
+            NodeCompress root = nodes[0];
+
+            NodeCompress node = root.Left.Left;
+            Assert.AreEqual( node.ByteValue, 0x12 );
+            Assert.AreEqual( node.Count, 2 );
+
+            node = root.Right.Left;
+            Assert.AreEqual( node.Leaf, false );
+            Assert.AreEqual( node.Count, 2 );
+
+            node = root.Right.Left.Right;
+            Assert.AreEqual( node.Leaf, true );
+            Assert.AreEqual( node.Count, 1 );
+            Assert.AreEqual( node.ByteValue, 0x11 );
         }
     }
 }

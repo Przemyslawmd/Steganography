@@ -16,7 +16,7 @@ namespace Compression
             int sizeBeforeCompress = source.Length;
             nodes = CreateNodes( source );            
             nodes = nodes.OrderBy( x => x.Count ).ToList();            
-            BuildTree(); 
+            BuildTree( nodes ); 
 
             // codes and tempCode are used only in generateCodes, but are declared out of this method, because it's recursive method
             codes = new Dictionary<byte, String>();
@@ -73,40 +73,40 @@ namespace Compression
         /***********************************************************************************************************************************/
         /* BUILD HUFMANN TREE **************************************************************************************************************/
         
-        private void BuildTree()
+        private void BuildTree( List<NodeCompress> listNodes )
         {            
             NodeCompress newNode;
                         
-            while ( nodes.Count >= 2 )
+            while ( listNodes.Count >= 2 )
             {                
-                newNode = new NodeCompress( nodes[0].Count + nodes[1].Count, nodes[0], nodes[1] );                
-                nodes[0].Parent = newNode;
-                nodes[1].Parent = newNode;
-                nodes.RemoveAt( 0 );
-                nodes.RemoveAt( 0 );
-                InsertNodeIntoTree( newNode );
+                newNode = new NodeCompress( listNodes[0].Count + listNodes[1].Count, listNodes[0], listNodes[1] );                
+                listNodes[0].Parent = newNode;
+                listNodes[1].Parent = newNode;
+                listNodes.RemoveAt( 0 );
+                listNodes.RemoveAt( 0 );
+                InsertNodeIntoTree( newNode, listNodes );
             }           
         }
 
         /**********************************************************************************************************************************/
         /* INSERT NODE INTO A TREE ********************************************************************************************************/
 
-        private void InsertNodeIntoTree( NodeCompress newNode )
+        private void InsertNodeIntoTree( NodeCompress newNode, List<NodeCompress> listNodes )
         {
             Boolean isInserted = false;
             
-            for ( int i = 0; i < nodes.Count; i++ )
+            for ( int i = 0; i < listNodes.Count; i++ )
             {
-                if ( nodes[i].Count > newNode.Count )
+                if ( listNodes[i].Count > newNode.Count )
                 {
-                    nodes.Insert( i, newNode );
+                    listNodes.Insert( i, newNode );
                     isInserted = true;
                     break;
                 }
             }
 
             if ( !isInserted )
-                nodes.Add( newNode );
+                listNodes.Add( newNode );
         }
 
         /******************************************************************************************************************************/
