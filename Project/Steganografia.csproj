@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\HuffmanCodes.cs" />
     <Compile Include="Covering\BaseCover.cs" />
     <Compile Include="Compression\Node.cs" />
     <Compile Include="Covering\Covering.cs" />

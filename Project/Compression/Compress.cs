@@ -16,12 +16,10 @@ namespace Compression
             int sizeBeforeCompress = source.Length;
             nodes = CreateNodes( source );            
             nodes = nodes.OrderBy( x => x.Count ).ToList();            
-            BuildTree( nodes ); 
+            BuildTree( nodes );           
 
-            // codes and tempCode are used only in generateCodes, but are declared out of this method, because it's recursive method
-            codes = new Dictionary<byte, String>();
-            tempCode = new List<Char>();
-            GenerateCodes( nodes[0], '1' );
+            codes = new HuffmanCodes().CreateCodesDictionary( nodes[0] );
+
             source = StartCompress( source );                    
             InsertCodes();
 
@@ -108,24 +106,7 @@ namespace Compression
             if ( !isInserted )
                 listNodes.Add( newNode );
         }
-
-        /******************************************************************************************************************************/
-        /* GENERATES CODES TRAVERSING HUFFMAN TREE ************************************************************************************/
-                      
-        private void GenerateCodes( NodeCompress node, Char token )
-        {
-            tempCode.Add(token);
-
-            if ( node.Left != null )
-                GenerateCodes( node.Left, '0' );
-            if ( node.Right != null )
-                GenerateCodes( node.Right, '1' );
-            else           
-                codes.Add( node.ByteValue, String.Concat( tempCode ) );
-
-            tempCode.RemoveAt( tempCode.Count - 1 );            
-        }        
-        
+                
         /****************************************************************************************************************************/
         /* MAIN ACTIVITY FOR COMPRESSING ********************************************************************************************/
 
@@ -210,8 +191,7 @@ namespace Compression
 
         private List<byte> codesData;
         private List<byte> compressedData;     
-        private Dictionary<byte, String> codes;     // final codes : byte values with bit sequences       
-        private List<Char> tempCode;                // using while creating final codes   
+        private Dictionary<byte, String> codes;     // final codes : byte values with bit sequences      
         private List<NodeCompress> nodes;
         private int BITS_IN_BYTE = 8;     
     }
