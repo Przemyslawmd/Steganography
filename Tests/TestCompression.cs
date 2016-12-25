@@ -14,7 +14,7 @@ namespace Tests
         [TestMethod]
         public void TestOrderedNodesForHuffmanTree()
         {
-            PrivateObject obj = new PrivateObject( new Compress() );
+            PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
             byte[] data = new byte[10] { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
@@ -32,7 +32,7 @@ namespace Tests
         [TestMethod]
         public void TestBuildingHuffmanTree()
         {
-            PrivateObject obj = new PrivateObject( new Compress() );
+            PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
             // Create a list of NodeCompress objects sorted by count member class 
             nodes = new List<NodeCompress>();
