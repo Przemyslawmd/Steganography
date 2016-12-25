@@ -18,7 +18,7 @@ namespace Tests
 
             byte[] data = new byte[10] { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
-            List<NodeCompress> nodes = ( List<NodeCompress> )( obj.Invoke( "CreateNodes", data ));
+            nodes = (List<NodeCompress>)(obj.Invoke( "CreateNodes", data ));
             nodes = nodes.OrderBy( x => x.Count ).ToList();
 
             Assert.AreEqual( nodes.Count, 7 );
@@ -33,14 +33,14 @@ namespace Tests
         public void TestBuildingHuffmanTree()
         {
             PrivateObject obj = new PrivateObject( new Compress() );
-            
+
             // Create a list of NodeCompress objects sorted by count member class 
-            List<NodeCompress> nodes = new List<NodeCompress>();
-            nodes.Add( new NodeCompress( 1, 0x10 ));
-            nodes.Add( new NodeCompress( 1, 0x11 ));
-            nodes.Add( new NodeCompress( 2, 0x12 ));
-            nodes.Add( new NodeCompress( 2, 0x13 ));
-            nodes.Add( new NodeCompress( 3, 0x14 ));
+            nodes = new List<NodeCompress>();
+            nodes.Add( new NodeCompress( 1, 0x10 ) );
+            nodes.Add( new NodeCompress( 1, 0x11 ) );
+            nodes.Add( new NodeCompress( 2, 0x12 ) );
+            nodes.Add( new NodeCompress( 2, 0x13 ) );
+            nodes.Add( new NodeCompress( 3, 0x14 ) );
 
             obj.Invoke( "BuildTree", nodes );
 
@@ -59,5 +59,31 @@ namespace Tests
             Assert.AreEqual( node.Count, 1 );
             Assert.AreEqual( node.ByteValue, 0x11 );
         }
+
+        /*********************************************************************************************/
+        /* TEST CREATING HUFFMAN CODES ***************************************************************/
+        [TestMethod]
+        public void TestGeneratingHuffmanCodes()
+        {
+            NodeCompress root = nodes[0];
+            Dictionary<byte, String> codes = new HuffmanCodes().CreateCodesDictionary( root );
+            String code;
+
+            codes.TryGetValue( 0x12, out code );
+            Assert.AreEqual( code, "100" );
+            codes.TryGetValue( 0x13, out code );
+            Assert.AreEqual( code, "101" );
+            codes.TryGetValue( 0x14, out code );
+            Assert.AreNotEqual( code, "100" );
+            codes.TryGetValue( 0x11, out code );
+            Assert.AreEqual( code, "1101" );
+            codes.TryGetValue( 0x10, out code );
+            Assert.AreEqual( code, "1100" );
+        }
+        
+        /********************************************************************************************/
+        /********************************************************************************************/
+
+        static List<NodeCompress> nodes;
     }
 }
