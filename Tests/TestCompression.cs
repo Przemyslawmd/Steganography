@@ -12,7 +12,7 @@ namespace Tests
         /********************************************************************************************/
         /* TEST CREATING NODES USED TO BUILD HUFFMAN TREE *******************************************/
         [TestMethod]
-        public void TestOrderedNodesForHuffmanTree()
+        public void TestCompressionCreatingNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
@@ -30,7 +30,7 @@ namespace Tests
         /*********************************************************************************************/
         /* TEST BUILDING HUFFMAN TREE ****************************************************************/
         [TestMethod]
-        public void TestBuildingHuffmanTree()
+        public void TestCompressionBuildingTree()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
@@ -63,7 +63,7 @@ namespace Tests
         /*********************************************************************************************/
         /* TEST CREATING HUFFMAN CODES ***************************************************************/
         [TestMethod]
-        public void TestGeneratingHuffmanCodes()
+        public void TestCompressionGeneratingCodes()
         {
             NodeCompress root = nodes[0];
             Dictionary<byte, String> codes = new HuffmanCodes().CreateCodesDictionary( root );

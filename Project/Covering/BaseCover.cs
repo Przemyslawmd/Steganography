@@ -14,7 +14,7 @@ namespace Stegan
         protected readonly byte MASK_1 = 1;
         protected readonly byte MASK_0 = 0;
         protected readonly int COMPRESS_PIXEL = 6;          // Number of a pixel which stores an information about compresion      
-        protected readonly int DATA_SIZE_PIXEL = 6;         // Count of pixels to store information about a size of data                         
+        protected readonly int DATA_SIZE_PIXEL = 6;         // Count of pixels intented to store an information about a size of data                         
         protected readonly int LAST_BIT = 7;
     }
 }

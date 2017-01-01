@@ -6,7 +6,7 @@ namespace Stegan
     class Covering : BaseCover
     {        
         /***************************************************************************************************************************/
-        /* COVER DATA IN A IMAGE ***************************************************************************************************/
+        /* COVER DATA IN AN IMAGE **************************************************************************************************/
         
         public void CoverData( Bitmap Image, byte[] dataToCover, Boolean isCompress ) 
         {
@@ -14,10 +14,10 @@ namespace Stegan
             byteCount = dataToCover.Length;
 
             // Save data size to be covered                                                    
-            // Number of bytes to be covered is stored in six pixels, therefore 18 bits is intended for it                                   
+            // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
             bitNumber = 17;            
             
-            for (int x = 0; x < DATA_SIZE_PIXEL; x++)
+            for ( int x = 0; x < DATA_SIZE_PIXEL; x++ )
             {	
                 color = Image.GetPixel( x, 0 );
                 red = ChangeColorCoveringSize( color.R );
@@ -67,7 +67,7 @@ namespace Stegan
         }
         
         /*****************************************************************************************************************************/
-        /* CHECK A BIT NUMBER IN COVERING BYTE ***************************************************************************************/
+        /* CHECK BIT NUMBER IN BYTE THAT IS BEING COVERED ****************************************************************************/
 
         private bool CheckBitNumber( byte[] dataToCover )
         {

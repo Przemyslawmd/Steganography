@@ -7,7 +7,7 @@ namespace Compression
 {
     class HuffmanCodes
     {
-         public Dictionary<byte, String> CreateCodesDictionary( NodeCompress root )
+        public Dictionary<byte, String> CreateCodesDictionary( NodeCompress root )
         {
             codes = new Dictionary<byte, String>();
             code = new List<Char>();
