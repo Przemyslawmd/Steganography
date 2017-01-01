@@ -8,8 +8,8 @@ namespace Tests
     [TestClass]
     public class TestSteganography
     {
-        [TestInitialize]
-        public void Initialize()
+        [ClassInitialize]
+        public static void Initialize( TestContext context )
         {
             bitmap = new Bitmap( 50, 50 );
             textToBeHidden = "This text is to be hidden";
@@ -19,7 +19,9 @@ namespace Tests
         /* TEST COVERING DATA **************************************************************************/
         [TestMethod]
         public void TestSteganCovering()
-        {          
+        {
+            //bitmap = new Bitmap( 50, 50 );
+            //textToBeHidden = "This text is to be hidden";
             byte[] data = new byte[textToBeHidden.Length * sizeof( char )];
             System.Buffer.BlockCopy( textToBeHidden.ToCharArray(), 0, data, 0, data.Length );          
 
@@ -60,8 +62,8 @@ namespace Tests
         /******************************************************************************************************/
         /******************************************************************************************************/
 
-        [TestCleanup]
-        public void CleanUp()
+        [ClassCleanup]
+        public static void CleanUp()
         {
             bitmap.Dispose();            
         }
@@ -69,7 +71,7 @@ namespace Tests
         /*******************************************************************************************************/
         /*******************************************************************************************************/
 
-        Bitmap bitmap;
-        String textToBeHidden;
+        static Bitmap bitmap;
+        static String textToBeHidden;
     }
 }
