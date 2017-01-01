@@ -8,15 +8,20 @@ namespace Tests
     [TestClass]
     public class TestSteganography
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            bitmap = new Bitmap( 50, 50 );
+            textToBeHidden = "This text is to be hidden";
+        }         
+         
         /***********************************************************************************************/
         /* TEST COVERING DATA **************************************************************************/
         [TestMethod]
         public void TestSteganCovering()
-        {
-            bitmap = new Bitmap( 50, 50 );
-            String text = "This text is to be hidden";
-            byte[] data = new byte[text.Length * sizeof( char )];
-            System.Buffer.BlockCopy( text.ToCharArray(), 0, data, 0, data.Length );          
+        {          
+            byte[] data = new byte[textToBeHidden.Length * sizeof( char )];
+            System.Buffer.BlockCopy( textToBeHidden.ToCharArray(), 0, data, 0, data.Length );          
 
             new Covering().CoverData( bitmap, data, false );
             
@@ -46,15 +51,25 @@ namespace Tests
         {
             Boolean compressionFlag = false;
             byte[] data = new Uncovering().UncoverData( bitmap, ref compressionFlag );
-            String text = System.Text.Encoding.Unicode.GetString( data );
+            String uncoveredText = System.Text.Encoding.Unicode.GetString( data );
 
-            Assert.AreNotEqual( text, "This text is to be hidden_" );
-            Assert.AreEqual( text, "This text is to be hidden" );
+            Assert.AreNotEqual( uncoveredText, "This text is to be hidden_" );
+            Assert.AreEqual( uncoveredText, textToBeHidden );            
+        }
+
+        /******************************************************************************************************/
+        /******************************************************************************************************/
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            bitmap.Dispose();            
         }
 
         /*******************************************************************************************************/
         /*******************************************************************************************************/
 
-        static Bitmap bitmap;
+        Bitmap bitmap;
+        String textToBeHidden;
     }
 }
