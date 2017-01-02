@@ -19,9 +19,7 @@ namespace Tests
         /* TEST COVERING DATA **************************************************************************/
         [TestMethod]
         public void TestSteganCovering()
-        {
-            //bitmap = new Bitmap( 50, 50 );
-            //textToBeHidden = "This text is to be hidden";
+        {            
             byte[] data = new byte[textToBeHidden.Length * sizeof( char )];
             System.Buffer.BlockCopy( textToBeHidden.ToCharArray(), 0, data, 0, data.Length );          
 
