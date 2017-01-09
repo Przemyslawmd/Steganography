@@ -14,97 +14,67 @@ namespace Cryptography
 
         /**************************************************************************************************/
         /**************************************************************************************************/
-
+        
         private static byte[] ExpandKey( byte[] key )
-        {
-            byte[] expandedKey = new byte[keyBytesExpanded];
-            byte[] tempWord = new byte[4];
+        {            
+            Word[] expandedWord = new Word[keyWordExpanded];            
+            Word tempWord;
 
-            // Copy key to first four words (16 bytes) of expanded key
-            Array.Copy( key, 0, expandedKey, 0, keyBytes );
+            // Key for the first round
+            for ( int i = 0; i < 4; i++ )
+                expandedWord[i] = new Word( key[i * 4], key[i * 4 + 1], key[i * 4 + 2], key[i * 4 + 3] );                     
 
-            // Take an action for the rest part of expanded key 
-            for ( int i = 16; i < keyBytesExpanded; i++ )
+            // Keys for the rest rounds
+            for ( int i = 4; i < 44; i++ )
             {
                 // Copy last word of a previous key into a temporary word
-                Array.Copy( expandedKey, i - 4, tempWord, 0, 4 );
+                tempWord = new Word( expandedWord[i - 1] );
 
                 // An action for each part of expanded key to calculate its first word
-                if ( i % 16 == 0 )
-                    CalculateFirstWord( expandedKey, i );
+                if ( i % 4 == 0 )
+                    CalculateTemporaryWord( i / 4 - 1, tempWord );
 
-                // An action to calculate rest three words of expanded key
-
-
-
+                expandedWord[i] = expandedWord[i - 4].XorOuter( tempWord );                
             }
 
+            // Temporary solution 
+            byte[] expandedKey = new byte[keyBytesExpanded];
+
+            for ( int i = 0, j = 0; i < 44; i++ )
+            {
+                expandedKey[j++] = expandedWord[i].value1;
+                expandedKey[j++] = expandedWord[i].value2;
+                expandedKey[j++] = expandedWord[i].value3;
+                expandedKey[j++] = expandedWord[i].value4;
+            }
+            
             return expandedKey;
         }
 
+
         /***************************************************************************************************/
         /***************************************************************************************************/
 
-        private static void RotateWord( byte[] key, int index )
+        private static void CalculateTemporaryWord( int i, Word word )
         {
-            byte temp = key[index];
-            key[index] = key[index + 1];
-            key[index + 1] = key[index + 2];
-            key[index + 2] = key[index + 3];
-            key[index + 3] = temp;
-        }
-
-
-        private static void SubByte( byte[] key, int index )
-        {
-            for ( int i = 0; i <= 3; i++ ) 
-                key[index + i] = BaseCryptography.GetSbox( key[index + i] );
-        } 
-
-        private static void CalculateFirstWord( byte[] key, int index )
-        {
-            RotateWord( key, index );
-
-            //key[index] = key[index - 16] ^ BaseCryptography( ;
-            //key[index + 1];
-            //key[index + 2];
-            //key[index + 3];
-
-            
-            //W[j] = W[j - 4] ^ SubByte( Rot1( W[j - 1] ) ) ^ Rcon[j / 4];
-
-            //W[j] = W[j - 4] ^ SubByte( word ) ^ Rcon[j / 4];
-        }
-
-
+            word.Rotate();
+            word.SubByte();            
+            word.XorInner( new Word( rcon[i], 0, 0, 0 ) );
+        }            
 
         /*****************************************************************************************************/
         /*****************************************************************************************************/
 
-        static byte[] rcon = new byte[255]
+        static byte[] rcon = new byte[10]
         {
-            0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
-            0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
-            0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
-            0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8,
-            0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef,
-            0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc,
-            0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b,
-            0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3,
-            0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94,
-            0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20,
-            0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35,
-            0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f,
-            0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
-            0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
-            0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
-            0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb
+            0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
         };
 
         static readonly byte[] salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
         static readonly int iterations = 200;
         static readonly int keyBytes = 16;
         static readonly int keyBytesExpanded = 176;
+        static readonly int keyWordExpanded = 44;
     }
 }
 

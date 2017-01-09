@@ -79,6 +79,7 @@
     <Compile Include="Cryptography\Decryption.cs" />
     <Compile Include="Cryptography\Encryption.cs" />
     <Compile Include="Cryptography\Key.cs" />
+    <Compile Include="Cryptography\Word.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
