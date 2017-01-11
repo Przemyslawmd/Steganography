@@ -8,7 +8,7 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( List<byte> source, String password )
+        public List<byte> Encrypt( byte[] source, String password )
         {
             byte[] key = Key.CreateKey( password );
 
@@ -32,17 +32,29 @@ namespace Cryptography
             return null;
         }
 
+        private void EncryptBlockData( int index )
+        {
+
+
+
+
+        }
+
+
         /* ALIGN DATA *********************************************************************************/
         /* Add additional bytes for data to be divided by block size **********************************/
 
-        private void AlignData( List<byte> source )
+        private byte[] AlignData( byte[] source )
         {
-            int alignment = 16 - ( source.Count % ( keyLength / 8 ));
+            int beginSize = source.Length;
+            int alignment = 16 - ( beginSize % ( keyLength / 8 ));            
+            Array.Resize( ref source, beginSize + alignment );
 
             for ( int i = 0; i < alignment - 1; i++ )
-                source.Add( 0x00 );
+                source[beginSize + i] = ( 0x00 );
 
-            source.Add( (byte)alignment );
+            source[beginSize + alignment - 1] = (byte)alignment;
+            return source;
         }
 
         private void ShiftRows()

@@ -6,7 +6,7 @@ namespace Cryptography
 {
     class BaseCryptography
     {
-        protected void AddRoundKey( int roundNumber, List<byte> data, byte[] key )
+        protected void AddRoundKey( int roundNumber, byte[] data, byte[] key )
         {
             for ( int i = 0; i < 4; i++ )
             {

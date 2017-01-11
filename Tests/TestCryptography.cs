@@ -14,25 +14,25 @@ namespace Tests
         [TestMethod]
         public void TestAESDataAlignment()
         {                                
-            PrivateObject obj = new PrivateObject( new Encryption());
+            PrivateObject obj = new PrivateObject( new Encryption() );
 
-            List<byte> data = new List<byte>( new byte[5] );  
-            obj.Invoke( "AlignData", data );
+            byte[] data = new byte[5];  
+            data = ( byte[] )obj.Invoke( "AlignData", data );
 
-            Assert.AreEqual(data.Count, 16);
-            Assert.AreEqual( data[data.Count - 1], 11 );
+            Assert.AreEqual( data.Length, 16 );
+            Assert.AreEqual( data[data.Length - 1], 11 );
+                        
+            data = new byte[22];
+            data = ( byte[] )obj.Invoke( "AlignData", data );
 
-            data = new List<byte>( new byte[22] );
-            obj.Invoke( "AlignData", data );
+            Assert.AreEqual( data.Length, 32 );
+            Assert.AreEqual( data[data.Length - 1], 10 );
 
-            Assert.AreEqual( data.Count, 32 );
-            Assert.AreEqual( data[data.Count - 1], 10 );
+            data = new byte[16] ;
+            data = ( byte[] )obj.Invoke( "AlignData", data );
 
-            data = new List<byte>( new byte[16] );
-            obj.Invoke( "AlignData", data );
-
-            Assert.AreEqual( data.Count, 32 );
-            Assert.AreEqual( data[data.Count - 1], 16 );
+            Assert.AreEqual( data.Length, 32 );
+            Assert.AreEqual( data[data.Length - 1], 16 );            
         }
 
         /************************************************************************************************************/
@@ -69,7 +69,7 @@ namespace Tests
         [TestMethod]
         public void TestAESAddRoundKey()
         {
-            List<byte> sourceData = new List<byte>() { 0x04, 0xE0, 0x48, 0x28, 0x66, 0xCB, 0xF8, 0x06, 0x81, 0x19, 0xD3, 0x26, 0xE5, 0x9A, 0x7A, 0x4C };
+            byte[] sourceData = new byte[16] { 0x04, 0xE0, 0x48, 0x28, 0x66, 0xCB, 0xF8, 0x06, 0x81, 0x19, 0xD3, 0x26, 0xE5, 0x9A, 0x7A, 0x4C };
             byte[] key = new byte[16] { 0xA0, 0x88, 0x23, 0x2A, 0xFA, 0x54, 0xA3, 0x6C, 0xFE, 0x2C, 0x39, 0x76, 0x17, 0xB1, 0x39, 0x05 };
             byte[] expectedData = new byte[16] { 0xA4, 0x68, 0x6B, 0x02, 0x9C, 0x9F, 0x5B, 0x6A, 0x7F, 0x35, 0xEA, 0x50, 0xF2, 0x2B, 0x43, 0x49 };
             
@@ -77,7 +77,7 @@ namespace Tests
             int roundNumber = 0;
             
             type.Invoke( "AddRoundKey", roundNumber, sourceData, key );            
-            CollectionAssert.AreEqual( sourceData.ToArray(), expectedData );
+            CollectionAssert.AreEqual( sourceData, expectedData );
         }
 
         /************************************************************************************************************/
