@@ -8,30 +8,32 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( List<byte> source )
+        public List<byte> Encrypt( List<byte> source, String password )
         {
+            byte[] key = Key.CreateKey( password );
+
             AlignData( source );
 
-            AddRoundKey( 0 );
+            AddRoundKey( 0, source, key );
 
             for ( int i = 1; i < roundCount - 1; i++ )
             {
                 SubBytes();
                 ShiftRows();
                 MixColumns();
-                AddRoundKey( i );
+                AddRoundKey( i, source, key );
             }
 
             // Last round without MixColumns 
             SubBytes();
             ShiftRows();
-            AddRoundKey(roundCount - 1);
+            AddRoundKey( roundCount - 1, source, key );
             
             return null;
         }
 
-        /* ALIGN DATA ********************************************************************************/
-        /* Add additional byte for data to be divided by block size                                  */
+        /* ALIGN DATA *********************************************************************************/
+        /* Add additional bytes for data to be divided by block size **********************************/
 
         private void AlignData( List<byte> source )
         {
