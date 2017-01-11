@@ -10,34 +10,35 @@ namespace Cryptography
     {
         public List<byte> Encrypt( byte[] source, String password )
         {
-            byte[] key = Key.CreateKey( password );
+            key = Key.CreateKey( password );
 
-            AlignData( source );
+            data = AlignData( source );
 
-            AddRoundKey( 0, source, key );
+            for ( int i = 0; i < data.Length; i += 16 )
+                EncryptBlockData( i ); 
+                        
+            return null;
+        }
+
+        /***********************************************************************************************/
+        /* ENCRYPT ONE BLOCK DATA **********************************************************************/
+
+        private void EncryptBlockData( int blockShift )
+        {
+            AddRoundKey( 0, data, blockShift, key );
 
             for ( int i = 1; i < roundCount - 1; i++ )
             {
                 SubBytes();
                 ShiftRows();
                 MixColumns();
-                AddRoundKey( i, source, key );
+                AddRoundKey( i, data, blockShift, key );
             }
 
             // Last round without MixColumns 
             SubBytes();
             ShiftRows();
-            AddRoundKey( roundCount - 1, source, key );
-            
-            return null;
-        }
-
-        private void EncryptBlockData( int index )
-        {
-
-
-
-
+            AddRoundKey( roundCount - 1, data, blockShift, key );
         }
 
 
@@ -73,5 +74,8 @@ namespace Cryptography
         {
 
         }
+
+        private byte[] data;
+        private byte[] key;
     }
 }

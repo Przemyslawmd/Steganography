@@ -6,12 +6,12 @@ namespace Cryptography
 {
     class BaseCryptography
     {
-        protected void AddRoundKey( int roundNumber, byte[] data, byte[] key )
+        protected void AddRoundKey( int roundNumber, byte[] data, int blockShift, byte[] key )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    data[i * 4 + j] ^= key[roundNumber * 44 + i * 4 + j];
+                    data[blockShift + i * 4 + j] ^= key[roundNumber * 44 + i * 4 + j];
             }
         }
 
