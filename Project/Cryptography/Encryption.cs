@@ -29,15 +29,15 @@ namespace Cryptography
 
             for ( int roundNumber = 1; roundNumber < roundCount - 1; roundNumber++ )
             {
-                SubBytes( data, blockShift, roundNumber );
-                ShiftRows();
+                SubBytes( data, blockShift + roundNumber );
+                ShiftRows( data, blockShift + roundNumber );
                 MixColumns();
                 AddRoundKey( roundNumber, data, blockShift, key );
             }
 
             // Last round without MixColumns 
-            SubBytes( data, blockShift, roundCount - 1 );
-            ShiftRows();
+            SubBytes( data, blockShift + roundCount - 1 );
+            ShiftRows( data, blockShift + roundCount - 1 );
             AddRoundKey( roundCount - 1, data, blockShift, key );
         }
 
@@ -58,18 +58,44 @@ namespace Cryptography
             return source;
         }
 
-        private void ShiftRows()
-        {
+        /************************************************************************************************/
+        /* SHIFT ROWS IN MATRIX STATE *******************************************************************/
 
+        private void ShiftRows( byte[] data, int shift )
+        {
+            byte temp;
+            
+            // Second row
+            temp = data[shift + 4];
+            data[shift + 4] = data[shift + 5];
+            data[shift + 5] = data[shift + 6];
+            data[shift + 6] = data[shift + 7];
+            data[shift + 7] = temp;
+
+            // Third row - swap two pairs of columns 
+            data[shift + 8] += data[shift + 10];
+            data[shift + 10] = (byte)( data[shift + 8] - data[shift + 10] );
+            data[shift + 8] -= data[shift + 10];
+
+            data[shift + 9] += data[shift + 11];
+            data[shift + 11] = (byte)( data[shift + 9] - data[shift +11] );
+            data[shift + 9] -= data[shift + 11];
+
+            // Fourth row
+            temp = data[shift + 15];
+            data[shift + 15] = data[shift + 14];
+            data[shift + 14] = data[shift + 13];
+            data[shift + 13] = data[shift + 12];
+            data[shift + 12] = temp;
         }
 
         /************************************************************************************************/
         /* SUBBYTES TRANSORMATION ***********************************************************************/
 
-        private void SubBytes( byte[] data, int blockShift, int roundShift )
+        private void SubBytes( byte[] data, int shift )
         {
             for ( int i = 0; i < 16; i++ )
-                data[blockShift + roundShift + i] = BaseCryptography.GetSbox( data[blockShift + roundShift + i] );
+                data[shift + i] = BaseCryptography.GetSbox( data[shift + i] );
         }
 
 
