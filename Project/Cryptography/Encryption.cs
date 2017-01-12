@@ -12,10 +12,10 @@ namespace Cryptography
         {
             key = Key.CreateKey( password );
 
-            data = AlignData( source );
+            byte[] data = AlignData( source );
 
             for ( int i = 0; i < data.Length; i += 16 )
-                EncryptBlockData( i ); 
+                EncryptBlockData( data, i ); 
                         
             return null;
         }
@@ -23,20 +23,20 @@ namespace Cryptography
         /***********************************************************************************************/
         /* ENCRYPT ONE BLOCK DATA **********************************************************************/
 
-        private void EncryptBlockData( int blockShift )
+        private void EncryptBlockData( byte[] data, int blockShift )
         {
             AddRoundKey( 0, data, blockShift, key );
 
-            for ( int i = 1; i < roundCount - 1; i++ )
+            for ( int roundNumber = 1; roundNumber < roundCount - 1; roundNumber++ )
             {
-                SubBytes();
+                SubBytes( data, blockShift, roundNumber );
                 ShiftRows();
                 MixColumns();
-                AddRoundKey( i, data, blockShift, key );
+                AddRoundKey( roundNumber, data, blockShift, key );
             }
 
             // Last round without MixColumns 
-            SubBytes();
+            SubBytes( data, blockShift, roundCount - 1 );
             ShiftRows();
             AddRoundKey( roundCount - 1, data, blockShift, key );
         }
@@ -63,10 +63,13 @@ namespace Cryptography
 
         }
 
+        /************************************************************************************************/
+        /* SUBBYTES TRANSORMATION ***********************************************************************/
 
-        private void SubBytes()
+        private void SubBytes( byte[] data, int blockShift, int roundShift )
         {
-
+            for ( int i = 0; i < 16; i++ )
+                data[blockShift + roundShift + i] = BaseCryptography.GetSbox( data[blockShift + roundShift + i] );
         }
 
 
@@ -74,8 +77,7 @@ namespace Cryptography
         {
 
         }
-
-        private byte[] data;
+        
         private byte[] key;
     }
 }

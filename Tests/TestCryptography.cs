@@ -88,11 +88,13 @@ namespace Tests
         public void TestAESSubBytes()
         {
             byte[] sourceData = new byte[16] { 0x19, 0xA0, 0x9A, 0xE9, 0x3D, 0xF4, 0xC6, 0xF8, 0xE3, 0xE2, 0x8D, 0x48, 0xBE, 0x2B, 0x2A, 0x08 };
-            byte[] expectedData = new byte[16] { 0xD4, 0xE0, 0xB8, 0x1E, 0x27, 0xBF, 0xB4, 0x41, 0x11, 0x98, 0x5D, 0x52, 0xAE, 0xF1, 0xE5, 0x30 };
-            
-            for ( int i = 0; i < 16; i++ )
-                sourceData[i] = BaseCryptography.GetSbox( sourceData[i] );
+            byte[] expectedData = new byte[16] { 0xD4, 0xE0, 0xB8, 0x1E, 0x27, 0xBF, 0xB4, 0x41, 0x11, 0x98, 0x5D, 0x52, 0xAE, 0xF1, 0xE5, 0x30 };            
+           
+            PrivateObject type = new PrivateObject( new Encryption() );
+            int roundNumber = 0;
+            int blockShift = 0;
 
+            type.Invoke( "SubBytes", sourceData, blockShift, roundNumber );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
     }
