@@ -31,7 +31,7 @@ namespace Cryptography
             {
                 SubBytes( data, blockShift + roundNumber );
                 ShiftRows( data, blockShift + roundNumber );
-                MixColumns();
+                MixColumns( data, blockShift + roundNumber );
                 AddRoundKey( roundNumber, data, blockShift, key );
             }
 
@@ -99,7 +99,7 @@ namespace Cryptography
         }
 
 
-        private void MixColumns()
+        private void MixColumns( byte[] data, int shift )
         {
 
         }

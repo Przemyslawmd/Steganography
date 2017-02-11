@@ -112,5 +112,21 @@ namespace Tests
             type.Invoke( "ShiftRows", sourceData, shift );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
+
+        /***************************************************************************************************************/
+        /* TEST MIX COLUMNS ********************************************************************************************/
+
+        [TestMethod]
+        public void TestAESMixColumns()
+        {
+            byte[] sourceData = new byte[16] { 0x2b, 0xe2, 0x25, 0x42, 0x7e, 0x2f, 0x28, 0xb0, 0x70, 0xd0, 0xfc, 0x28, 0x62, 0x89, 0x34, 0xf8 };
+            byte[] expectedData = new byte[16] { 0xC6, 0xF7, 0xFA, 0x9F, 0x25, 0x5E, 0x5E, 0xB9, 0x13, 0xF6, 0xB2, 0xB1, 0xB7, 0xCB, 0xD3, 0xB5 };
+
+            PrivateObject type = new PrivateObject( new Encryption() );
+            int shift = 0;
+
+            type.Invoke( "MixColumns", sourceData, shift );
+            CollectionAssert.AreEqual( sourceData, expectedData );
+        }
     }
 }
