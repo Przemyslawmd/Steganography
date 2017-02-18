@@ -128,5 +128,26 @@ namespace Tests
             type.Invoke( "MixColumns", sourceData, shift );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
+
+        /***************************************************************************************************************/
+        /* TEST MULTIPLY BY 2 IN GF(2^8) *******************************************************************************/
+
+        [TestMethod]
+        public void TestAESMultiplyInGF()
+        {
+            byte source = 0xd4;
+            byte expected = 0xb3;
+
+            PrivateObject type = new PrivateObject( new Encryption() );
+            source = (byte)type.Invoke( "MultiplyInGF", source );
+            Assert.AreEqual( source, expected );
+
+            source = 0xa3;
+            expected = 0x5d;
+
+            type = new PrivateObject( new Encryption() );
+            source = (byte)type.Invoke( "MultiplyInGF", source );
+            Assert.AreEqual( source, expected );
+        }
     }
 }

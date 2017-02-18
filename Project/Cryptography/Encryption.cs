@@ -41,7 +41,6 @@ namespace Cryptography
             AddRoundKey( roundCount - 1, data, blockShift, key );
         }
 
-
         /* ALIGN DATA *********************************************************************************/
         /* Add additional bytes for data to be divided by block size **********************************/
 
@@ -101,9 +100,24 @@ namespace Cryptography
 
         private void MixColumns( byte[] data, int shift )
         {
-
+            //data[shift + 0] = 
         }
-        
+
+
+        /*************************************************************************************************/
+        /* MULTIPLY BY 2 IN GF(2^8) **********************************************************************/
+
+        private byte MultiplyInGF( byte data )
+        {
+            bool flag = (( data & 0x80 ) != 0x00 ) ? true : false;
+            data <<= 1;
+
+            if ( flag )
+                data ^= 0x1b;
+            return data;
+        }
+
+
         private byte[] key;
     }
 }
