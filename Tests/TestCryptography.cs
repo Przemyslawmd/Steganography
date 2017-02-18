@@ -133,21 +133,35 @@ namespace Tests
         /* TEST MULTIPLY BY 2 IN GF(2^8) *******************************************************************************/
 
         [TestMethod]
-        public void TestAESMultiplyInGF()
+        public void TestAESMultiplyBy2()
         {
-            byte source = 0xd4;
+            byte input = 0xd4;
             byte expected = 0xb3;
 
             PrivateObject type = new PrivateObject( new Encryption() );
-            source = (byte)type.Invoke( "MultiplyInGF", source );
-            Assert.AreEqual( source, expected );
+            input = (byte)type.Invoke( "MultiplyBy2", input );
+            Assert.AreEqual( input, expected );
 
-            source = 0xa3;
+            input = 0xa3;
             expected = 0x5d;
 
             type = new PrivateObject( new Encryption() );
-            source = (byte)type.Invoke( "MultiplyInGF", source );
-            Assert.AreEqual( source, expected );
+            input = (byte)type.Invoke( "MultiplyBy2", input );
+            Assert.AreEqual( input, expected );
+        }
+
+        /***************************************************************************************************************/
+        /* TEST MULTIPLY BY 3 IN GF(2^8) *******************************************************************************/
+
+        [TestMethod]
+        public void TestAESMultiplyBy3()
+        {
+            byte input = 0xbf;
+            byte expected = 0xda;
+
+            PrivateObject type = new PrivateObject( new Encryption() );
+            input = (byte)type.Invoke( "MultiplyBy3", input );
+            Assert.AreEqual( input, expected );
         }
     }
 }

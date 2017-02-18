@@ -97,17 +97,37 @@ namespace Cryptography
                 data[shift + i] = BaseCryptography.GetSbox( data[shift + i] );
         }
 
+        /*************************************************************************************************/
+        /* MIX COLUMNS ***********************************************************************************/
 
         private void MixColumns( byte[] data, int shift )
         {
-            //data[shift + 0] = 
-        }
+            byte val0;
+            byte val1;
+            byte val2;
+            byte val3;
 
+            for ( int i = 0; i < 4; i++ )
+            {
+                val0 = data[shift + i];
+                val1 = data[shift + 4 + i];
+                val2 = data[shift + 8 + i];
+                val3 = data[shift + 12 + i];
+                
+                data[shift + i] = (byte)( MultiplyBy2( val0 ) ^ MultiplyBy3( val1 ) ^ val2 ^ val3 );
+
+                data[shift + 4 + i] = (byte)( val0 ^ MultiplyBy2( val1 ) ^ MultiplyBy3( val2 ) ^ val3 );
+
+                data[shift + 8 + i] = (byte)( val0 ^ val1 ^ MultiplyBy2( val2 ) ^ MultiplyBy3( val3 ));
+
+                data[shift + 12 + i] = (byte)( MultiplyBy3( val0 ) ^ val1 ^ val2 ^ MultiplyBy2( val3 ));
+            }
+        }
 
         /*************************************************************************************************/
         /* MULTIPLY BY 2 IN GF(2^8) **********************************************************************/
 
-        private byte MultiplyInGF( byte data )
+        private byte MultiplyBy2( byte data )
         {
             bool flag = (( data & 0x80 ) != 0x00 ) ? true : false;
             data <<= 1;
@@ -117,6 +137,18 @@ namespace Cryptography
             return data;
         }
 
+        /*************************************************************************************************/
+        /* MULTIPLY BY 3 IN GF(2^8) **********************************************************************/
+
+        private byte MultiplyBy3( byte data )
+        {
+            byte temp = MultiplyBy2( data );
+            data ^= temp;
+            return data;
+        }
+
+        /*************************************************************************************************/
+        /*************************************************************************************************/
 
         private byte[] key;
     }
