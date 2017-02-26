@@ -21,36 +21,35 @@ namespace Cryptography
             Word tempWord;
 
             // Key for the first round
-            for ( int i = 0; i < 4; i++ )
-                expandedWord[i] = new Word( key[i * 4], key[i * 4 + 1], key[i * 4 + 2], key[i * 4 + 3] );                     
+            for ( int indexWord = 0; indexWord < 4; indexWord++ )
+                expandedWord[indexWord] = new Word( key[indexWord * 4], key[indexWord * 4 + 1], key[indexWord * 4 + 2], key[indexWord * 4 + 3] );
 
             // Keys for the rest rounds
-            for ( int i = 4; i < 44; i++ )
+            for ( int indexWord = 4; indexWord < 44; indexWord++ )
             {
-                // Copy last word of a previous key into a temporary word
-                tempWord = new Word( expandedWord[i - 1] );
-
                 // An action for each part of expanded key to calculate its first word
-                if ( i % 4 == 0 )
-                    CalculateTemporaryWord( i / 4 - 1, tempWord );
-
-                expandedWord[i] = expandedWord[i - 4].XorOuter( tempWord );                
+                if ( indexWord % 4 == 0 )
+                {
+                    tempWord = new Word( expandedWord[indexWord - 1] );
+                    CalculateTemporaryWord( indexWord / 4, tempWord );
+                    expandedWord[indexWord] = expandedWord[indexWord - 4].XorOuter( tempWord );
+                }
+                else
+                    expandedWord[indexWord] = expandedWord[indexWord - 4].XorOuter( expandedWord[indexWord - 1] );                
             }
-
-            // Temporary solution 
+            
             byte[] expandedKey = new byte[keyBytesExpanded];
 
-            for ( int i = 0, j = 0; i < 44; i++ )
+            for ( int indexWord = 0, j = 0; indexWord < 44; indexWord++ )
             {
-                expandedKey[j++] = expandedWord[i].value1;
-                expandedKey[j++] = expandedWord[i].value2;
-                expandedKey[j++] = expandedWord[i].value3;
-                expandedKey[j++] = expandedWord[i].value4;
+                expandedKey[j++] = expandedWord[indexWord].value1;
+                expandedKey[j++] = expandedWord[indexWord].value2;
+                expandedKey[j++] = expandedWord[indexWord].value3;
+                expandedKey[j++] = expandedWord[indexWord].value4;
             }
             
             return expandedKey;
         }
-
 
         /***************************************************************************************************/
         /***************************************************************************************************/
@@ -59,7 +58,7 @@ namespace Cryptography
         {
             word.Rotate();
             word.SubByte();            
-            word.XorInner( new Word( rcon[i], 0, 0, 0 ) );
+            word.XorInner( new Word( rcon[i - 1], 0, 0, 0 ) );
         }            
 
         /*****************************************************************************************************/
