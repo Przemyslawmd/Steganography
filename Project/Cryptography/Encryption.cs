@@ -8,37 +8,65 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( byte[] source, String password )
+        public void Encrypt( byte[] source, String password )
         {
-            key = Key.CreateKey( password );
-
+            byte[] key = Key.CreateKey( password );
             byte[] data = AlignData( source );
+            byte[,] state = new byte[4, 4];
 
             for ( int i = 0; i < data.Length; i += 16 )
-                EncryptBlockData( data, i ); 
-                        
-            return null;
+            {
+                InputIntoState( data ,i, state );
+                EncryptBlockData( state, key );
+                StateIntoOutput( data, i, state );
+            }                 
         }
 
+        /*************************************************************************************/
+        /* CHANGE STREAM INTO TWO DIMENSION ARRAY ********************************************/
+        /* Two dimension array seems to be more natural for AES functions than stream ********/
+        /* Additional this array is "after transpontation" ***********************************/ 
+
+        private void InputIntoState( byte[] data, int index, byte[,] state )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    state[i, j] = data[index + i + j * 4];        
+            }            
+        }
+
+        /**************************************************************************************/
+        /* CHANGE STATE INTO STREAM ***********************************************************/
+
+        private void StateIntoOutput( byte[] data, int index, byte[,] state )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    data[index + i * 4 + j] = state[j, i];
+            }  
+        }
+        
         /***********************************************************************************************/
         /* ENCRYPT ONE BLOCK DATA **********************************************************************/
 
-        private void EncryptBlockData( byte[] data, int blockShift )
+        private void EncryptBlockData( byte[,] state, byte[] key )
         {
-            AddRoundKey( 0, data, blockShift, key );
+            AddRoundKey( 0, state, key );
 
             for ( int roundNumber = 1; roundNumber < roundCount - 1; roundNumber++ )
             {
-                SubBytes( data, blockShift + roundNumber );
-                ShiftRows( data, blockShift + roundNumber );
-                MixColumns( data, blockShift + roundNumber );
-                AddRoundKey( roundNumber, data, blockShift, key );
+                SubBytes( state );
+                ShiftRows( state );
+                MixColumns( state );                
+                AddRoundKey( roundNumber, state, key );
             }
 
             // Last round without MixColumns 
-            SubBytes( data, blockShift + roundCount - 1 );
-            ShiftRows( data, blockShift + roundCount - 1 );
-            AddRoundKey( roundCount - 1, data, blockShift, key );
+            SubBytes( state );
+            ShiftRows( state );            
+            AddRoundKey( roundCount, state, key );
         }
 
         /* ALIGN DATA *********************************************************************************/
@@ -60,67 +88,65 @@ namespace Cryptography
         /************************************************************************************************/
         /* SHIFT ROWS IN MATRIX STATE *******************************************************************/
 
-        private void ShiftRows( byte[] data, int shift )
-        {
-            byte temp;
-            
+        private void ShiftRows( byte[,] state )
+        {            
             // Second row
-            temp = data[shift + 4];
-            data[shift + 4] = data[shift + 5];
-            data[shift + 5] = data[shift + 6];
-            data[shift + 6] = data[shift + 7];
-            data[shift + 7] = temp;
+            byte temp = state[1, 0];
+            state[1, 0] = state[1, 1];
+            state[1, 1] = state[1, 2];
+            state[1, 2] = state[1, 3];
+            state[1, 3] = temp;
 
             // Third row - swap two pairs of columns 
-            data[shift + 8] += data[shift + 10];
-            data[shift + 10] = (byte)( data[shift + 8] - data[shift + 10] );
-            data[shift + 8] -= data[shift + 10];
+            state[2, 0] += state[2, 2];
+            state[2, 2] = (byte)( state[2, 0] - state[2, 2] );
+            state[2, 0] -= state[2, 2];
 
-            data[shift + 9] += data[shift + 11];
-            data[shift + 11] = (byte)( data[shift + 9] - data[shift +11] );
-            data[shift + 9] -= data[shift + 11];
+            state[2, 1] += state[2, 3];
+            state[2, 3] = (byte)( state[2, 1] - state[2, 3] );
+            state[2, 1] -= state[2, 3];
 
             // Fourth row
-            temp = data[shift + 15];
-            data[shift + 15] = data[shift + 14];
-            data[shift + 14] = data[shift + 13];
-            data[shift + 13] = data[shift + 12];
-            data[shift + 12] = temp;
+            temp = state[3, 3];
+            state[3, 3] = state[3, 2];
+            state[3, 2] = state[3, 1];
+            state[3, 1] = state[3, 0];
+            state[3, 0] = temp;
         }
 
         /************************************************************************************************/
         /* SUBBYTES TRANSORMATION ***********************************************************************/
 
-        private void SubBytes( byte[] data, int shift )
+        private void SubBytes( byte[,] state )
         {
-            for ( int i = 0; i < 16; i++ )
-                data[shift + i] = BaseCryptography.GetSbox( data[shift + i] );
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    state[i, j] = BaseCryptography.GetSbox( state[i, j] );
+            }
         }
 
         /*************************************************************************************************/
         /* MIX COLUMNS ***********************************************************************************/
 
-        private void MixColumns( byte[] data, int shift )
+        private void MixColumns( byte[,] state )
         {
-            byte val0;
-            byte val1;
-            byte val2;
-            byte val3;
-
+            byte val0, val1, val2, val3;
+            
             for ( int i = 0; i < 4; i++ )
             {
-                val0 = data[shift + i];
-                val1 = data[shift + 4 + i];
-                val2 = data[shift + 8 + i];
-                val3 = data[shift + 12 + i];
+                val0 = state[0, i];
+                val1 = state[1, i];
+                val2 = state[2, i];
+                val3 = state[3, i];
                 
-                data[shift + i] = (byte)( MultiplyBy2( val0 ) ^ MultiplyBy3( val1 ) ^ val2 ^ val3 );
+                state[0, i] = (byte)( MultiplyBy2( val0 ) ^ MultiplyBy3( val1 ) ^ val2 ^ val3 );
 
-                data[shift + 4 + i] = (byte)( val0 ^ MultiplyBy2( val1 ) ^ MultiplyBy3( val2 ) ^ val3 );
+                state[1, i] = (byte)( val0 ^ MultiplyBy2( val1 ) ^ MultiplyBy3( val2 ) ^ val3 );
 
-                data[shift + 8 + i] = (byte)( val0 ^ val1 ^ MultiplyBy2( val2 ) ^ MultiplyBy3( val3 ));
+                state[2, i] = (byte)( val0 ^ val1 ^ MultiplyBy2( val2 ) ^ MultiplyBy3( val3 ));
 
-                data[shift + 12 + i] = (byte)( MultiplyBy3( val0 ) ^ val1 ^ val2 ^ MultiplyBy2( val3 ));
+                state[3, i] = (byte)( MultiplyBy3( val0 ) ^ val1 ^ val2 ^ MultiplyBy2( val3 ));
             }
         }
 
@@ -145,11 +171,6 @@ namespace Cryptography
             byte temp = MultiplyBy2( data );
             data ^= temp;
             return data;
-        }
-
-        /*************************************************************************************************/
-        /*************************************************************************************************/
-
-        private byte[] key;
+        }        
     }
 }
