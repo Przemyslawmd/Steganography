@@ -10,13 +10,13 @@ namespace Cryptography
     {
         public void Encrypt( byte[] source, String password )
         {
-            byte[] key = Key.CreateKey( password );
+            byte[][] key = Key.CreateKeys( password );
             byte[] data = AlignData( source );
             byte[,] state = new byte[4, 4];
 
             for ( int i = 0; i < data.Length; i += 16 )
             {
-                InputIntoState( data ,i, state );
+                InputIntoState( data , i, state );
                 EncryptBlockData( state, key );
                 StateIntoOutput( data, i, state );
             }                 
@@ -51,22 +51,28 @@ namespace Cryptography
         /***********************************************************************************************/
         /* ENCRYPT ONE BLOCK DATA **********************************************************************/
 
-        private void EncryptBlockData( byte[,] state, byte[] key )
+        private void EncryptBlockData( byte[,] state, byte[][] key )
         {
-            AddRoundKey( 0, state, key );
+            //var row_5_accessor = (c => ClientId[5, c]);
 
-            for ( int roundNumber = 1; roundNumber < roundCount - 1; roundNumber++ )
+            AddRoundKey( state, key[0] );
+
+            //for ( int roundNumber = 1; roundNumber < 2; roundNumber++ )           
+            for ( int round = 1; round < numOfRound - 1; round++ )
             {
                 SubBytes( state );
                 ShiftRows( state );
                 MixColumns( state );                
-                AddRoundKey( roundNumber, state, key );
+                AddRoundKey( state, key[round] );
             }
 
+            
             // Last round without MixColumns 
             SubBytes( state );
-            ShiftRows( state );            
-            AddRoundKey( roundCount, state, key );
+            ShiftRows( state );
+            //MixColumns( state );
+            AddRoundKey( state, key[numOfRound - 1] );
+            
         }
 
         /* ALIGN DATA *********************************************************************************/

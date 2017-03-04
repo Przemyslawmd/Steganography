@@ -6,20 +6,13 @@ namespace Cryptography
 {
     class BaseCryptography
     {
-        protected void AddRoundKey( int roundNumber, byte[,] state, byte[] key )
+        protected void AddRoundKey( byte[,] state, byte[] key )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    state[i, j] ^= key[roundNumber * 16 + i * 4 + j];
-            }
-            /*
-            for ( int i = 0; i < 4; i++ )
-            {
-                for ( int j = 0; j < 4; j++ )
-                    data[blockShift + i * 4 + j] ^= key[roundNumber * 16 + i * 4 + j];
-            }
-            */
+                    state[i, j] ^= key[i * 4 + j];
+            }           
         }
 
 
@@ -31,7 +24,7 @@ namespace Cryptography
 
         protected readonly int keyLength = 128;
         protected readonly int blockLength = 128;
-        protected readonly int roundCount = 10;
+        protected readonly int numOfRound = 10;
 
 
         protected static byte[,] sbox = new byte[16, 16] 
