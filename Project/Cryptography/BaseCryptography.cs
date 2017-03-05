@@ -7,11 +7,12 @@ namespace Cryptography
     class BaseCryptography
     {
         protected void AddRoundKey( byte[,] state, byte[] key )
-        {
+        {            
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    state[i, j] ^= key[i * 4 + j];
+                    // During xor key is being transposed
+                    state[i, j] ^= key[i + j * 4];
             }           
         }
 
@@ -19,12 +20,11 @@ namespace Cryptography
         public static byte GetSbox( byte value )
         {
             return sbox[ value >> 4, value & 0xF ];
-        }
-
-
-        protected readonly int keyLength = 128;
-        protected readonly int blockLength = 128;
-        protected readonly int numOfRound = 10;
+        }                     
+        
+        
+        // Number of rounds with initial round
+        protected readonly int NumOfRounds = 11;
 
 
         protected static byte[,] sbox = new byte[16, 16] 

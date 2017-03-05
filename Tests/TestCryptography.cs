@@ -12,57 +12,33 @@ namespace Tests
         [TestMethod]
         public void TestAESEncryptBlockData()
         {
-            byte[,] blockToEncrypt = new byte[4, 4] { { 0x01, 0x23, 0x45, 0x67 },
-                                                      { 0x89, 0xab, 0xcd, 0xef },
-                                                      { 0xfe, 0xdc, 0xba, 0x98 },
-                                                      { 0x76, 0x54, 0x32, 0x10 } };
-
-            byte[,] blockExpected = new byte[4, 4]  { { 0xff, 0x0b, 0x84, 0x4a },
-                                                      { 0x08, 0x53, 0xbf, 0x7c },
-                                                      { 0x69, 0x34, 0xab, 0x43 },
-                                                      { 0x64, 0x14, 0x8f, 0xb9 } };
-
-
-            byte[] key = new byte[16]            { 0x0f, 0x15, 0x71, 0xc9,
-                                                   0x47, 0xd9, 0xe8, 0x59,
-                                                   0x0c, 0xb7, 0xad, 0xd6,
-                                                   0xaf, 0x7f, 0x67, 0x98 };
-
-            byte[,] input = { { 0x32, 0x88, 0x31, 0xE0 },
-            { 0x43,  0x5A,  0x31,  0x37 },
-            { 0xF6,  0x30,  0x98,  0x07 },
-            { 0xA8,  0x8D,  0xA2,  0x34 } };
-
-
-            byte[] key_ = new byte[16] { 0x2B,  0x28,  0xAB,  0x09 ,
-                             0x7E,  0xAE, 0xF7,  0xCF ,
-                             0x15,  0xD2,  0x15,  0x4F ,
-                             0x16,  0xA6,  0x88,  0x3C  };
-
-
-
-            //byte[,] dataToEncrypt = new byte[4, 4] { { 0x01, 0x89, 0xfe, 0x76 },
-            //                                         { 0x23, 0xab, 0xdc, 0x54 },
-            //                                         { 0x45, 0xcd, 0xba, 0x32 },
-            //                                         { 0x67, 0xef, 0x98, 0x10 } };
-
-
-
-
-            //byte[,] expectedData = new byte[4, 4] { { 0xff, 0x08, 0x69, 0x64 },
-            //                                        { 0x0b, 0x53, 0x34, 0x14 },
-            //                                        { 0x84, 0xbf, 0xab, 0x8f },
-            //                                        { 0x4a, 0x7c, 0x43, 0xb9 } };
-
-
-
+            byte[] initialKey;
+            byte[,] blockToEncrypt;
+            byte[,] blockExpected;
+            byte[][] roundKeys;
             PrivateType typeKey = new PrivateType( typeof( Key ) );
-            byte[] expandedKey = (byte[])typeKey.InvokeStatic( "ExpandKey", key_ );
-            
-            PrivateObject typeEncryption = new PrivateObject( new Encryption() );            
-            typeEncryption.Invoke( "EncryptBlockData", input, expandedKey );
+            PrivateObject typeEncryption = new PrivateObject( new Encryption() );
 
-            Assert.AreEqual( blockToEncrypt[0, 0], blockExpected[0, 0] );
+            initialKey = new byte[16]       { 0x54, 0x68, 0x61, 0x74,
+                                              0x73, 0x20, 0x6D, 0x79,
+                                              0x20, 0x4B, 0x75, 0x6E,
+                                              0x67, 0x20, 0x46, 0x75 };
+
+            blockToEncrypt = new byte[4, 4] {{ 0x54, 0x4F, 0x4E, 0x20 },
+                                             { 0x77, 0x6E, 0x69, 0x54 },
+                                             { 0x6F, 0x65, 0x6E, 0x77 },
+                                             { 0x20, 0x20, 0x65, 0x6F }};
+
+            
+            blockExpected  = new byte[4, 4] {{ 0x29, 0x57, 0x40, 0x1A},
+                                             { 0xC3, 0x14, 0x22, 0x02},
+                                             { 0x50, 0x20, 0x99, 0xD7},
+                                             { 0x5F, 0xF6, 0xB3, 0x3A}};
+
+
+            roundKeys = (byte[][])typeKey.InvokeStatic( "ExpandKey", initialKey );            
+            typeEncryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
+            CollectionAssert.AreEqual( blockToEncrypt, blockExpected );         
         }
 
         /************************************************************************************************************/
@@ -174,22 +150,24 @@ namespace Tests
         [TestMethod]
         public void TestAESAddRoundKey()
         {
-            byte[,] sourceData = new byte[4, 4] {   { 0x04, 0xE0, 0x48, 0x28 },
+            byte[,] initialBlock = new byte[4, 4]  {{ 0x04, 0xE0, 0x48, 0x28 },
                                                     { 0x66, 0xCB, 0xF8, 0x06 },
                                                     { 0x81, 0x19, 0xD3, 0x26 },
-                                                    { 0xE5, 0x9A, 0x7A, 0x4C } };
+                                                    { 0xE5, 0x9A, 0x7A, 0x4C }};
            
-            byte[,] expectedData = new byte[4, 4] { { 0xA4, 0x68, 0x6B, 0x02 },
+            byte[,] expectedBlock = new byte[4, 4] {{ 0xA4, 0x68, 0x6B, 0x02 },
                                                     { 0x9C, 0x9F, 0x5B, 0x6A },
                                                     { 0x7F, 0x35, 0xEA, 0x50 },
-                                                    { 0xF2, 0x2B, 0x43, 0x49 } };
+                                                    { 0xF2, 0x2B, 0x43, 0x49 }};
 
-            byte[] key = new byte[16] { 0xA0, 0x88, 0x23, 0x2A, 0xFA, 0x54, 0xA3, 0x6C, 0xFE, 0x2C, 0x39, 0x76, 0x17, 0xB1, 0x39, 0x05 };
+            byte[] key = new byte[16]               { 0xA0, 0xFA, 0xFE, 0x17,
+                                                      0x88, 0x54, 0x2C, 0xB1,
+                                                      0x23, 0xA3, 0x39, 0x39,
+                                                      0x2A, 0x6C, 0x76, 0x05 };
 
-            PrivateObject type = new PrivateObject( new BaseCryptography() );                   
-            
-            type.Invoke( "AddRoundKey", sourceData, key );            
-            CollectionAssert.AreEqual( sourceData, expectedData );
+            PrivateObject type = new PrivateObject( new BaseCryptography() );                 
+            type.Invoke( "AddRoundKey", initialBlock, key );            
+            CollectionAssert.AreEqual( initialBlock, expectedBlock );
         }
 
         /************************************************************************************************************/
@@ -208,8 +186,7 @@ namespace Tests
                                                     { 0x11, 0x98, 0x5d, 0x52 },
                                                     { 0xae, 0xf1, 0xe5, 0x30 } };            
            
-            PrivateObject type = new PrivateObject( new Encryption() );
-            
+            PrivateObject type = new PrivateObject( new Encryption() );            
             type.Invoke( "SubBytes", sourceData );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
@@ -230,8 +207,7 @@ namespace Tests
                                                     { 0x87, 0x53, 0xd2, 0x96 },
                                                     { 0x3b, 0x89, 0xf1, 0x1a } };
 
-            PrivateObject type = new PrivateObject( new Encryption() );            
-            
+            PrivateObject type = new PrivateObject( new Encryption() );           
             type.Invoke( "ShiftRows", sourceData );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
@@ -252,8 +228,7 @@ namespace Tests
                                                    { 0x13, 0xF6, 0xB2, 0xB1 },
                                                    { 0xB7, 0xCB, 0xD3, 0xB5 }};
 
-            PrivateObject type = new PrivateObject( new Encryption() );
-            
+            PrivateObject type = new PrivateObject( new Encryption() );            
             type.Invoke( "MixColumns", sourceData );
             CollectionAssert.AreEqual( sourceData, expectedData );
         }

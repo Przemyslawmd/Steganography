@@ -53,26 +53,20 @@ namespace Cryptography
 
         private void EncryptBlockData( byte[,] state, byte[][] key )
         {
-            //var row_5_accessor = (c => ClientId[5, c]);
-
             AddRoundKey( state, key[0] );
-
-            //for ( int roundNumber = 1; roundNumber < 2; roundNumber++ )           
-            for ( int round = 1; round < numOfRound - 1; round++ )
+                                 
+            for ( int round = 1; round < NumOfRounds - 1; round++ )
             {
                 SubBytes( state );
                 ShiftRows( state );
                 MixColumns( state );                
                 AddRoundKey( state, key[round] );
-            }
-
+            } 
             
             // Last round without MixColumns 
             SubBytes( state );
-            ShiftRows( state );
-            //MixColumns( state );
-            AddRoundKey( state, key[numOfRound - 1] );
-            
+            ShiftRows( state );            
+            AddRoundKey( state, key[NumOfRounds - 1] );            
         }
 
         /* ALIGN DATA *********************************************************************************/
@@ -80,8 +74,9 @@ namespace Cryptography
 
         private byte[] AlignData( byte[] source )
         {
+            const int KeyLenghtInBytes = 16;
             int beginSize = source.Length;
-            int alignment = 16 - ( beginSize % ( keyLength / 8 ));            
+            int alignment = 16 - ( beginSize % ( KeyLenghtInBytes ));            
             Array.Resize( ref source, beginSize + alignment );
 
             for ( int i = 0; i < alignment - 1; i++ )

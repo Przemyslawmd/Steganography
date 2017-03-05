@@ -80,8 +80,9 @@ namespace Cryptography
         static byte[] rcon = new byte[10]
         {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
-        };                
-        
+        };
+
+        // Number of rounds with initial round
         static readonly int NumOfRounds = 11;
         // Number of words of keys for all rounds 
         static readonly int NumOfWords = 44;
