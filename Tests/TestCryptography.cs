@@ -196,30 +196,49 @@ namespace Tests
         }
 
         /************************************************************************************************************/
-        /* TEST SUB BYTES TRANSFORMATION ****************************************************************************/
+        /* TEST SUB BYTES AND INVERSE SUB BYTES TRANSFORMATION ******************************************************/
 
         [TestMethod]
         public void TestAESSubBytes()
         {
-            byte[,] sourceData = new byte[4, 4] {   { 0x19, 0xa0, 0x9a, 0xe9 },
+            byte[,] initialState = new byte[4, 4]  {{ 0x19, 0xa0, 0x9a, 0xe9 },
                                                     { 0x3d, 0xf4, 0xc6, 0xf8 }, 
                                                     { 0xe3, 0xe2, 0x8d, 0x48 }, 
-                                                    { 0xbe, 0x2b, 0x2a, 0x08 } };
+                                                    { 0xbe, 0x2b, 0x2a, 0x08 }};
 
-            byte[,] expectedData = new byte[4, 4] { { 0xd4, 0xe0, 0xb8, 0x1e },
+            byte[,] expectedState = new byte[4, 4] {{ 0xd4, 0xe0, 0xb8, 0x1e },
                                                     { 0x27, 0xbf, 0xb4, 0x41 },
                                                     { 0x11, 0x98, 0x5d, 0x52 },
-                                                    { 0xae, 0xf1, 0xe5, 0x30 } };            
+                                                    { 0xae, 0xf1, 0xe5, 0x30 }};            
            
             PrivateObject type = new PrivateObject( new Encryption() );            
-            type.Invoke( "SubBytes", sourceData );
-            CollectionAssert.AreEqual( sourceData, expectedData );
+            type.Invoke( "SubBytes", initialState );
+            CollectionAssert.AreEqual( initialState, expectedState );
         }
 
-        /***************************************************************************************************************/
-        /* TEST SHIFT ROWS *********************************************************************************************/
 
         [TestMethod]
+        public void TestAESInvSubBytes()
+        {
+            byte[,] initialState = new byte[4, 4]  {{ 0xac, 0xef, 0x13, 0x45 },
+                                                    { 0x73, 0xc1, 0xb5, 0x23 },
+                                                    { 0xcf, 0x11, 0xd6, 0x5a },
+                                                    { 0x7b, 0xdf, 0xb5, 0xb8 }};
+
+            byte[,] expectedState = new byte[4, 4] {{ 0xaa, 0x61, 0x82, 0x68 },
+                                                    { 0x8f, 0xdd, 0xd2, 0x32 },
+                                                    { 0x5f, 0xe3, 0x4a, 0x46 },
+                                                    { 0x03, 0xef, 0xd2, 0x9a }};
+
+            PrivateObject type = new PrivateObject( new Decryption() );
+            type.Invoke( "InvSubBytes", initialState );
+            CollectionAssert.AreEqual( initialState, expectedState );
+        }
+
+      /***************************************************************************************************************/
+      /* TEST SHIFT ROWS AND INVERSE SHIFT ROWS **********************************************************************/
+
+      [TestMethod]
         public void TestAESShiftRows()
         {
             byte[,] initialData = new byte[4, 4]   {{ 0x49, 0x45, 0x7f, 0x77 },
@@ -237,9 +256,7 @@ namespace Tests
             CollectionAssert.AreEqual( initialData, expectedData );
         }
 
-        /***************************************************************************************************************/
-        /* TEST INVERSE SHIFT ROWS *************************************************************************************/
-
+        
         [TestMethod]
         public void TestAESInvShiftRows()
         {

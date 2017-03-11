@@ -45,17 +45,21 @@ namespace Cryptography
         }
 
         /*************************************************************************************/
-        /*************************************************************************************/
+        /* GET SBOX AND INV SBOX VALUES ******************************************************/           
 
         public static byte GetSbox( byte value )
         {
-            return sbox[ value >> 4, value & 0xF ];
-        }                     
+            return sbox[value >> 4, value & 0xF];
+        }
         
-        
-        // Number of rounds with initial round
-        protected readonly int NumOfRounds = 11;
 
+        public static byte GetInvSbox( byte value )
+        {
+            return invsbox[value >> 4, value & 0xF];
+        }
+
+        /**************************************************************************************/
+        /* SBOX AND INV SBOX TABLES ***********************************************************/
 
         protected static byte[,] sbox = new byte[16, 16] 
         {
@@ -79,7 +83,7 @@ namespace Cryptography
         };
 
 
-        protected byte[,] invsbox = new byte[16, 16]
+        protected static byte[,] invsbox = new byte[16, 16]
         {
             { 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb },
             { 0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb },
@@ -98,5 +102,9 @@ namespace Cryptography
             { 0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61 },
             { 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d }
        };
+
+        // Number of rounds with initial round
+        protected readonly int NumOfRounds = 11;
+
     }
 }
