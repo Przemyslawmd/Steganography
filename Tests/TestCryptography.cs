@@ -222,26 +222,47 @@ namespace Tests
         [TestMethod]
         public void TestAESShiftRows()
         {
-            byte[,] sourceData = new byte[4, 4]   { { 0x49, 0x45, 0x7f, 0x77 },
+            byte[,] initialData = new byte[4, 4]   {{ 0x49, 0x45, 0x7f, 0x77 },
                                                     { 0xde, 0xdb, 0x39, 0x02 },
                                                     { 0xd2, 0x96, 0x87, 0x53 },
-                                                    { 0x89, 0xf1, 0x1a, 0x3b } };
+                                                    { 0x89, 0xf1, 0x1a, 0x3b }};
 
-            byte[,] expectedData = new byte[4, 4] { { 0x49, 0x45, 0x7f, 0x77 },
+            byte[,] expectedData = new byte[4, 4]  {{ 0x49, 0x45, 0x7f, 0x77 },
                                                     { 0xdb, 0x39, 0x02, 0xde },
                                                     { 0x87, 0x53, 0xd2, 0x96 },
-                                                    { 0x3b, 0x89, 0xf1, 0x1a } };
+                                                    { 0x3b, 0x89, 0xf1, 0x1a }};
 
             PrivateObject type = new PrivateObject( new Encryption() );           
-            type.Invoke( "ShiftRows", sourceData );
-            CollectionAssert.AreEqual( sourceData, expectedData );
+            type.Invoke( "ShiftRows", initialData );
+            CollectionAssert.AreEqual( initialData, expectedData );
         }
 
         /***************************************************************************************************************/
-        /* TEST MIX COLUMNS ********************************************************************************************/
+        /* TEST INVERSE SHIFT ROWS *************************************************************************************/
 
         [TestMethod]
-        public void TestAESMixColumns()
+        public void TestAESInvShiftRows()
+        {
+            byte[,] initialData = new byte[4, 4]   {{ 0x87, 0xf2, 0x4d, 0x97 },
+                                                    { 0x6e, 0x4c, 0x90, 0xec },
+                                                    { 0x46, 0xe7, 0x4a, 0xc3 },
+                                                    { 0xa6, 0x8c, 0xd8, 0x95 }};
+
+            byte[,] expectedData = new byte[4, 4]  {{ 0x87, 0xf2, 0x4d, 0x97 },
+                                                    { 0xec, 0x6e, 0x4c, 0x90 },
+                                                    { 0x4a, 0xc3, 0x46, 0xe7 },
+                                                    { 0x8c, 0xd8, 0x95, 0xa6 }};
+
+            PrivateObject type = new PrivateObject( new Decryption() );
+            type.Invoke( "InvShiftRows", initialData );
+            CollectionAssert.AreEqual( initialData, expectedData );
+        }   
+        
+      /***************************************************************************************************************/
+      /* TEST MIX COLUMNS ********************************************************************************************/
+
+      [TestMethod]
+       public void TestAESMixColumns()
         {
             byte[,] sourceData   = new byte[4, 4] {{ 0x2b, 0xe2, 0x25, 0x42 },
                                                    { 0x7e, 0x2f, 0x28, 0xb0 },

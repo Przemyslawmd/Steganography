@@ -6,16 +6,46 @@ namespace Cryptography
 {
     class BaseCryptography
     {
+        /*************************************************************************************/
+        /* CHANGE STREAM INTO TWO DIMENSION ARRAY ********************************************/
+        /* This array is "after transpontation" **********************************************/
+
+        protected void InputIntoState( byte[] data, int index, byte[,] state )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    state[i, j] = data[index + i + j * 4];
+            }
+        }
+
+        /**************************************************************************************/
+        /* CHANGE STATE INTO STREAM ***********************************************************/
+
+        protected void StateIntoOutput( byte[] data, int index, byte[,] state )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    data[index + i * 4 + j] = state[j, i];
+            }
+        }
+
+        /*************************************************************************************/
+        /* ADD ROUND KEY *********************************************************************/
+
         protected void AddRoundKey( byte[,] state, byte[] key )
         {            
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    // During xor key is being transposed
+                    // Transpontation operation is required here
                     state[i, j] ^= key[i + j * 4];
             }           
         }
 
+        /*************************************************************************************/
+        /*************************************************************************************/
 
         public static byte GetSbox( byte value )
         {

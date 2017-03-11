@@ -11,42 +11,16 @@ namespace Cryptography
         public void Encrypt( byte[] source, String password )
         {
             byte[][] key = Key.CreateKeys( password );
-            byte[] data = AlignData( source );
+            byte[] dataToEncrypt = AlignData( source );
             byte[,] state = new byte[4, 4];
 
-            for ( int i = 0; i < data.Length; i += 16 )
+            for ( int i = 0; i < dataToEncrypt.Length; i += 16 )
             {
-                InputIntoState( data , i, state );
+                InputIntoState( dataToEncrypt , i, state );
                 EncryptBlockData( state, key );
-                StateIntoOutput( data, i, state );
+                StateIntoOutput( dataToEncrypt, i, state );
             }                 
-        }
-
-        /*************************************************************************************/
-        /* CHANGE STREAM INTO TWO DIMENSION ARRAY ********************************************/
-        /* Two dimension array seems to be more natural for AES functions than stream ********/
-        /* Additional this array is "after transpontation" ***********************************/ 
-
-        private void InputIntoState( byte[] data, int index, byte[,] state )
-        {
-            for ( int i = 0; i < 4; i++ )
-            {
-                for ( int j = 0; j < 4; j++ )
-                    state[i, j] = data[index + i + j * 4];        
-            }            
-        }
-
-        /**************************************************************************************/
-        /* CHANGE STATE INTO STREAM ***********************************************************/
-
-        private void StateIntoOutput( byte[] data, int index, byte[,] state )
-        {
-            for ( int i = 0; i < 4; i++ )
-            {
-                for ( int j = 0; j < 4; j++ )
-                    data[index + i * 4 + j] = state[j, i];
-            }  
-        }
+        }             
         
         /***********************************************************************************************/
         /* ENCRYPT ONE BLOCK DATA **********************************************************************/
