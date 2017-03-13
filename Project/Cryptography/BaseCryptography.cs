@@ -45,7 +45,16 @@ namespace Cryptography
         }
 
         /*************************************************************************************/
-        /* GET SBOX AND INV SBOX VALUES ******************************************************/           
+        /* GET SBOX AND INV SBOX VALUES ******************************************************/
+
+        protected static void GetBox( DelegateBox delegateBox, byte[,] state )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 4; j++ )
+                    state[i, j] = delegateBox.Invoke( state[i, j] );                   
+            }            
+        }        
 
         public static byte GetSbox( byte value )
         {
@@ -106,5 +115,6 @@ namespace Cryptography
         // Number of rounds with initial round
         protected readonly int NumOfRounds = 11;
 
+        protected delegate byte DelegateBox ( byte value );
     }
 }

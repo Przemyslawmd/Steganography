@@ -72,13 +72,12 @@ namespace Cryptography
             state[3, 3] = temp;
         }
 
+        /************************************************************************************************/
+        /* INVERSE SUBBYTES TRANSORMATION ***************************************************************/
+
         private void InvSubBytes( byte[,] state )
         {
-            for ( int i = 0; i < 4; i++ )
-            {
-                for ( int j = 0; j < 4; j++ )
-                    state[i, j] = BaseCryptography.GetInvSbox( state[i, j] );
-            }
+            GetBox( BaseCryptography.GetInvSbox, state );            
         }
 
         private void InvMixColumns( byte[,] state )
