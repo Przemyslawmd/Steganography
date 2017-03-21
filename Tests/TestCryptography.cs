@@ -306,18 +306,18 @@ namespace Tests
 
             byte input = 0xd4;
             byte expected = 0xb3;                         
-            input = (byte)type.Invoke( "Multiply", input, 2 );
+            input = (byte)type.Invoke( "Multiply", input, (byte)0x02 );
             Assert.AreEqual( input, expected );
-
+                        
             input = 0xa3;
             expected = 0x5d;                      
-            input = (byte)type.Invoke( "Multiply", input, 2 );
+            input = (byte)type.Invoke( "Multiply", input, (byte)0x02 );
             Assert.AreEqual( input, expected );
 
             input = 0xbf;
             expected = 0xda;            
-            input = (byte)type.Invoke( "Multiply", input, 3 );
-            Assert.AreEqual( input, expected );
+            input = (byte)type.Invoke( "Multiply", input, (byte)0x03 );
+            Assert.AreEqual( input, expected );            
         }       
     }
 }

@@ -120,34 +120,5 @@ namespace Cryptography
                 state[3, i] = (byte)( Multiply( val0, 3 ) ^ val1 ^ val2 ^ Multiply( val3, 2 ));
             }
         }        
-
-        /*************************************************************************************************/
-        /* MULTIPLY IN GF(2^8) ***************************************************************************/
-
-        private byte Multiply( byte data, int factor )
-        {
-            byte temp = 0x00;
-
-            for ( int i = factor; factor > 1; factor -= 2 )
-                temp ^= MultiplyBy2( data );
-
-            if ( factor % 2 == 1 )
-                temp ^= data;
-
-            return temp;
-        }
-
-        /*************************************************************************************************/
-        /* MULTIPLY BY 2 IN GF(2^8) **********************************************************************/
-
-        private byte MultiplyBy2( byte data )
-        {
-            bool flag = ((data & 0x80) != 0x00) ? true : false;
-            data <<= 1;
-
-            if ( flag )
-                data ^= 0x1b;
-            return data;
-        }
     }
 }
