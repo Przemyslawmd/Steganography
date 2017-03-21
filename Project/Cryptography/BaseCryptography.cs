@@ -10,24 +10,24 @@ namespace Cryptography
         /* CHANGE STREAM INTO TWO DIMENSION ARRAY ********************************************/
         /* This array is "after transpontation" **********************************************/
 
-        protected void InputIntoState( byte[] data, int index, byte[,] state )
+        protected void InputIntoState( byte[] input, int index, byte[,] state )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    state[i, j] = data[index + i + j * 4];
+                    state[i, j] = input[index + i + j * 4];
             }
         }
 
         /**************************************************************************************/
         /* CHANGE STATE INTO STREAM ***********************************************************/
 
-        protected void StateIntoOutput( byte[] data, int index, byte[,] state )
+        protected void StateIntoOutput( byte[] output, int index, byte[,] state )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    data[index + i * 4 + j] = state[j, i];
+                    output[index + i * 4 + j] = state[j, i];
             }
         }
 
@@ -38,8 +38,7 @@ namespace Cryptography
         {            
             for ( int i = 0; i < 4; i++ )
             {
-                for ( int j = 0; j < 4; j++ )
-                    // Transpontation operation is required here
+                for ( int j = 0; j < 4; j++ )                    
                     state[i, j] ^= key[i + j * 4];
             }           
         }
@@ -47,7 +46,7 @@ namespace Cryptography
         /*************************************************************************************/
         /* GET SBOX AND INV SBOX VALUES ******************************************************/
 
-        protected static void GetBox( DelegateBox delegateBox, byte[,] state )
+        protected static void GetGeneralSbox( DelegateBox delegateBox, byte[,] state )
         {
             for ( int i = 0; i < 4; i++ )
             {
@@ -115,6 +114,6 @@ namespace Cryptography
         // Number of rounds with initial round
         protected readonly int NumOfRounds = 11;
 
-        protected delegate byte DelegateBox ( byte value );
+        protected delegate byte DelegateBox( byte value );
     }
 }

@@ -77,7 +77,7 @@ namespace Cryptography
 
         private void InvSubBytes( byte[,] state )
         {
-            GetBox( BaseCryptography.GetInvSbox, state );            
+            GetGeneralSbox( GetInvSbox, state );            
         }
 
         private void InvMixColumns( byte[,] state )

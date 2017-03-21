@@ -94,7 +94,7 @@ namespace Cryptography
 
         private void SubBytes( byte[,] state )
         {
-            GetBox( BaseCryptography.GetSbox, state );            
+            GetGeneralSbox( GetSbox, state );            
         }
 
         /*************************************************************************************************/
@@ -111,14 +111,30 @@ namespace Cryptography
                 val2 = state[2, i];
                 val3 = state[3, i];
                 
-                state[0, i] = (byte)( MultiplyBy2( val0 ) ^ MultiplyBy3( val1 ) ^ val2 ^ val3 );
+                state[0, i] = (byte)( Multiply( val0, 2 ) ^ Multiply( val1, 3 ) ^ val2 ^ val3 );
 
-                state[1, i] = (byte)( val0 ^ MultiplyBy2( val1 ) ^ MultiplyBy3( val2 ) ^ val3 );
+                state[1, i] = (byte)( val0 ^ Multiply( val1, 2 ) ^ Multiply( val2, 3 ) ^ val3 );
 
-                state[2, i] = (byte)( val0 ^ val1 ^ MultiplyBy2( val2 ) ^ MultiplyBy3( val3 ));
+                state[2, i] = (byte)( val0 ^ val1 ^ Multiply( val2, 2 ) ^ Multiply( val3, 3 ));
 
-                state[3, i] = (byte)( MultiplyBy3( val0 ) ^ val1 ^ val2 ^ MultiplyBy2( val3 ));
+                state[3, i] = (byte)( Multiply( val0, 3 ) ^ val1 ^ val2 ^ Multiply( val3, 2 ));
             }
+        }        
+
+        /*************************************************************************************************/
+        /* MULTIPLY IN GF(2^8) ***************************************************************************/
+
+        private byte Multiply( byte data, int factor )
+        {
+            byte temp = 0x00;
+
+            for ( int i = factor; factor > 1; factor -= 2 )
+                temp ^= MultiplyBy2( data );
+
+            if ( factor % 2 == 1 )
+                temp ^= data;
+
+            return temp;
         }
 
         /*************************************************************************************************/
@@ -126,22 +142,12 @@ namespace Cryptography
 
         private byte MultiplyBy2( byte data )
         {
-            bool flag = (( data & 0x80 ) != 0x00 ) ? true : false;
+            bool flag = ((data & 0x80) != 0x00) ? true : false;
             data <<= 1;
 
             if ( flag )
                 data ^= 0x1b;
             return data;
         }
-
-        /*************************************************************************************************/
-        /* MULTIPLY BY 3 IN GF(2^8) **********************************************************************/
-
-        private byte MultiplyBy3( byte data )
-        {
-            byte temp = MultiplyBy2( data );
-            data ^= temp;
-            return data;
-        }        
     }
 }
