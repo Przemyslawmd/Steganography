@@ -13,27 +13,27 @@ namespace Stegan
             Color color;
             
             // Get a size of covered data
-            for ( int x = 0; x < DATA_SIZE_PIXEL; x++ )
+            for ( int x = 0; x < DataSizePixel; x++ )
             {
                 color = Image.GetPixel( x, 0 );
 
                 if (( color.R % 2) == 1 )
-                    byteCount |= MASK_1;
+                    byteCount |= Mask1;
                 byteCount <<= 1;
 
                 if (( color.G % 2) == 1 )
-                    byteCount |= MASK_1;
+                    byteCount |= Mask1;
                 byteCount <<= 1;
 
                 if (( color.B % 2) == 1 )
-                    byteCount |= MASK_1;
+                    byteCount |= Mask1;
 
-                if ( x != ( DATA_SIZE_PIXEL - 1 ))
+                if ( x != ( DataSizePixel - 1 ))
                     byteCount <<= 1;
             }
 
             byte[] DataBuffer = new byte[byteCount];                      
-            CompressFlag = (( Image.GetPixel( COMPRESS_PIXEL, 0 ).R % 2 ) == 1 ) ? true : false;                      
+            CompressFlag = (( Image.GetPixel( CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
             // Uncover data
             for ( int y = 1; y < Image.Height; y++ )
@@ -61,10 +61,10 @@ namespace Stegan
         private bool UncoverDataFromPixel( byte componentRGB, byte[] buffer )
         {
             if ( (componentRGB % 2) == 1 )
-                byteValue |= MASK_1;
+                byteValue |= Mask1;
             bitNumber++;
 
-            if ( bitNumber == ( LAST_BIT + 1 ))
+            if ( bitNumber == ( LastBit + 1 ))
             {
                 buffer[byteNumber++] = byteValue;
                 if ( byteNumber == byteCount )

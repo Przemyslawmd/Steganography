@@ -17,7 +17,7 @@ namespace Stegan
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
             bitNumber = 17;            
             
-            for ( int x = 0; x < DATA_SIZE_PIXEL; x++ )
+            for ( int x = 0; x < DataSizePixel; x++ )
             {	
                 color = Image.GetPixel( x, 0 );
                 red = ChangeColorCoveringSize( color.R );
@@ -27,9 +27,9 @@ namespace Stegan
             }            
             
             // Save information whether data is compressed                         
-            color = Image.GetPixel( COMPRESS_PIXEL, 0 );
-            red = ( isCompress ) ? ( color.R | MASK_1 ) : ( color.R & MASK_0 );          
-            Image.SetPixel( COMPRESS_PIXEL, 0, Color.FromArgb( red, color.G, color.B));
+            color = Image.GetPixel( CompressPixel, 0 );
+            red = ( isCompress ) ? ( color.R | Mask1 ) : ( color.R & Mask0 );          
+            Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B));
             
             // Cover data starting from a second row of a bitmap                   
             // bitNumber variable has initial value less than zero in order to get a byte at the beginning
@@ -77,7 +77,7 @@ namespace Stegan
                     return false;
                 
                 byteValue = dataToCover[byteNumber++];
-                bitNumber = LAST_BIT;
+                bitNumber = LastBit;
             }
             return true;
         }
@@ -88,9 +88,9 @@ namespace Stegan
         private int ChangeColorCoveringSize( byte componentRGB )
         {
             if ((( byteCount >> bitNumber-- ) % 2 ) == 0 )
-                return componentRGB & MASK_0;
+                return componentRGB & Mask0;
             
-            return componentRGB | MASK_1;           
+            return componentRGB | Mask1;           
         }
 
         /*****************************************************************************************************************************/
@@ -99,9 +99,9 @@ namespace Stegan
         private int ChangeColorCoveringData( byte componentRGB )
         {
             if ( (( byteValue >> bitNumber-- ) % 2 ) == 0 ) 
-                return componentRGB & MASK_0;
+                return componentRGB & Mask0;
             
-            return componentRGB | MASK_1;
+            return componentRGB | Mask1;
         }              
     }
 }

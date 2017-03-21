@@ -11,10 +11,10 @@ namespace Stegan
         protected int red;
         protected int green;
         protected int blue;
-        protected readonly byte MASK_1 = 1;
-        protected readonly byte MASK_0 = 0;
-        protected readonly int COMPRESS_PIXEL = 6;          // Number of a pixel which stores an information about compresion      
-        protected readonly int DATA_SIZE_PIXEL = 6;         // Count of pixels intented to store an information about a size of data                         
-        protected readonly int LAST_BIT = 7;
+        protected const byte Mask1 = 1;
+        protected const byte Mask0 = 0;
+        protected const int CompressPixel = 6;         // Number of a pixel which stores an information about compresion      
+        protected const int DataSizePixel = 6;         // Count of pixels intented to store an information about a size of data                         
+        protected const int LastBit = 7;
     }
 }
