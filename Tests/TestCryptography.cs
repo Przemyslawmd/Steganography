@@ -297,38 +297,27 @@ namespace Tests
         }
 
         /***************************************************************************************************************/
-        /* TEST MULTIPLY BY 2 IN GF(2^8) *******************************************************************************/
+        /* TEST MULTIPLY IN GF(2^8) ************************************************************************************/
 
         [TestMethod]
-        public void TestAESMultiplyBy2()
+        public void TestAESMultiply()
         {
-            byte input = 0xd4;
-            byte expected = 0xb3;
-
             PrivateObject type = new PrivateObject( new Encryption() );
-            input = (byte)type.Invoke( "MultiplyBy2", input );
+
+            byte input = 0xd4;
+            byte expected = 0xb3;                         
+            input = (byte)type.Invoke( "Multiply", input, 2 );
             Assert.AreEqual( input, expected );
 
             input = 0xa3;
-            expected = 0x5d;
-
-            type = new PrivateObject( new Encryption() );
-            input = (byte)type.Invoke( "MultiplyBy2", input );
+            expected = 0x5d;                      
+            input = (byte)type.Invoke( "Multiply", input, 2 );
             Assert.AreEqual( input, expected );
-        }
 
-        /***************************************************************************************************************/
-        /* TEST MULTIPLY BY 3 IN GF(2^8) *******************************************************************************/
-
-        [TestMethod]
-        public void TestAESMultiplyBy3()
-        {
-            byte input = 0xbf;
-            byte expected = 0xda;
-
-            PrivateObject type = new PrivateObject( new Encryption() );
-            input = (byte)type.Invoke( "MultiplyBy3", input );
+            input = 0xbf;
+            expected = 0xda;            
+            input = (byte)type.Invoke( "Multiply", input, 3 );
             Assert.AreEqual( input, expected );
-        }
+        }       
     }
 }
