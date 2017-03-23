@@ -69,32 +69,25 @@ namespace Cryptography
 
         /*************************************************************************************/
         /* MULTIPLY IN GF(2^8) ***************************************************************/
-
-        protected byte Multiply( byte data, byte factor )
+                
+        protected byte Multiply( byte a, byte b )
         {
-            byte temp = 0x00;
+            byte result = 0; 
+                        
+            while ( b > 0 )
+            {
+                if ( ( b & 0x01 ) != 0x00 )
+                    result ^= a;
 
-            for ( int i = factor; factor > 1; factor -= 2 )
-                temp ^= MultiplyBy2( data );
-
-            if ( factor % 2 == 1 )
-                temp ^= data;
-
-            return temp;
-        }
-
-        /*************************************************************************************/
-        /* MULTIPLY BY 2 IN GF(2^8) **********************************************************/
-
-        protected byte MultiplyBy2( byte data )
-        {
-            bool flag = ((data & 0x80) != 0x00) ? true : false;
-            data <<= 1;
-
-            if ( flag )
-                data ^= 0x1b;
-            return data;
-        }
+                if ( ( a & 0x80 ) != 0x00 )                                   
+                    a = (byte)( a << 1 ^ 0x11b );                  
+                else                
+                    a <<= 1;
+                
+                b >>= 1;
+            }
+            return result;            
+        }        
 
         /**************************************************************************************/
         /* SBOX AND INV SBOX TABLES ***********************************************************/

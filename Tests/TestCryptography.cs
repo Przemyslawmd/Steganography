@@ -1,6 +1,5 @@
-﻿using System;
+﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 using Cryptography;
 
 namespace Tests
@@ -8,7 +7,6 @@ namespace Tests
     [TestClass]
     public class TestsCryptography
     {
-
         [TestMethod]
         public void TestAESEncryptBlockData()
         {
@@ -235,10 +233,10 @@ namespace Tests
             CollectionAssert.AreEqual( initialState, expectedState );
         }
 
-      /***************************************************************************************************************/
-      /* TEST SHIFT ROWS AND INVERSE SHIFT ROWS **********************************************************************/
+        /***************************************************************************************************************/
+        /* TEST SHIFT ROWS AND INVERSE SHIFT ROWS **********************************************************************/
 
-      [TestMethod]
+        [TestMethod]
         public void TestAESShiftRows()
         {
             byte[,] initialData = new byte[4, 4]   {{ 0x49, 0x45, 0x7f, 0x77 },
@@ -273,12 +271,12 @@ namespace Tests
             PrivateObject type = new PrivateObject( new Decryption() );
             type.Invoke( "InvShiftRows", initialData );
             CollectionAssert.AreEqual( initialData, expectedData );
-        }   
+       }   
         
-      /***************************************************************************************************************/
-      /* TEST MIX COLUMNS ********************************************************************************************/
+       /***************************************************************************************************************/
+       /* TEST MIX AND INVERSE COLUMNS ********************************************************************************/
 
-      [TestMethod]
+       [TestMethod]
        public void TestAESMixColumns()
         {
             byte[,] sourceData   = new byte[4, 4] {{ 0x2b, 0xe2, 0x25, 0x42 },
@@ -296,6 +294,25 @@ namespace Tests
             CollectionAssert.AreEqual( sourceData, expectedData );
         }
 
+
+        [TestMethod]
+        public void TestAESInvMixColumns()
+        {
+            byte[,] sourceData = new byte[4, 4] {{ 0x04, 0xe0, 0x48, 0x28 },
+                                                 { 0x66, 0xcb, 0xf8, 0x06 },
+                                                 { 0x81, 0x19, 0xd3, 0x26 },
+                                                  { 0xe5, 0x9a, 0x7a, 0x4c }};
+
+            byte[,] expectedData = new byte[4, 4] {{ 0xd4, 0xe0, 0xb8, 0x1e },
+                                                   { 0xbf, 0xb4, 0x41, 0x27 },
+                                                   { 0x5d, 0x52, 0x11, 0x98 },
+                                                   { 0x30, 0xae, 0xf1, 0xe5 }};
+
+            PrivateObject type = new PrivateObject( new Decryption() );
+            type.Invoke( "InvMixColumns", sourceData );
+            CollectionAssert.AreEqual( sourceData, expectedData );
+        }
+
         /***************************************************************************************************************/
         /* TEST MULTIPLY IN GF(2^8) ************************************************************************************/
 
@@ -303,21 +320,24 @@ namespace Tests
         public void TestAESMultiply()
         {
             PrivateObject type = new PrivateObject( new Encryption() );
+            byte expected;
+            byte result;
 
-            byte input = 0xd4;
-            byte expected = 0xb3;                         
-            input = (byte)type.Invoke( "Multiply", input, (byte)0x02 );
-            Assert.AreEqual( input, expected );
-                        
-            input = 0xa3;
-            expected = 0x5d;                      
-            input = (byte)type.Invoke( "Multiply", input, (byte)0x02 );
-            Assert.AreEqual( input, expected );
+            result = (byte)type.Invoke( "Multiply", (byte)0xd4, (byte)0x02 );
+            expected = 0xb3;
+            Assert.AreEqual( result, expected );
 
-            input = 0xbf;
-            expected = 0xda;            
-            input = (byte)type.Invoke( "Multiply", input, (byte)0x03 );
-            Assert.AreEqual( input, expected );            
+            expected = 0x5d;
+            result = (byte)type.Invoke( "Multiply", (byte)0xa3, (byte)0x02 );
+            Assert.AreEqual( result, expected );
+
+            result = (byte)type.Invoke( "Multiply", (byte)0xbf, (byte)0x03 );
+            expected = 0xda;
+            Assert.AreEqual( result, expected );
+
+            result = (byte)type.Invoke( "Multiply", (byte)0x57, (byte)0x13 );
+            expected = 0xFE;
+            Assert.AreEqual( result, expected );
         }       
     }
 }

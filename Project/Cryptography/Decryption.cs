@@ -82,7 +82,23 @@ namespace Cryptography
 
         private void InvMixColumns( byte[,] state )
         {
+            byte val0, val1, val2, val3;
 
+            for ( int i = 0; i < 4; i++ )
+            {
+                val0 = state[0, i];
+                val1 = state[1, i];
+                val2 = state[2, i];
+                val3 = state[3, i];
+
+                state[0, i] = (byte)( Multiply( val0, 0x0e ) ^ Multiply( val1, 0x0b ) ^ Multiply( val2, 0x0d ) ^ Multiply( val3, 0x09 ));
+
+                state[1, i] = (byte)( Multiply( val0, 0x09 ) ^ Multiply( val1, 0x0e ) ^ Multiply( val2, 0x0b ) ^ Multiply( val3, 0x0d ));
+
+                state[2, i] = (byte)( Multiply( val0, 0x0d ) ^ Multiply( val1, 0x09 ) ^ Multiply( val2, 0x0e ) ^ Multiply( val3, 0x0b ));
+
+                state[3, i] = (byte)( Multiply( val0, 0x0b ) ^ Multiply( val1, 0x0d ) ^ Multiply( val2, 0x09 ) ^ Multiply( val3, 0x0e ));
+            }
         }
     }
 }
