@@ -7,6 +7,9 @@ namespace Tests
     [TestClass]
     public class TestsCryptography
     {
+        /***********************************************************************************************************/
+        /* TEST ENCRYPTION OF ONE BLOCK DATA ***********************************************************************/
+
         [TestMethod]
         public void TestAESEncryptBlockData()
         {
@@ -14,10 +17,9 @@ namespace Tests
             byte[,] blockToEncrypt;
             byte[,] blockExpected;
             byte[][] roundKeys;
-            PrivateType typeKey = new PrivateType( typeof( Key ) );
-            PrivateObject typeEncryption = new PrivateObject( new Encryption() );
-
-            // First test
+            PrivateType key = new PrivateType( typeof( Key ) );
+            PrivateObject encryption = new PrivateObject( new Encryption() );
+                        
 
             initialKey = new byte[16]       { 0x54, 0x68, 0x61, 0x74,
                                               0x73, 0x20, 0x6D, 0x79,
@@ -30,18 +32,16 @@ namespace Tests
                                              { 0x20, 0x20, 0x65, 0x6F }};
 
             
-            blockExpected  = new byte[4, 4] {{ 0x29, 0x57, 0x40, 0x1A},
-                                             { 0xC3, 0x14, 0x22, 0x02},
-                                             { 0x50, 0x20, 0x99, 0xD7},
-                                             { 0x5F, 0xF6, 0xB3, 0x3A}};
+            blockExpected  = new byte[4, 4] {{ 0x29, 0x57, 0x40, 0x1A },
+                                             { 0xC3, 0x14, 0x22, 0x02 },
+                                             { 0x50, 0x20, 0x99, 0xD7 },
+                                             { 0x5F, 0xF6, 0xB3, 0x3A }};
 
 
-            roundKeys = (byte[][])typeKey.InvokeStatic( "ExpandKey", initialKey );            
-            typeEncryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
+            roundKeys = (byte[][])key.InvokeStatic( "ExpandKey", initialKey );            
+            encryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
             CollectionAssert.AreEqual( blockToEncrypt, blockExpected );
-
-
-            // Second test
+                        
 
             initialKey = new byte[16]       { 0x2B, 0x7E, 0x15, 0x16,
                                               0x28, 0xAE, 0xD2, 0xA6,
@@ -59,11 +59,67 @@ namespace Tests
                                              { 0x84, 0x09, 0x85, 0x0B },
                                              { 0x1D, 0xFB, 0x97, 0x32 }};
                                     
-            roundKeys = (byte[][])typeKey.InvokeStatic( "ExpandKey", initialKey );
-            typeEncryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
+            roundKeys = (byte[][])key.InvokeStatic( "ExpandKey", initialKey );
+            encryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
             CollectionAssert.AreEqual( blockToEncrypt, blockExpected );
         }
 
+        /***********************************************************************************************************/
+        /* TEST DECRYPTION OF ONE BLOCK DATA ***********************************************************************/
+
+        [TestMethod]
+        public void TestAESDecryptBlockData()
+        {
+            byte[] initialKey;
+            byte[,] blockToDecrypt;
+            byte[,] blockExpected;
+            byte[][] roundKeys;
+            PrivateType key = new PrivateType( typeof( Key ) );
+            PrivateObject decryption = new PrivateObject( new Decryption() );
+
+
+            initialKey = new byte[16]       { 0x54, 0x68, 0x61, 0x74,
+                                              0x73, 0x20, 0x6D, 0x79,
+                                              0x20, 0x4B, 0x75, 0x6E,
+                                              0x67, 0x20, 0x46, 0x75 };
+
+            blockExpected = new byte[4, 4]  {{ 0x54, 0x4F, 0x4E, 0x20 },
+                                             { 0x77, 0x6E, 0x69, 0x54 },
+                                             { 0x6F, 0x65, 0x6E, 0x77 },
+                                             { 0x20, 0x20, 0x65, 0x6F }};
+
+
+            blockToDecrypt = new byte[4, 4] {{ 0x29, 0x57, 0x40, 0x1A },
+                                             { 0xC3, 0x14, 0x22, 0x02 },
+                                             { 0x50, 0x20, 0x99, 0xD7 },
+                                             { 0x5F, 0xF6, 0xB3, 0x3A }};
+
+            roundKeys = (byte[][])key.InvokeStatic( "ExpandKey", initialKey );
+            decryption.Invoke( "DecryptBlockData", blockToDecrypt, roundKeys );
+            CollectionAssert.AreEqual( blockToDecrypt, blockExpected );
+                        
+
+            initialKey = new byte[16]       { 0x2B, 0x7E, 0x15, 0x16,
+                                              0x28, 0xAE, 0xD2, 0xA6,
+                                              0xAB, 0xF7, 0x15, 0x88,
+                                              0x09, 0xCF, 0x4F, 0x3C };
+
+            blockExpected = new byte[4, 4]  {{ 0x32, 0x88, 0x31, 0xE0 },
+                                             { 0x43, 0x5A, 0x31, 0x37 },
+                                             { 0xF6, 0x30, 0x98, 0x07 },
+                                             { 0xA8, 0x8D, 0xA2, 0x34 }};
+
+
+            blockToDecrypt = new byte[4, 4] {{ 0x39, 0x02, 0xDC, 0x19 },
+                                             { 0x25, 0xDC, 0x11, 0x6A },
+                                             { 0x84, 0x09, 0x85, 0x0B },
+                                             { 0x1D, 0xFB, 0x97, 0x32 }};
+
+            roundKeys = (byte[][])key.InvokeStatic( "ExpandKey", initialKey );
+            decryption.Invoke( "DecryptBlockData", blockToDecrypt, roundKeys );
+            CollectionAssert.AreEqual( blockToDecrypt, blockExpected );
+        }
+        
         /************************************************************************************************************/
         /* TEST DATA ALIGNMENT **************************************************************************************/
 
@@ -326,9 +382,9 @@ namespace Tests
             result = (byte)type.Invoke( "Multiply", (byte)0xd4, (byte)0x02 );
             expected = 0xb3;
             Assert.AreEqual( result, expected );
-
-            expected = 0x5d;
+                        
             result = (byte)type.Invoke( "Multiply", (byte)0xa3, (byte)0x02 );
+            expected = 0x5d;
             Assert.AreEqual( result, expected );
 
             result = (byte)type.Invoke( "Multiply", (byte)0xbf, (byte)0x03 );
