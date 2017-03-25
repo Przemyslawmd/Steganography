@@ -1,12 +1,37 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cryptography;
+using System.IO;
+using System.Reflection;
+using System;
 
 namespace Tests
 {
     [TestClass]
     public class TestsCryptography
     {
+        /***********************************************************************************************************/
+        /* MAIN TEST FOR ENCRYPION *********************************************************************************/
+        [TestMethod]
+        public void TestAES()
+        {
+            String password = "3ndnui@uh2";
+            PrivateObject encryption = new PrivateObject( new Encryption() );
+            PrivateObject decryption = new PrivateObject( new Decryption() );
+
+            string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;            
+            string filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
+            byte[] data = File.ReadAllBytes( filePath );
+            byte[] dataCopy = new byte[data.Length];
+            Array.Copy( data, dataCopy, data.Length );
+
+            data = (byte[])encryption.Invoke( "Encrypt", data, password );
+            CollectionAssert.AreNotEqual( data, dataCopy );
+                        
+            data = (byte[])decryption.Invoke( "Decrypt", data, password );
+            CollectionAssert.AreEqual( data, dataCopy );            
+        } 
+                  
         /***********************************************************************************************************/
         /* TEST ENCRYPTION OF ONE BLOCK DATA ***********************************************************************/
 
