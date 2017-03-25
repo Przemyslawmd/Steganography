@@ -8,7 +8,7 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public void Encrypt( byte[] source, String password )
+        public byte[] Encrypt( byte[] source, String password )
         {
             byte[][] key = Key.CreateKeys( password );
             byte[] dataToEncrypt = AlignData( source );
@@ -19,7 +19,9 @@ namespace Cryptography
                 InputIntoState( dataToEncrypt , i, state );
                 EncryptBlockData( state, key );
                 StateIntoOutput( dataToEncrypt, i, state );
-            }                 
+            }
+
+            return dataToEncrypt;                 
         }             
         
         /***********************************************************************************************/

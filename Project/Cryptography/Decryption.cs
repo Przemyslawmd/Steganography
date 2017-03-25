@@ -6,20 +6,25 @@ namespace Cryptography
 {
     class Decryption : BaseCryptography
     {
-        public void Decrypt( byte[] dataToDecrypt, String password )
+        public byte[] Decrypt( byte[] dataToDecrypt, String password )
         {
             byte[][] key = Key.CreateKeys( password );
             byte[,] state = new byte[4, 4];
 
             if ( dataToDecrypt.Length % 16 != 0 )
-                return;
+                throw new ExceptionEncryption( "Data to be encrypted must be divided by 16" );
 
             for ( int i = 0; i < dataToDecrypt.Length; i += 16 )
             {
                 InputIntoState( dataToDecrypt, i, state );
                 DecryptBlockData( state, key );
                 StateIntoOutput( dataToDecrypt, i, state );
-            }            
+            }
+
+            int padding = dataToDecrypt[dataToDecrypt.Length - 1];
+            byte[] decryptedData = new byte[dataToDecrypt.Length - padding];
+            Array.Copy( dataToDecrypt, decryptedData, decryptedData.Length );
+            return decryptedData;            
         }
 
         /***********************************************************************************************/
