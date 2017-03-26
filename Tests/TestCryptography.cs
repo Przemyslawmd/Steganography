@@ -15,20 +15,17 @@ namespace Tests
         [TestMethod]
         public void TestAES()
         {
-            String password = "3ndnui@uh2";
-            PrivateObject encryption = new PrivateObject( new Encryption() );
-            PrivateObject decryption = new PrivateObject( new Decryption() );
-
+            String password = "3ndnui@uh2";    
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;            
             string filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
             byte[] data = File.ReadAllBytes( filePath );
             byte[] dataCopy = new byte[data.Length];
             Array.Copy( data, dataCopy, data.Length );
-
-            data = (byte[])encryption.Invoke( "Encrypt", data, password );
+                        
+            data = new Encryption().Encrypt( data, password );            
             CollectionAssert.AreNotEqual( data, dataCopy );
                         
-            data = (byte[])decryption.Invoke( "Decrypt", data, password );
+            data = new Decryption().Decrypt( data, password );
             CollectionAssert.AreEqual( data, dataCopy );            
         } 
                   
