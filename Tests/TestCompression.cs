@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Compression;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace Tests
 {
@@ -10,7 +11,26 @@ namespace Tests
     public class TestCompression
     {
         /********************************************************************************************/
+        /* MAIN TEST FOR COMPRESSION ****************************************************************/
+
+        [TestMethod]
+        public void TestMainForCompression()
+        {                       
+            string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
+            string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
+            byte[] data = File.ReadAllBytes( filePath );
+                        
+            byte[] dataCompressed = new Compress().CompressData( data );
+            CollectionAssert.AreNotEqual( data, dataCompressed );
+            Assert.IsTrue( dataCompressed.Length < data.Length );
+            
+            byte[] dataDecompressed = new Decompress().decompressData( dataCompressed );
+            CollectionAssert.AreEqual( data, dataDecompressed );
+        }
+
+        /********************************************************************************************/
         /* TEST CREATING NODES USED TO BUILD HUFFMAN TREE *******************************************/
+
         [TestMethod]
         public void TestCompressionCreatingNodes()
         {
@@ -29,6 +49,7 @@ namespace Tests
 
         /*********************************************************************************************/
         /* TEST BUILDING HUFFMAN TREE ****************************************************************/
+
         [TestMethod]
         public void TestCompressionBuildingTree()
         {
@@ -62,6 +83,7 @@ namespace Tests
 
         /*********************************************************************************************/
         /* TEST CREATING HUFFMAN CODES ***************************************************************/
+
         [TestMethod]
         public void TestCompressionGeneratingCodes()
         {
