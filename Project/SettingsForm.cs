@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using Steganography;
 
 namespace Stegan
 {
@@ -11,92 +12,83 @@ namespace Stegan
         {
             Form settingForm = new Form();
             settingForm.Width = 365;
-            settingForm.Height = 180;
+            settingForm.Height = 250;
             settingForm.MinimizeBox = false;
             settingForm.MaximizeBox = false;
             settingForm.ShowIcon = false;
             settingForm.FormBorderStyle = FormBorderStyle.FixedSingle;
-            
-            // Compression //
+                  
 
-            GroupBox groupCompress = CreateGroupBox( 50, 330, 10, 20 );
-            CheckBox ctCompress = CreateCheckBox( 15, 300, 15, isCompress );
-            
-            groupCompress.Controls.Add( CreateLabel( "Data compression", 240, 5, 20 ) );
-            groupCompress.Controls.Add( ctCompress );
+            GroupBox groupCompression = CreateGroupBox( 10, 20, 50, 330 );
+            CheckBox checkCompression = CreateCheckBox( 300, 15, 15, Settings.GetCompressionState() );
+            groupCompression.Controls.Add( checkCompression );
+            groupCompression.Controls.Add( CreateLabel( 5, 20, "Data compression", 240 ) );
+
+
+            GroupBox groupEncryption =  CreateGroupBox( 10, 90, 50, 330 );
+            CheckBox checkEncryption = CreateCheckBox( 300, 15, 15, Settings.GetEncryptionState() );
+            groupEncryption.Controls.Add( checkEncryption );
+            groupEncryption.Controls.Add( CreateLabel( 5, 20, "Data encryption", 240 ) );
                         
-            // Accept //
 
-            Button btAccept = new Button();
-            btAccept.Text = "Accept";
-            btAccept.Location = new Point( 140, 100 );
-            btAccept.Click += ( object senderAc, EventArgs eAc) => { acceptSetting(ctCompress.Checked ); };
-            btAccept.Click += ( object senderAc, EventArgs aAc) => { settingForm.Dispose(); };
+            Button buttonAccept = new Button();
+            buttonAccept.Text = "Accept";
+            buttonAccept.Location = new Point( 140, 170 );
+            buttonAccept.Click += ( object senderAc, EventArgs eAc) => { acceptSetting( checkCompression.Checked, checkEncryption.Checked ); };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc) => { settingForm.Dispose(); };
                      
-            settingForm.Controls.Add( groupCompress );
-            settingForm.Controls.Add( btAccept );
+            settingForm.Controls.Add( groupCompression );
+            settingForm.Controls.Add( groupEncryption );
+            settingForm.Controls.Add( buttonAccept );
 
             menuStripOne.Enabled = false;
             settingForm.Disposed += ( object obj, EventArgs eventA ) => { menuStripOne.Enabled = true; };
             settingForm.Show();
         }
 
-        /**********************************************************************************************************************/
-        /* ACCEPTS SETTINGS ***************************************************************************************************/
+        /****************************************************************************************/
+        /* ACCEPTS SETTINGS *********************************************************************/
 
-        private void acceptSetting( Boolean compress )
+        private void acceptSetting( bool compressionState, bool encryptionState )
         {
-            isCompress = compress;                       
-        }
+            Settings.SetCompressionState( compressionState );
+            Settings.SetEncryptionState( encryptionState );                                   
+        }              
 
-        /**************************************************************************************/
-        /* HELPERS FOR CONTROLS CREATING ******************************************************/
-
-        /* GENERAL ****************************************************************************/
+        /* GENERAL CONTROL SETTINGS**************************************************************/
     
-        private void SetGeneralControl( Control control, int width, int x, int y )
+        private void SetGeneralControl( int x, int y, int width, Control control )
         {
             control.Width = width;
             control.Location = new Point( x, y );
         }
 
-        /* GROUPBOX ***************************************************************************/
+        /* GROUPBOX ****************************************************************************/
 
-        private GroupBox CreateGroupBox( int height, int width, int x, int y )
+        private GroupBox CreateGroupBox( int x, int y, int height, int width )
         {
             GroupBox group = new GroupBox();
             group.Height = height;
-            SetGeneralControl( group, width, x, y );
+            SetGeneralControl( x, y, width, group );
             return group;
-        }
+        }        
 
-        /* RADIO BUTTON ***********************************************************************/
+        /* CHECKBOX ****************************************************************************/
 
-        private RadioButton CreateRadio( String text, int width, int x, int y, bool state )
-        {
-            RadioButton radio = new RadioButton();
-            SetGeneralControl( radio, width, x, y );
-            radio.Text = text;            
-            radio.Checked = state;
-            return radio;
-        }
-
-        /* CHECKBOX ***************************************************************************/
-
-        private CheckBox CreateCheckBox( int width, int x, int y, bool state )
+        private CheckBox CreateCheckBox( int x, int y, int width, bool state )
         {
             CheckBox checkBox = new CheckBox();            
-            SetGeneralControl( checkBox, width, x, y );
+            SetGeneralControl( x, y, width, checkBox );
             checkBox.Checked = state;
             return checkBox;
         }
 
         /* LABEL *******************************************************************************/
 
-        private Label CreateLabel( String text, int width, int x, int y ) 
+        private Label CreateLabel( int x, int y, String text, int width ) 
         {
             Label label = new Label();
-            SetGeneralControl( label, width, x, y );
+            SetGeneralControl( x, y, width, label );
             label.Text = text;           
             return label;
         } 
