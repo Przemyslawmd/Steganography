@@ -5,8 +5,9 @@ using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Compression;
+using Cryptography;
 
-namespace Stegan
+namespace Steganography
 {
     public partial class Form1 : Form
     {
@@ -163,7 +164,27 @@ namespace Stegan
 
         private void CoverData()
         {
-            if ( isCompress )
+            if ( Settings.GetEncryptionState() )
+            {
+                string password = Settings.GetPassword();
+
+                if ( password.Equals( "" ) )
+                {
+                    MessageBox.Show( "Encryption is checked, but password is empty" );
+                    return; 
+                } 
+
+                try
+                {
+                    DataBuffer = new Encryption().Encrypt( DataBuffer, password );
+                }
+                catch ( Exception e )
+                {
+                    return;
+                }
+            }
+
+            if ( Settings.GetCompressionState() )
             {                
                 try
                 {
@@ -174,8 +195,8 @@ namespace Stegan
                     MessageBox.Show( e.Message.ToString() );
                     return;
                 }
-            }
-
+            }                  
+                        
             // 8 value means bites in byte
             if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage ))
             {
@@ -234,6 +255,28 @@ namespace Stegan
             {
                 return false;
             }
+
+            if ( Settings.GetEncryptionState() )
+            {
+                string password = Settings.GetPassword();
+
+                if ( password.Equals( "" ) )
+                {
+                    MessageBox.Show( "Encryption is checked, but password is empty" );
+                    return false;
+                }
+
+                try
+                {
+                    DataBuffer = new Decryption().Decrypt( DataBuffer, password );
+                }
+                catch ( Exception e )
+                {
+                    MessageBox.Show( e.Message + e.Source + e.ToString() );
+                    return false;
+                }
+            }
+
             return true;
         }
         
@@ -302,8 +345,8 @@ namespace Stegan
             browser.Dock = DockStyle.Fill;
             browser.DocumentText = "<html><body style='font-size:11px; font-family: Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
                 "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>Steganography application</p>" + 
-                "<pre>Version 1.2</pre>" +
-                "<pre>Author:           Przemyslaw Madej, Cracow 2016 </pre>" + 
+                "<pre>Version 1.3</pre>" +
+                "<pre>Author:           Przemyslaw Madej, Warsaw 2017 </pre>" + 
                 "<pre>Email:            przemyslawmd@gmail.com</pre>" +
                 "<pre>Home page:        http://www.przemeknet.pl/steganEn.aspx</pre></body></html>"; 
             Form.Controls.Add(browser);
