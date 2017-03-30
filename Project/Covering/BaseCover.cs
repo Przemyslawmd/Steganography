@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stegan
+namespace Steganography
 {
     class BaseCover
     {
