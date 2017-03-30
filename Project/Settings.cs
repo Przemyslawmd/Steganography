@@ -24,7 +24,18 @@ namespace Steganography
             isEncryption = state;
         }
 
+        public static string GetPassword()
+        {
+            return encryptionPassword;
+        }
+
+        public static void SetPassword( string password )
+        {
+            encryptionPassword = password;
+        }
+
         private static bool isCompression;
         private static bool isEncryption;
+        private static string encryptionPassword;
     }
 }

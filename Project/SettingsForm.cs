@@ -2,9 +2,8 @@
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using Steganography;
 
-namespace Stegan
+namespace Steganography
 {
     public partial class Form1 : Form
     {
@@ -12,7 +11,7 @@ namespace Stegan
         {
             Form settingForm = new Form();
             settingForm.Width = 365;
-            settingForm.Height = 250;
+            settingForm.Height = 290;
             settingForm.MinimizeBox = false;
             settingForm.MaximizeBox = false;
             settingForm.ShowIcon = false;
@@ -22,20 +21,25 @@ namespace Stegan
             GroupBox groupCompression = CreateGroupBox( 10, 20, 50, 330 );
             CheckBox checkCompression = CreateCheckBox( 300, 15, 15, Settings.GetCompressionState() );
             groupCompression.Controls.Add( checkCompression );
-            groupCompression.Controls.Add( CreateLabel( 5, 20, "Data compression", 240 ) );
+            groupCompression.Controls.Add( CreateLabel( 10, 20, "Data compression", 100 ) );
 
 
-            GroupBox groupEncryption =  CreateGroupBox( 10, 90, 50, 330 );
-            CheckBox checkEncryption = CreateCheckBox( 300, 15, 15, Settings.GetEncryptionState() );
+            GroupBox groupEncryption =  CreateGroupBox( 10, 90, 90, 330 );
+            CheckBox checkEncryption = CreateCheckBox( 300, 15, 15, Settings.GetEncryptionState() );            
+            TextBox textBoxEncryption = CreateTextBox( 213, 50, 100, Settings.GetPassword() );
+            groupEncryption.Controls.Add( CreateLabel( 10, 20, "Data encryption", 100 ) );
             groupEncryption.Controls.Add( checkEncryption );
-            groupEncryption.Controls.Add( CreateLabel( 5, 20, "Data encryption", 240 ) );
-                        
+            groupEncryption.Controls.Add( CreateLabel( 10, 55, "Password", 100 ) );
+            groupEncryption.Controls.Add( textBoxEncryption );
+            
 
             Button buttonAccept = new Button();
             buttonAccept.Text = "Accept";
-            buttonAccept.Location = new Point( 140, 170 );
-            buttonAccept.Click += ( object senderAc, EventArgs eAc) => { acceptSetting( checkCompression.Checked, checkEncryption.Checked ); };
-            buttonAccept.Click += ( object senderAc, EventArgs aAc) => { settingForm.Dispose(); };
+            buttonAccept.Location = new Point( 140, 210 );
+            buttonAccept.Click += ( object senderAc, EventArgs eAc ) => { Settings.SetCompressionState( checkCompression.Checked ); };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.SetEncryptionState( checkEncryption.Checked ); };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.SetPassword( textBoxEncryption.Text ); };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { settingForm.Dispose(); };
                      
             settingForm.Controls.Add( groupCompression );
             settingForm.Controls.Add( groupEncryption );
@@ -44,16 +48,7 @@ namespace Stegan
             menuStripOne.Enabled = false;
             settingForm.Disposed += ( object obj, EventArgs eventA ) => { menuStripOne.Enabled = true; };
             settingForm.Show();
-        }
-
-        /****************************************************************************************/
-        /* ACCEPTS SETTINGS *********************************************************************/
-
-        private void acceptSetting( bool compressionState, bool encryptionState )
-        {
-            Settings.SetCompressionState( compressionState );
-            Settings.SetEncryptionState( encryptionState );                                   
-        }              
+        }                   
 
         /* GENERAL CONTROL SETTINGS**************************************************************/
     
@@ -91,6 +86,16 @@ namespace Stegan
             SetGeneralControl( x, y, width, label );
             label.Text = text;           
             return label;
-        } 
+        }
+
+        /* TEXT BOX ****************************************************************************/
+
+        private TextBox CreateTextBox( int x, int y, int width, string password )
+        {
+            TextBox textBox = new TextBox();
+            SetGeneralControl( x, y, width, textBox );
+            textBox.Text = password;
+            return textBox;
+        }
     }
 }
