@@ -206,7 +206,7 @@ namespace Steganography
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData( bitmap, DataBuffer, isCompress );
+            new Covering().CoverData( bitmap, DataBuffer, Settings.GetCompressionState() );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
             MessageBox.Show( "Data was covered in a graphic file successfully" );
@@ -361,7 +361,6 @@ namespace Steganography
         
         private int heightImage;
         private int widthImage;
-        private Boolean isCompress = false;       
                                   
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
