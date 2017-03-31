@@ -8,11 +8,13 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public byte[] Encrypt( byte[] source, String password )
+        public byte[] Encrypt( byte[] dataToEncrypt, String password )
         {
             byte[][] key = Key.CreateKeys( password );
-            byte[] dataToEncrypt = AlignData( source );
+            dataToEncrypt = AlignData( dataToEncrypt );
             byte[,] state = new byte[4, 4];
+
+            int alignment = dataToEncrypt[dataToEncrypt.Length - 1];
 
             for ( int i = 0; i < dataToEncrypt.Length; i += 16 )
             {
@@ -21,6 +23,8 @@ namespace Cryptography
                 StateIntoOutput( dataToEncrypt, i, state );
             }
 
+            Array.Resize( ref dataToEncrypt, dataToEncrypt.Length + 1 );
+            dataToEncrypt[dataToEncrypt.Length - 1] = (byte)alignment;
             return dataToEncrypt;                 
         }             
         
@@ -42,7 +46,7 @@ namespace Cryptography
             // Last round without MixColumns 
             SubBytes( state );
             ShiftRows( state );            
-            AddRoundKey( state, key[NumOfRounds - 1] );            
+            AddRoundKey( state, key[NumOfRounds - 1] );
         }
 
         /* ALIGN DATA *********************************************************************************/

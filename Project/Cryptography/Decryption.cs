@@ -11,6 +11,9 @@ namespace Cryptography
             byte[][] key = Key.CreateKeys( password );
             byte[,] state = new byte[4, 4];
 
+            int alignment = dataToDecrypt[dataToDecrypt.Length - 1];
+            Array.Resize( ref dataToDecrypt, dataToDecrypt.Length - 1 );
+
             if ( dataToDecrypt.Length % 16 != 0 )
                 throw new ExceptionEncryption( "Data to be encrypted must be divided by 16" );
 
@@ -21,8 +24,7 @@ namespace Cryptography
                 StateIntoOutput( dataToDecrypt, i, state );
             }
 
-            int padding = dataToDecrypt[dataToDecrypt.Length - 1];
-            byte[] decryptedData = new byte[dataToDecrypt.Length - padding];
+            byte[] decryptedData = new byte[dataToDecrypt.Length - alignment];
             Array.Copy( dataToDecrypt, decryptedData, decryptedData.Length );
             return decryptedData;            
         }

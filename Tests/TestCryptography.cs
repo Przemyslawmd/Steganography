@@ -24,9 +24,9 @@ namespace Tests
                         
             data = new Encryption().Encrypt( data, password );            
             CollectionAssert.AreNotEqual( data, dataCopy );
-                        
+
             data = new Decryption().Decrypt( data, password );
-            CollectionAssert.AreEqual( data, dataCopy );            
+            CollectionAssert.AreEqual( data, dataCopy );
         } 
                   
         /***********************************************************************************************************/
@@ -150,23 +150,20 @@ namespace Tests
         {                                
             PrivateObject obj = new PrivateObject( new Encryption() );
 
-            byte[] data = new byte[5];  
-            data = ( byte[] )obj.Invoke( "AlignData", data );
-
+            byte[] data = new byte[5];
+            data = (byte[])obj.Invoke( "AlignData", data );
             Assert.AreEqual( data.Length, 16 );
             Assert.AreEqual( data[data.Length - 1], 11 );
-                        
-            data = new byte[22];
-            data = ( byte[] )obj.Invoke( "AlignData", data );
 
+            data = new byte[22];
+            data = (byte[])obj.Invoke( "AlignData", data );
             Assert.AreEqual( data.Length, 32 );
             Assert.AreEqual( data[data.Length - 1], 10 );
 
             data = new byte[16] ;
-            data = ( byte[] )obj.Invoke( "AlignData", data );
-
+            data = (byte[]) obj.Invoke( "AlignData", data );
             Assert.AreEqual( data.Length, 32 );
-            Assert.AreEqual( data[data.Length - 1], 16 );            
+            Assert.AreEqual( data[data.Length - 1], 16 );
         }
 
         /************************************************************************************************************/
