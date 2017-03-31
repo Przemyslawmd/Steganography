@@ -180,6 +180,7 @@ namespace Steganography
                 }
                 catch ( Exception e )
                 {
+                    MessageBox.Show( e.Message.ToString() );
                     return;
                 }
             }
@@ -251,8 +252,9 @@ namespace Steganography
                 if ( flagCompress )
                     DataBuffer = new Decompress().decompressData( DataBuffer );
             }
-            catch ( Exception )
+            catch ( Exception e )
             {
+                MessageBox.Show( e.Message + e.Source + e.ToString() );
                 return false;
             }
 
@@ -314,8 +316,7 @@ namespace Steganography
 
         private void removeText(object sender, EventArgs e)
         {
-            textControl.Text = "";
-            return;
+            textControl.Text = "";            
         }              
 
         /***************************************************************************************************************/
