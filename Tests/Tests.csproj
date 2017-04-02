@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="Resources\fileToTest.txt" />
     <Content Include="Resources\fileToTestCompression.txt" />
+    <Content Include="Resources\graphicToTest.jpg" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

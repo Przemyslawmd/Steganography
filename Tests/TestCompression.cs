@@ -14,7 +14,7 @@ namespace Tests
         /* MAIN TEST FOR COMPRESSION ****************************************************************/
 
         [TestMethod]
-        public void TestMainForCompression()
+        public void TestCompressionMAin()
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
