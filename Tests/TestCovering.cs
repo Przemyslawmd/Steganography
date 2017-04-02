@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
-using Steganography;
+using Stegan;
 using Compression;
 using System.IO;
 

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace Steganography
+namespace Stegan
 {
     public partial class Form1 : Form
     {

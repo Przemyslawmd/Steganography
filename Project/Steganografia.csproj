@@ -8,8 +8,8 @@
     <ProjectGuid>{B630B755-7C59-4BBA-A0B7-0F6C3F43AEC6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SteganP</RootNamespace>
-    <AssemblyName>SteganP</AssemblyName>
+    <RootNamespace>Stegan</RootNamespace>
+    <AssemblyName>Stegan</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -39,7 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
-    <DocumentationFile>bin\Debug\SteganP.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Stegan.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">

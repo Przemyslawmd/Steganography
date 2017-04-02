@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cryptography;
 using System.IO;
-using System.Reflection;
 using System;
 
 namespace Tests

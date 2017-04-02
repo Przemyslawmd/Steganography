@@ -1,4 +1,4 @@
-﻿namespace Steganography
+﻿namespace Stegan
 {
     partial class Form1
     {

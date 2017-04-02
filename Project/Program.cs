@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Steganography
+namespace Stegan
 {
     static class Program
     {
