@@ -8,9 +8,10 @@ namespace Compression
 {
     class Compress
     {
-        /**********************************************************************************************************************************/
-        /* MAIN COMPRESS METHOD ***********************************************************************************************************/
-                
+        /************************************************************************************************/
+        /* COMPRESS DATA ********************************************************************************/
+        // Public method to start compression                
+        // Returns compressed data merged with Huffman codes
         public byte[] CompressData( byte[] source )
         {
             int sizeBeforeCompress = source.Length;            
@@ -28,11 +29,13 @@ namespace Compression
             Buffer.BlockCopy( source, 0, finalData, header.Length + 4, source.Length );
            
             return finalData;           
-        }              
-                
-        /****************************************************************************************************************************/
-        /* COMPRESS DATA ************************************************************************************************************/
-        
+        }
+
+        /************************************************************************************************/
+        /* START COMPRESS *******************************************************************************/
+        // Main method for compression                
+        // Returns compressed data
+
         private byte[] StartCompress( byte[] source )
         {
             int bitShift = 0;
@@ -47,7 +50,7 @@ namespace Compression
                
                 for (int j = 0; j < code.Length; j++)
                 {
-                    if ( bitShift == BITS_IN_BYTE )
+                    if ( bitShift == BitsInByte )
                     {
                         compressedData.Add( temp );
                         temp = 0;
@@ -64,7 +67,7 @@ namespace Compression
             // Some data remains, there is a need to add an alignment
             if ( bitShift != 0 )           
             {
-                temp <<= ( BITS_IN_BYTE - bitShift );
+                temp <<= ( BitsInByte - bitShift );
                 compressedData.Add( temp );
             }
             
@@ -72,8 +75,9 @@ namespace Compression
         }
 
         /**************************************************************************************************/
-        /* GET CODES FROM DICTIONARY AND MERGE IT WITH COMPRESSED DATA ************************************/
-        
+        /* INSERT CODES ***********************************************************************************/
+        // Gets codes from dictionary and merges it with compressed data 
+                    
         private void InsertCodes()
         {
             codesData = new List<byte>();
@@ -83,7 +87,7 @@ namespace Compression
 
             // In first four bytes there is an information about size of Dictionary
             temp = codes.Count;
-            for ( int i = 0, j = 24; i < 4; i++, j -= BITS_IN_BYTE )
+            for ( int i = 0, j = 24; i < 4; i++, j -= BitsInByte )
                 codesData.Add(( byte )( temp >> j ));
                         
             codes.Keys.CopyTo( keys, 0 );            
@@ -104,17 +108,17 @@ namespace Compression
                 if ( tempCode[tempCode.Length - 1] == '1' )
                     temp += 1;
 
-                for ( int k = 0, j = 24; k < 4; k++, j -= BITS_IN_BYTE )
+                for ( int k = 0, j = 24; k < 4; k++, j -= BitsInByte )
                     codesData.Add(( byte )( temp >> j ));
             }           
         }
 
-        /****************************************************************************************************************/
-        /****************************************************************************************************************/
+        /********************************************************************************************************/
+        /********************************************************************************************************/
 
         private List<byte> codesData;              // data with codes that are to be merged with compressed data
         private List<byte> compressedData;     
         private Dictionary<byte, String> codes;    // final codes : byte values with bit sequences  
-        readonly int BITS_IN_BYTE = 8;     
+        readonly int BitsInByte = 8;     
     }
 }
