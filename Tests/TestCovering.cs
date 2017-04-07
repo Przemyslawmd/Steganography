@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
 using Stegan;
 using Compression;
+using Cryptography;
 using System.IO;
 
 namespace Tests
@@ -97,8 +98,10 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInColorBitmapWithCompression()
         {
-            PrepareData();
-            bool compression = true;
+            // Needed as a reference parameter, in this test value is not important 
+            bool compression = false;
+
+            PrepareData();            
             byte[] dataCopy = new byte[fullData.Length];
             Array.Copy( fullData, dataCopy, fullData.Length );
 
@@ -108,6 +111,50 @@ namespace Tests
             byte[] decompressedData = new Decompress().decompressData( uncoveredData );
 
             CollectionAssert.AreEqual( decompressedData, fullData );
+        }
+
+        /********************************************************************************************************/
+        /* TEST COVERING WITH ENCRYPTION ************************************************************************/
+
+        [TestMethod]
+        public void TestCoveringInColorBitmapWithEncryption()
+        {
+            bool compression = false;
+            String password = "de3@JH^@";
+
+            PrepareData();
+            byte[] dataCopy = new byte[fullData.Length];
+            Array.Copy( fullData, dataCopy, fullData.Length );
+                        
+            byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );            
+            new Covering().CoverData( colorBitmap, encryptedData, false );
+            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] decryptedData = new Decryption().Decrypt( uncoveredData, password );
+
+            CollectionAssert.AreEqual( decryptedData, fullData );
+        }
+
+        /********************************************************************************************************/
+        /* TEST COVERING WITH COMPRESSION AND ENCRYPTION ********************************************************/
+
+        [TestMethod]
+        public void TestCoveringInColorBitmapWithCompressionAndEncryption()
+        {
+            bool compression = true;
+            String password = "de3@JH^@";
+
+            PrepareData();
+            byte[] dataCopy = new byte[fullData.Length];
+            Array.Copy( fullData, dataCopy, fullData.Length );
+
+            byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );
+            byte[] compressedData = new Compress().CompressData( encryptedData );
+            new Covering().CoverData( colorBitmap, compressedData, compression );
+            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] decompressedData = new Decompress().decompressData( uncoveredData ); 
+            byte[] decryptedData = new Decryption().Decrypt( decompressedData, password );
+
+            CollectionAssert.AreEqual( decryptedData, fullData );
         }
 
         /********************************************************************************************************/
