@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Compression
+namespace Stegan
 {
     class HuffmanTree
     {
+        /*****************************************************************************************/
+        /* BUILD TREE ****************************************************************************/
+        // Public method for buiding Huffman tree
+        // Parameter is stream of bytes to be compressed
+        // Return a root of Huffman tree
+
         public NodeCompress BuildTree( byte[] sourceData )
         {
             List<NodeCompress> nodes = CreateNodes( sourceData );
@@ -15,8 +20,9 @@ namespace Compression
             return nodes[0];
         }
 
-        /*********************************************************************/
-        /*********************************************************************/
+        /*****************************************************************************************/
+        /* CREATE NODES **************************************************************************/
+        // Create and return list with instances of NodeCompress class
 
         private List<NodeCompress> CreateNodes( byte[] sourceData )
         {
@@ -52,7 +58,9 @@ namespace Compression
         }
 
         /*********************************************************************************************/
-        /* BUILD HUFFMAN TREE ************************************************************************/
+        /* BUILD TREE ********************************************************************************/
+        // Build huffman tree from a list containing NodeCompress objects
+        // There is no new allocation for tree structure, list is changed into tree
 
         private void BuildTree( List<NodeCompress> listNodes )
         {
@@ -69,8 +77,8 @@ namespace Compression
             }
         }
 
-        /**********************************************************************************************************************************/
-        /* INSERT NODE INTO A TREE ********************************************************************************************************/
+        /***********************************************************************************************/
+        /* INSERT NODE INTO A TREE *********************************************************************/
 
         private void InsertNodeIntoTree( NodeCompress newNode, List<NodeCompress> listNodes )
         {

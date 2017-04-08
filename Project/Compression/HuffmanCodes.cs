@@ -3,22 +3,26 @@ using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Tests" )]
 
-namespace Compression
+namespace Stegan
 {
     class HuffmanCodes
     {
+        /********************************************************************************/
+        /* CREATE DICTIONARY WITH CODES *************************************************/        
+
         public Dictionary<byte, String> CreateCodesDictionary( NodeCompress root )
         {
-            codes = new Dictionary<byte, String>();
-            code = new List<Char>();
+            codes = new Dictionary<byte, string>();
+            code = new List<char>();
             GenerateCodes( root, '1' );
             return codes;
         }
 
         /********************************************************************************/
-        /* RECURSIVE METHOD WHICH TRAVERSE TREE AND GENERATES CODES *********************/
+        /* GENERATE CODES ***************************************************************/
+        // Recursive method that traverses tree and generates codes 
 
-        private void GenerateCodes( NodeCompress node, Char token )
+        private void GenerateCodes( NodeCompress node, char token )
         {
             code.Add( token );
 
@@ -35,7 +39,10 @@ namespace Compression
         /***********************************************************************************/
         /***********************************************************************************/
 
-        private List<Char> code;
-        private Dictionary<byte, String> codes;
+        // In some extreme cases, code may be very long, that it is used List<Char> instead of, 
+        // for example, Long type 
+        private List<char> code;
+
+        private Dictionary<byte, string> codes;
     }
 }
