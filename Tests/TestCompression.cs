@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Compression;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Stegan;
 
 namespace Tests
 {
@@ -14,17 +14,17 @@ namespace Tests
         /* MAIN TEST FOR COMPRESSION ****************************************************************/
 
         [TestMethod]
-        public void TestCompressionMAin()
+        public void TestCompressionMain()
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
             byte[] data = File.ReadAllBytes( filePath );
                         
-            byte[] dataCompressed = new Compress().CompressData( data );
+            byte[] dataCompressed = new Compression().Compress( data );
             CollectionAssert.AreNotEqual( data, dataCompressed );
             Assert.IsTrue( dataCompressed.Length < data.Length );
             
-            byte[] dataDecompressed = new Decompress().decompressData( dataCompressed );
+            byte[] dataDecompressed = new Decompression().Decompress( dataCompressed );
             CollectionAssert.AreEqual( data, dataDecompressed );
         }
 

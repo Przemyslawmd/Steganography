@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
 using Stegan;
-using Compression;
 using Cryptography;
 using System.IO;
 
@@ -105,10 +104,10 @@ namespace Tests
             byte[] dataCopy = new byte[fullData.Length];
             Array.Copy( fullData, dataCopy, fullData.Length );
 
-            byte[] compressedData = new Compress().CompressData( dataCopy );
+            byte[] compressedData = new Compression().Compress( dataCopy );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
-            byte[] decompressedData = new Decompress().decompressData( uncoveredData );
+            byte[] decompressedData = new Decompression().Decompress( uncoveredData );
 
             CollectionAssert.AreEqual( decompressedData, fullData );
         }
@@ -148,10 +147,10 @@ namespace Tests
             Array.Copy( fullData, dataCopy, fullData.Length );
 
             byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );
-            byte[] compressedData = new Compress().CompressData( encryptedData );
+            byte[] compressedData = new Compression().Compress( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
-            byte[] decompressedData = new Decompress().decompressData( uncoveredData ); 
+            byte[] decompressedData = new Decompression().Decompress( uncoveredData ); 
             byte[] decryptedData = new Decryption().Decrypt( decompressedData, password );
 
             CollectionAssert.AreEqual( decryptedData, fullData );

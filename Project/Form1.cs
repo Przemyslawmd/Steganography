@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using Compression;
 using Cryptography;
 
 namespace Stegan
@@ -188,7 +187,7 @@ namespace Stegan
             {                
                 try
                 {
-                    DataBuffer = new Compress().CompressData( DataBuffer );
+                    DataBuffer = new Compression().Compress( DataBuffer );
                 }
                 catch ( Exception e )
                 {
@@ -249,7 +248,7 @@ namespace Stegan
             {
                 DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress );
                 if ( flagCompress )
-                    DataBuffer = new Decompress().decompressData( DataBuffer );
+                    DataBuffer = new Decompression().Decompress( DataBuffer );
             }
             catch ( Exception e )
             {
