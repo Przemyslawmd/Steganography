@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Compression
+namespace Stegan
 {
     class NodeCompress : Node
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Compression
+namespace Stegan
 {
     class Node
     {
         public Node() { }
 
-        public Node( Boolean isLeaf )
+        public Node( bool isLeaf )
         {
             this.isLeaf = isLeaf;
         }
@@ -22,7 +22,7 @@ namespace Compression
             get { return isLeaf; }
         }
 
-        protected Boolean isLeaf;
+        protected bool isLeaf;
         protected byte byteValue;
     }
 }

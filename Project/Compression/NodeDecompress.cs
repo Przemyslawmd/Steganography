@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Compression
+namespace Stegan
 {
     class NodeDecompress : Node
     {
-        public NodeDecompress( byte byteValue, Boolean isLeaf ) : base( isLeaf )
+        public NodeDecompress( byte byteValue, bool isLeaf ) : base( isLeaf )
         {
             this.byteValue = byteValue;            
         }        
