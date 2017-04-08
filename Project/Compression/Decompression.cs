@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;             // MessageBox
 
-//using Debug;
-
-namespace Compression
+namespace Stegan
 {
-    class Decompress
+    class Decompression
     {
-        public byte[] decompressData( byte[] source )
+        /**********************************************************************************/
+        /* DECOMPRESS DATA  ***************************************************************/
+        // Public Method to start decompression
+
+        public byte[] Decompress( byte[] source )
         {
             int[] DataCount = new int[1];            
             sourceData = source; 
@@ -21,13 +21,15 @@ namespace Compression
                       
             return Decode( DataCount[0] );    
         }
-        
-        /***********************************************************************************************************/
-        /* GET CODES ***********************************************************************************************/
-        
+
+        /**********************************************************************************/
+        /* GET CODES FROM SOURCE **********************************************************/
+        // Get Huffman codes from compressed data
+        // Huffman codes are merged with compressed data after compression
+
         private void GetCodesFromSource( byte[] data )
         {
-            // Get count of codes from source data, this value is stored in first four bytes            
+            // Get number of codes from source data, this value is stored in first four bytes            
             int codesCount = 0;
             for ( int i = 0; i < 3; i++ )
             {
@@ -77,8 +79,8 @@ namespace Compression
             dataIndex = index;            
         }
 
-        /***********************************************************************************************************/
-        /* BUILD TREE **********************************************************************************************/
+        /********************************************************************************/
+        /* BUILD TREE *******************************************************************/
 
         private void BuildTree()
         {
@@ -117,11 +119,12 @@ namespace Compression
                 else if ( tempCode[tempCode.Length - 1] == '1' )                
                     node.Right = new NodeDecompress( byteValue[i], true );                  
              }           
-        }     
-                 
-        /**********************************************************************************************************/
-        /**********************************************************************************************************/
-        
+        }
+
+        /*********************************************************************************/
+        /* DECODE ************************************************************************/
+        // Decompress data - change codes into byte values
+
         private byte[] Decode( int DataCount )
         {                        
             List<byte> decompressedData = new List<byte>();
@@ -162,8 +165,8 @@ namespace Compression
             return decompressedData.ToArray();
         } 
         
-        /***************************************************************************************************************************/
-        /***************************************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private NodeDecompress root;        
         private List<byte> byteValue;

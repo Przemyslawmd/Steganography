@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
-namespace Compression
+namespace Stegan
 {
-    class Compress
+    class Compression
     {
         /************************************************************************************************/
         /* COMPRESS DATA ********************************************************************************/
         // Public method to start compression                
         // Returns compressed data merged with Huffman codes
-        public byte[] CompressData( byte[] source )
+
+        public byte[] Compress( byte[] source )
         {
             int sizeBeforeCompress = source.Length;            
 
@@ -118,7 +118,7 @@ namespace Compression
 
         private List<byte> codesData;              // data with codes that are to be merged with compressed data
         private List<byte> compressedData;     
-        private Dictionary<byte, String> codes;    // final codes : byte values with bit sequences  
+        private Dictionary<byte, string> codes;    // final codes : byte values with bit sequences  
         readonly int BitsInByte = 8;     
     }
 }
