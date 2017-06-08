@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace Stegan
 {
@@ -17,22 +18,19 @@ namespace Stegan
             {
                 color = Image.GetPixel( x, 0 );
 
-                if (( color.R % 2) == 1 )
-                    byteCount |= Mask1;
+                byteCount |= ( color.R & Mask1 );
                 byteCount <<= 1;
 
-                if (( color.G % 2) == 1 )
-                    byteCount |= Mask1;
+                byteCount |= ( color.G & Mask1 );
                 byteCount <<= 1;
 
-                if (( color.B % 2) == 1 )
-                    byteCount |= Mask1;
+                byteCount |= ( color.B & Mask1 );
 
                 if ( x != ( DataSizePixel - 1 ))
                     byteCount <<= 1;
             }
 
-            byte[] DataBuffer = new byte[byteCount];                      
+            List<byte> DataBuffer = new List<byte>( byteCount );
             CompressFlag = (( Image.GetPixel( CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
             // Uncover data
@@ -43,22 +41,22 @@ namespace Stegan
                     color = Image.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, DataBuffer ) == false )
-                        return DataBuffer;
+                        return DataBuffer.ToArray();
 
                     if ( UncoverDataFromPixel( color.G, DataBuffer ) == false )
-                        return DataBuffer;
+                        return DataBuffer.ToArray();
 
                     if ( UncoverDataFromPixel( color.B, DataBuffer ) == false )
-                        return DataBuffer;
+                        return DataBuffer.ToArray();
                 }
             }
-            return DataBuffer;
+            return DataBuffer.ToArray();
         }        
         
         /*****************************************************************************************************************************/
         /* UNCOVER BIT FROM A PIXEL **************************************************************************************************/
 
-        private bool UncoverDataFromPixel( byte componentRGB, byte[] buffer )
+        private bool UncoverDataFromPixel( byte componentRGB, List<byte> buffer )
         {
             if ( (componentRGB % 2) == 1 )
                 byteValue |= Mask1;
@@ -66,8 +64,8 @@ namespace Stegan
 
             if ( bitNumber == ( LastBit + 1 ))
             {
-                buffer[byteNumber++] = byteValue;
-                if ( byteNumber == byteCount )
+                buffer.Add( byteValue );
+                if ( buffer.Count == byteCount )
                     return false;
                 byteValue = 0;
                 bitNumber = 0;

@@ -1,7 +1,7 @@
 ﻿
 namespace Stegan
 {
-    class BaseCover
+    abstract class BaseCover
     {
         protected int bitNumber;            // Number of bit in a byte 
         protected int byteCount;            // Count of bytes in a stream of data to be covered / uncovered                        
