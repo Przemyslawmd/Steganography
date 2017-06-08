@@ -246,7 +246,7 @@ namespace Stegan
 
             try
             {
-                DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress );
+                DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress ).ToArray();
                 if ( flagCompress )
                     DataBuffer = new Decompression().Decompress( DataBuffer );
             }

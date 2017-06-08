@@ -9,7 +9,7 @@ namespace Stegan
         /**********************************************************************************************************************************/
         /* UNCOVER DATA FROM AN IMAGE *****************************************************************************************************/
 
-        public byte[] UncoverData( Bitmap Image, ref Boolean CompressFlag )
+        public List<byte> UncoverData( Bitmap Image, ref Boolean CompressFlag )
         {
             Color color;
             
@@ -41,16 +41,16 @@ namespace Stegan
                     color = Image.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, DataBuffer ) == false )
-                        return DataBuffer.ToArray();
+                        return DataBuffer;
 
                     if ( UncoverDataFromPixel( color.G, DataBuffer ) == false )
-                        return DataBuffer.ToArray();
+                        return DataBuffer;
 
                     if ( UncoverDataFromPixel( color.B, DataBuffer ) == false )
-                        return DataBuffer.ToArray();
+                        return DataBuffer;
                 }
             }
-            return DataBuffer.ToArray();
+            return DataBuffer;
         }        
         
         /*****************************************************************************************************************************/

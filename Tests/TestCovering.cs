@@ -4,6 +4,8 @@ using System.Drawing;
 using Stegan;
 using Cryptography;
 using System.IO;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Tests
 {
@@ -65,13 +67,12 @@ namespace Tests
         public void TestCoveringInEmptyBitmap()
         {
             PrepareData();
-            byte[] data = new byte[shortData.Length * sizeof( char )];
-            System.Buffer.BlockCopy( shortData.ToCharArray(), 0, data, 0, data.Length );
+            List<byte> data = new List<byte>( Encoding.Unicode.GetBytes( shortData ) );
 
-            new Covering().CoverData( emptyBitmap, data, false );
+            new Covering().CoverData( emptyBitmap, data.ToArray(), false );
             Boolean compression = false;
             data = new Uncovering().UncoverData( emptyBitmap, ref compression );
-            String uncoveredText = System.Text.Encoding.Unicode.GetString( data );
+            String uncoveredText = System.Text.Encoding.Unicode.GetString( data.ToArray() );
 
             Assert.AreNotEqual( uncoveredText, "This text is to be hidden_" );
             Assert.AreEqual( uncoveredText, shortData );            
@@ -86,7 +87,7 @@ namespace Tests
             PrepareData();
             bool compression = false;                        
             new Covering().CoverData( colorBitmap, fullData, compression );
-            byte[] unCoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] unCoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
                         
             CollectionAssert.AreEqual( unCoveredData, fullData );
         }
@@ -106,7 +107,7 @@ namespace Tests
 
             byte[] compressedData = new Compression().Compress( dataCopy );
             new Covering().CoverData( colorBitmap, compressedData, compression );
-            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
             byte[] decompressedData = new Decompression().Decompress( uncoveredData );
 
             CollectionAssert.AreEqual( decompressedData, fullData );
@@ -127,7 +128,7 @@ namespace Tests
                         
             byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );            
             new Covering().CoverData( colorBitmap, encryptedData, false );
-            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
             byte[] decryptedData = new Decryption().Decrypt( uncoveredData, password );
 
             CollectionAssert.AreEqual( decryptedData, fullData );
@@ -149,7 +150,7 @@ namespace Tests
             byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );
             byte[] compressedData = new Compression().Compress( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
-            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
             byte[] decompressedData = new Decompression().Decompress( uncoveredData ); 
             byte[] decryptedData = new Decryption().Decrypt( decompressedData, password );
 
