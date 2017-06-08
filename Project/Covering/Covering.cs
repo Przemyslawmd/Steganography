@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace Stegan
 {     
     class Covering : BaseCover
     {        
-        /***************************************************************************************************************************/
-        /* COVER DATA IN AN IMAGE **************************************************************************************************/
+        /***********************************************************************************************/
+        /* COVER DATA INSIDE AN IMAGE ******************************************************************/
         
-        public void CoverData( Bitmap Image, byte[] dataToCover, Boolean isCompress ) 
+        public void CoverData( Bitmap Image, List<byte> dataToCover, Boolean isCompress ) 
         {
             Color color;
-            byteCount = dataToCover.Length;
+            byteCount = dataToCover.Count;
+
+            dataToCover.Reverse();
+            stack = new Stack<byte>( dataToCover );
 
             // Save data size to be covered                                                    
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
@@ -29,7 +33,7 @@ namespace Stegan
             // Save information whether data is compressed                         
             color = Image.GetPixel( CompressPixel, 0 );
             red = ( isCompress ) ? ( color.R | Mask1 ) : ( color.R & Mask0 );          
-            Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B));
+            Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
             
             // Cover data starting from a second row of a bitmap                   
             // bitNumber variable has initial value less than zero in order to get a byte at the beginning
@@ -41,12 +45,12 @@ namespace Stegan
                 {
                     color = Image.GetPixel(x, y);                             
                                         
-                    if ( CheckBitNumber( dataToCover ) == false )                        
+                    if ( CheckBitNumber() == false )
                         return;
 
                     red = ChangeColorCoveringData( color.R );           
                                
-                    if ( CheckBitNumber( dataToCover ) == false )
+                    if ( CheckBitNumber() == false )
                     {
                         Image.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ) );
                         return;
@@ -54,7 +58,7 @@ namespace Stegan
 
                     green = ChangeColorCoveringData( color.G );         
                                       
-                    if ( CheckBitNumber( dataToCover ) == false )
+                    if ( CheckBitNumber() == false )
                     {
                         Image.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
@@ -66,24 +70,25 @@ namespace Stegan
             }            
         }
         
-        /*****************************************************************************************************************************/
-        /* CHECK BIT NUMBER IN BYTE THAT IS BEING COVERED ****************************************************************************/
+        /***********************************************************************************************/
+        /* CHECK BIT NUMBER ****************************************************************************/
+        // Check bit number in byte is being covered
 
-        private bool CheckBitNumber( byte[] dataToCover )
+        private bool CheckBitNumber()
         {
             if ( bitNumber < 0 )
             {
-                if ( byteNumber == byteCount )                                    
+                if ( stack.Count == 0 )
                     return false;
-                
-                byteValue = dataToCover[byteNumber++];
+
+                byteValue = stack.Pop();
                 bitNumber = LastBit;
             }
             return true;
         }
 
-        /*****************************************************************************************************************************/
-        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA SIZE *********************************************************************/
+        /***********************************************************************************************/
+        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA SIZE ***************************************/
 
         private int ChangeColorCoveringSize( byte componentRGB )
         {
@@ -93,8 +98,8 @@ namespace Stegan
             return componentRGB | Mask1;           
         }
 
-        /*****************************************************************************************************************************/
-        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA **************************************************************************/
+        /**********************************************************************************************/
+        /* CHANGE COLOR *******************************************************************************/
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
@@ -102,6 +107,13 @@ namespace Stegan
                 return componentRGB & Mask0;
             
             return componentRGB | Mask1;
-        }              
+        }
+
+        /**********************************************************************************************/
+        /**********************************************************************************************/
+
+        // Data to be covered are arranged into stack
+        Stack<byte> stack;
     }
 }
+

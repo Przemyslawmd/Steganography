@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using Cryptography;
+using System.Collections.Generic;
 
 namespace Stegan
 {
@@ -205,7 +206,7 @@ namespace Stegan
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData( bitmap, DataBuffer, Settings.GetCompressionState() );
+            new Covering().CoverData( bitmap, new List<byte>( DataBuffer ), Settings.GetCompressionState() );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
             MessageBox.Show( "Data was covered in a graphic file successfully" );
