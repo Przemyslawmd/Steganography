@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
@@ -6,7 +7,7 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public byte[] Encrypt( byte[] dataToEncrypt, String password )
+        public List<byte> Encrypt( byte[] dataToEncrypt, String password )
         {
             byte[][] key = Key.CreateKeys( password );
             dataToEncrypt = AlignData( dataToEncrypt );
@@ -23,7 +24,7 @@ namespace Cryptography
 
             Array.Resize( ref dataToEncrypt, dataToEncrypt.Length + 1 );
             dataToEncrypt[dataToEncrypt.Length - 1] = (byte)alignment;
-            return dataToEncrypt;                 
+            return new List<byte>( dataToEncrypt );
         }             
         
         /***********************************************************************************************/

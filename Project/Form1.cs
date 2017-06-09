@@ -175,7 +175,7 @@ namespace Stegan
 
                 try
                 {
-                    DataBuffer = new Encryption().Encrypt( DataBuffer, password );
+                    buffer = new Encryption().Encrypt( DataBuffer, password );
                 }
                 catch ( Exception e )
                 {
@@ -188,7 +188,7 @@ namespace Stegan
             {                
                 try
                 {
-                    DataBuffer = new Compression().Compress( DataBuffer ).ToArray();
+                    buffer = new Compression().Compress( buffer );
                 }
                 catch ( Exception e )
                 {
@@ -198,7 +198,7 @@ namespace Stegan
             }                  
                         
             // 8 value means bites in byte
-            if (( DataBuffer.Length * 8 ) > (( heightImage - 1 ) * widthImage ))
+            if (( buffer.Count * 8 ) > (( heightImage - 1 ) * widthImage ))
             {
                 MessageBox.Show( "Too many data to be hidden into a loaded graphic" );
                 return;
@@ -206,7 +206,7 @@ namespace Stegan
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData( bitmap, new List<byte>( DataBuffer ), Settings.GetCompressionState() );
+            new Covering().CoverData( bitmap, buffer, Settings.GetCompressionState() );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
             MessageBox.Show( "Data was covered in a graphic file successfully" );
@@ -365,7 +365,8 @@ namespace Stegan
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
         byte[] FileBuffer;
-        byte[] DataBuffer;   // Buffer for bytes to be hidden              
+        byte[] DataBuffer;   // Buffer for bytes to be hidden
+        List<byte> buffer;
     }
 }
 

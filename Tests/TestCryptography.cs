@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cryptography;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -17,15 +18,15 @@ namespace Tests
             String password = "3ndnui@uh2";    
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;            
             string filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
-            byte[] data = File.ReadAllBytes( filePath );
-            byte[] dataCopy = new byte[data.Length];
-            Array.Copy( data, dataCopy, data.Length );
+
+            List<byte> data = new List<byte>( File.ReadAllBytes( filePath ) );
+            List<byte> dataCopy = new List<byte>( data );
                         
-            data = new Encryption().Encrypt( data, password );            
+            data = new Encryption().Encrypt( data.ToArray(), password );
             CollectionAssert.AreNotEqual( data, dataCopy );
 
-            data = new Decryption().Decrypt( data, password );
-            CollectionAssert.AreEqual( data, dataCopy );
+            byte[] decompressedData = new Decryption().Decrypt( data.ToArray(), password );
+            CollectionAssert.AreEqual( decompressedData, dataCopy );
         } 
                   
         /***********************************************************************************************************/

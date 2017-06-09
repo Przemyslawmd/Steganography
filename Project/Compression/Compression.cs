@@ -12,14 +12,14 @@ namespace Stegan
         // Public method to start compression                
         // Returns compressed data merged with Huffman codes
 
-        public List<byte> Compress( byte[] source )
+        public List<byte> Compress( List<byte> source )
         {
-            int sizeBeforeCompress = source.Length;
+            int sizeBeforeCompress = source.Count;
 
-            NodeCompress root = new HuffmanTree().BuildTree( source );
+            NodeCompress root = new HuffmanTree().BuildTree( source.ToArray() );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
 
-            compressedData = StartCompress( source );
+            compressedData = StartCompress( source.ToArray() );
             List<byte> codesData = InsertCodes();
 
             codesData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );

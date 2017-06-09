@@ -18,11 +18,11 @@ namespace Tests
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
-            byte[] data = File.ReadAllBytes( filePath );
+            List<byte> data = new List<byte>( File.ReadAllBytes( filePath ) );
                         
             List<byte> dataCompressed = new Compression().Compress( data );
             CollectionAssert.AreNotEqual( data, dataCompressed );
-            Assert.IsTrue( dataCompressed.Count < data.Length );
+            Assert.IsTrue( dataCompressed.Count < data.Count );
             
             List<byte> dataDecompressed = new Decompression().Decompress( dataCompressed.ToArray() );
             CollectionAssert.AreEqual( data, dataDecompressed );

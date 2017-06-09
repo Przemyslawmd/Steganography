@@ -102,8 +102,7 @@ namespace Tests
             bool compression = false;
 
             PrepareData();            
-            byte[] dataCopy = new byte[fullData.Length];
-            Array.Copy( fullData, dataCopy, fullData.Length );
+            List<byte> dataCopy = new List<byte>( fullData );
 
             List<byte> compressedData = new Compression().Compress( dataCopy );
             new Covering().CoverData( colorBitmap, new List<byte>( compressedData ), compression );
@@ -123,11 +122,10 @@ namespace Tests
             String password = "de3@JH^@";
 
             PrepareData();
-            byte[] dataCopy = new byte[fullData.Length];
-            Array.Copy( fullData, dataCopy, fullData.Length );
-                        
-            byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );            
-            new Covering().CoverData( colorBitmap, new List<byte>( encryptedData ), false );
+            List<byte> dataCopy = new List<byte>( fullData );
+
+            List<byte> encryptedData = new Encryption().Encrypt( dataCopy.ToArray(), password );
+            new Covering().CoverData( colorBitmap, encryptedData, false );
             byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
             byte[] decryptedData = new Decryption().Decrypt( uncoveredData, password );
 
@@ -147,9 +145,9 @@ namespace Tests
             byte[] dataCopy = new byte[fullData.Length];
             Array.Copy( fullData, dataCopy, fullData.Length );
 
-            byte[] encryptedData = new Encryption().Encrypt( dataCopy, password );
+            List<byte> encryptedData = new Encryption().Encrypt( dataCopy, password );
             List<byte> compressedData = new Compression().Compress( encryptedData );
-            new Covering().CoverData( colorBitmap, new List<byte>( compressedData ), compression );
+            new Covering().CoverData( colorBitmap, compressedData, compression );
             byte[] uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
             List<byte> decompressedData = new Decompression().Decompress( uncoveredData ); 
             byte[] decryptedData = new Decryption().Decrypt( decompressedData.ToArray(), password );
