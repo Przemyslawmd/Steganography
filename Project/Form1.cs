@@ -188,7 +188,7 @@ namespace Stegan
             {                
                 try
                 {
-                    DataBuffer = new Compression().Compress( DataBuffer );
+                    DataBuffer = new Compression().Compress( DataBuffer ).ToArray();
                 }
                 catch ( Exception e )
                 {
@@ -249,7 +249,7 @@ namespace Stegan
             {
                 DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress ).ToArray();
                 if ( flagCompress )
-                    DataBuffer = new Decompression().Decompress( DataBuffer );
+                    DataBuffer = new Decompression().Decompress( DataBuffer ).ToArray();
             }
             catch ( Exception e )
             {

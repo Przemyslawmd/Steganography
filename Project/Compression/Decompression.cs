@@ -9,7 +9,7 @@ namespace Stegan
         /* DECOMPRESS DATA  ***************************************************************/
         // Public Method to start decompression
 
-        public byte[] Decompress( byte[] source )
+        public List<byte> Decompress( byte[] source )
         {
             int[] DataCount = new int[1];            
             sourceData = source; 
@@ -125,7 +125,7 @@ namespace Stegan
         /* DECODE ************************************************************************/
         // Decompress data - change codes into byte values
 
-        private byte[] Decode( int DataCount )
+        private List<byte> Decode( int DataCount )
         {                        
             List<byte> decompressedData = new List<byte>();
             byte[] mask = { 128, 64, 32, 16, 8, 4, 2, 1 };
@@ -157,12 +157,12 @@ namespace Stegan
                     {
                         decompressedData.Add( node.ByteValue );
                         if ( ++Count == DataCount )
-                            return decompressedData.ToArray();
+                            return decompressedData;
                         node = null;
                     }
                 }
             }                       
-            return decompressedData.ToArray();
+            return decompressedData;
         } 
         
         /**************************************************************************************/
