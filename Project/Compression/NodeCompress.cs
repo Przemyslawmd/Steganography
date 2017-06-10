@@ -7,49 +7,23 @@ namespace Stegan
         public NodeCompress( int count, byte byteValue ) : base( true )
         {
             this.byteValue = byteValue;
-            this.count = count;
+            this.Count = count;
             this.isLeaf = true;
         }
 
         public NodeCompress( int count, NodeCompress left, NodeCompress right ) : base( false )
         {
-            this.count = count;
-            this.left = left;
-            this.right = right;            
+            this.Count = count;
+            this.Left = left;
+            this.Right = right;
         }        
         
-        public int Count
-        {
-            get { return count; }
-            set { count = value; }
-        }
-        
-        public NodeCompress Left
-        {
-            get { return left; }
-            set { left = value; }
-        }
+        public int Count { get; set; }
 
-        public NodeCompress Right
-        {
-            get { return right; }
-            set { right = value; }
-        }
+        public NodeCompress Left { get; set; }
 
-        public NodeCompress Parent
-        {
-            get { return parent; }
-            set { parent = value; } 
-        }
-        
-        public void Increment()
-        {
-            count++;
-        }
-        
-        int count;        
-        NodeCompress left;
-        NodeCompress right;
-        NodeCompress parent; 
+        public NodeCompress Right { get; set; }
+
+        public NodeCompress Parent { get; set; }
     }   
 }

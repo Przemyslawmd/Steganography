@@ -12,7 +12,7 @@ namespace Stegan
         // Parameter is stream of bytes to be compressed
         // Return a root of Huffman tree
 
-        public NodeCompress BuildTree( byte[] sourceData )
+        public NodeCompress BuildTree( List<byte> sourceData )
         {
             List<NodeCompress> nodes = CreateNodes( sourceData );
             nodes = nodes.OrderBy( x => x.Count ).ToList();
@@ -24,19 +24,19 @@ namespace Stegan
         /* CREATE NODES **************************************************************************/
         // Create and return list with instances of NodeCompress class
 
-        private List<NodeCompress> CreateNodes( byte[] sourceData )
+        private List<NodeCompress> CreateNodes( List<byte> sourceData )
         {
             List<NodeCompress> list = new List<NodeCompress>();
             list.Add( new NodeCompress( 1, sourceData[0] ) );
             Boolean isFound = false;
 
-            for ( int i = 1; i < sourceData.Length; i++ )
+            for ( int i = 1; i < sourceData.Count; i++ )
             {
                 for ( int j = 0; j < list.Count; j++ )
                 {
                     if ( sourceData[i] == list[j].ByteValue )
                     {
-                        list[j].Increment();
+                        list[j].Count++;
                         isFound = true;
                         break;
                     }
