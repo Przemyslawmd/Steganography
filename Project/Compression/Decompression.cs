@@ -13,7 +13,7 @@ namespace Stegan
         {
             int[] DataCount = new int[1];            
             sourceData = source.ToArray();
-            GetCodesFromSource( source );
+            GetCodesFromSource( source  );
 
             Buffer.BlockCopy( sourceData, dataIndex + 1, DataCount, 0, 4 );
             dataIndex += 4;
@@ -84,8 +84,8 @@ namespace Stegan
 
         private void BuildTree()
         {
-            root = new NodeDecompress( 0, false );
-            NodeDecompress node;
+            root = new Node( 0, false );
+            Node node;
             
             List<byte> tempByte = new List<byte>();
             char[] tempCode = null;                     
@@ -101,23 +101,23 @@ namespace Stegan
                     if ( tempCode[j] == '0' )
                     {
                         if ( node.Left == null )
-                            node.Left = new NodeDecompress( 0, false );                        
+                            node.Left = new Node( 0, false );
                         node = node.Left;
                     }
 
                     else if ( tempCode[j] == '1' )
                     {
-                        if ( node.Right == null )                        
-                            node.Right = new NodeDecompress( 0, false );                                                      
+                        if ( node.Right == null )
+                            node.Right = new Node( 0, false );
                         node = node.Right;
                     }
                 }
 
                 // Check last char in code - add leaves
                 if ( tempCode[tempCode.Length - 1] == '0' )                
-                    node.Left = new NodeDecompress( byteValue[i], true );                   
+                    node.Left = new Node( byteValue[i], true );
                 else if ( tempCode[tempCode.Length - 1] == '1' )                
-                    node.Right = new NodeDecompress( byteValue[i], true );                  
+                    node.Right = new Node( byteValue[i], true );
              }           
         }
 
@@ -130,7 +130,7 @@ namespace Stegan
             List<byte> decompressedData = new List<byte>();
             byte[] mask = { 128, 64, 32, 16, 8, 4, 2, 1 };
                         
-            NodeDecompress node = null;
+            Node node = null;
             int Count = 0;
 
             // Get byte from data to be decompressed
@@ -168,7 +168,7 @@ namespace Stegan
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private NodeDecompress root;        
+        private Node root;
         private List<byte> byteValue;
         private List<char[]> codeValue;        
         private byte[] sourceData;          // data to be decompressed              
