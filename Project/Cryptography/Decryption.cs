@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Cryptography
 {
     class Decryption : BaseCryptography
     {
-        public byte[] Decrypt( byte[] dataToDecrypt, String password )
+        public List<byte> Decrypt( List<byte> data, String password )
         {
             byte[][] key = Key.CreateKeys( password );
             byte[,] state = new byte[4, 4];
+            byte[] dataToDecrypt = data.ToArray();
 
             int alignment = dataToDecrypt[dataToDecrypt.Length - 1];
             Array.Resize( ref dataToDecrypt, dataToDecrypt.Length - 1 );
@@ -24,7 +26,7 @@ namespace Cryptography
 
             byte[] decryptedData = new byte[dataToDecrypt.Length - alignment];
             Array.Copy( dataToDecrypt, decryptedData, decryptedData.Length );
-            return decryptedData;            
+            return new List<byte>( decryptedData );
         }
 
         /***********************************************************************************************/

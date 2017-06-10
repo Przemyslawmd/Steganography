@@ -7,8 +7,9 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( byte[] dataToEncrypt, String password )
+        public List<byte> Encrypt( List<byte> data, String password )
         {
+            byte[] dataToEncrypt = data.ToArray();
             byte[][] key = Key.CreateKeys( password );
             dataToEncrypt = AlignData( dataToEncrypt );
             byte[,] state = new byte[4, 4];

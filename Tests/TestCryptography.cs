@@ -22,10 +22,10 @@ namespace Tests
             List<byte> data = new List<byte>( File.ReadAllBytes( filePath ) );
             List<byte> dataCopy = new List<byte>( data );
                         
-            data = new Encryption().Encrypt( data.ToArray(), password );
+            data = new Encryption().Encrypt( data, password );
             CollectionAssert.AreNotEqual( data, dataCopy );
 
-            byte[] decompressedData = new Decryption().Decrypt( data.ToArray(), password );
+            List<byte> decompressedData = new Decryption().Decrypt( data, password );
             CollectionAssert.AreEqual( decompressedData, dataCopy );
         } 
                   

@@ -24,7 +24,7 @@ namespace Tests
             CollectionAssert.AreNotEqual( data, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < data.Count );
             
-            List<byte> dataDecompressed = new Decompression().Decompress( dataCompressed.ToArray() );
+            List<byte> dataDecompressed = new Decompression().Decompress( dataCompressed );
             CollectionAssert.AreEqual( data, dataDecompressed );
         }
 

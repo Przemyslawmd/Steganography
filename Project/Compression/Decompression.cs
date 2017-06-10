@@ -9,11 +9,11 @@ namespace Stegan
         /* DECOMPRESS DATA  ***************************************************************/
         // Public Method to start decompression
 
-        public List<byte> Decompress( byte[] source )
+        public List<byte> Decompress( List<byte> source )
         {
             int[] DataCount = new int[1];            
-            sourceData = source; 
-            GetCodesFromSource( source );            
+            sourceData = source.ToArray();
+            GetCodesFromSource( source.ToArray() );
 
             Buffer.BlockCopy( sourceData, dataIndex + 1, DataCount, 0, 4 );
             dataIndex += 4;

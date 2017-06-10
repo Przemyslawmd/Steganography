@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Cryptography;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Stegan
 {
@@ -41,7 +42,7 @@ namespace Stegan
                     EnableMenu( false, menuOpenGraphic );
                     EnableMenu( true, menuCoverText, menuUncoverFile, menuDiscoverText, menuSaveGraphic, menuRemoveGraphic );
 
-                    if ( DataBuffer != null )
+                    if ( dataBuffer != null )
                         menuCoverFile.Enabled = true;
                  }
             }
@@ -137,8 +138,7 @@ namespace Stegan
                 return;
             }            
             
-            DataBuffer = new byte[FileBuffer.Length];
-            System.Buffer.BlockCopy( FileBuffer, 0, DataBuffer, 0, DataBuffer.Length );
+            dataBuffer = new List<byte>( FileBuffer );
             CoverData();                      
         }
 
@@ -153,8 +153,7 @@ namespace Stegan
                 return;
             }
             
-            DataBuffer = new byte[textControl.Text.Length * sizeof(char)];         
-            System.Buffer.BlockCopy( textControl.Text.ToCharArray(), 0, DataBuffer, 0, DataBuffer.Length );
+            dataBuffer = new List<byte>( Encoding.Unicode.GetBytes( textControl.Text ));
             CoverData();                              
         }
         
@@ -175,7 +174,7 @@ namespace Stegan
 
                 try
                 {
-                    buffer = new Encryption().Encrypt( DataBuffer, password );
+                    dataBuffer = new Encryption().Encrypt( dataBuffer, password );
                 }
                 catch ( Exception e )
                 {
@@ -188,7 +187,7 @@ namespace Stegan
             {                
                 try
                 {
-                    buffer = new Compression().Compress( buffer );
+                    dataBuffer = new Compression().Compress( dataBuffer );
                 }
                 catch ( Exception e )
                 {
@@ -198,7 +197,7 @@ namespace Stegan
             }                  
                         
             // 8 value means bites in byte
-            if (( buffer.Count * 8 ) > (( heightImage - 1 ) * widthImage ))
+            if (( dataBuffer.Count * 8 ) > (( heightImage - 1 ) * widthImage ))
             {
                 MessageBox.Show( "Too many data to be hidden into a loaded graphic" );
                 return;
@@ -206,7 +205,7 @@ namespace Stegan
 
             Bitmap bitmap = (Bitmap)pictureBox.Image;            
 
-            new Covering().CoverData( bitmap, buffer, Settings.GetCompressionState() );
+            new Covering().CoverData( bitmap, dataBuffer, Settings.GetCompressionState() );
             pictureBox.Image = bitmap;
             pictureBox.Invalidate();
             MessageBox.Show( "Data was covered in a graphic file successfully" );
@@ -220,9 +219,8 @@ namespace Stegan
             if ( UncoverData() == false )
                 return;
 
-            FileBuffer = new byte[DataBuffer.Length];
-            System.Buffer.BlockCopy( DataBuffer, 0, FileBuffer, 0, FileBuffer.Length );
-            fileNameControl.Text = "Number of uncovered bytes: " + DataBuffer.Length.ToString();
+            FileBuffer = dataBuffer.ToArray();
+            fileNameControl.Text = "Number of uncovered bytes: " + dataBuffer.Count.ToString();
             EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
@@ -234,7 +232,7 @@ namespace Stegan
             if ( UncoverData() == false )
                 return;
 
-            textControl.Text = System.Text.Encoding.Unicode.GetString( DataBuffer );            
+            textControl.Text = System.Text.Encoding.Unicode.GetString( dataBuffer.ToArray() );
         }      
         
         /***********************************************************************************************************/
@@ -247,9 +245,9 @@ namespace Stegan
 
             try
             {
-                DataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress ).ToArray();
+                dataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress );
                 if ( flagCompress )
-                    DataBuffer = new Decompression().Decompress( DataBuffer ).ToArray();
+                    dataBuffer = new Decompression().Decompress( dataBuffer );
             }
             catch ( Exception e )
             {
@@ -269,7 +267,7 @@ namespace Stegan
 
                 try
                 {
-                    DataBuffer = new Decryption().Decrypt( DataBuffer, password );
+                    dataBuffer = new Decryption().Decrypt( dataBuffer, password );
                 }
                 catch ( Exception e )
                 {
@@ -304,7 +302,7 @@ namespace Stegan
 
         private void RemoveData( object sender, EventArgs e )
         {
-            DataBuffer = null;
+            dataBuffer = null;
             fileNameControl.Text = "";
             EnableMenu( true, menuOpenFile );
             EnableMenu( false, menuRemoveData, menuSaveData, menuCoverFile );                        
@@ -365,8 +363,8 @@ namespace Stegan
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
         byte[] FileBuffer;
-        byte[] DataBuffer;   // Buffer for bytes to be hidden
-        List<byte> buffer;
+        List<byte> dataBuffer;
     }
 }
 
+ 
