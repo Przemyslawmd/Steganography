@@ -8,21 +8,11 @@ namespace Stegan
 
         public Node( bool isLeaf )
         {
-            this.isLeaf = isLeaf;
+            this.Leaf = isLeaf;
         }
 
-        public byte ByteValue
-        {
-            get { return byteValue; }
-            set { byteValue = value; }
-        }
+        public byte ByteValue { get; set; }
 
-        public Boolean Leaf
-        {
-            get { return isLeaf; }
-        }
-
-        protected bool isLeaf;
-        protected byte byteValue;
+        public Boolean Leaf { get; protected set; }
     }
 }

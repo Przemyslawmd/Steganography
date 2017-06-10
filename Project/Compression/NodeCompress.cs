@@ -6,9 +6,9 @@ namespace Stegan
     {
         public NodeCompress( int count, byte byteValue ) : base( true )
         {
-            this.byteValue = byteValue;
+            this.ByteValue = byteValue;
             this.Count = count;
-            this.isLeaf = true;
+            this.Leaf = true;
         }
 
         public NodeCompress( int count, NodeCompress left, NodeCompress right ) : base( false )

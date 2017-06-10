@@ -6,22 +6,12 @@ namespace Stegan
     {
         public NodeDecompress( byte byteValue, bool isLeaf ) : base( isLeaf )
         {
-            this.byteValue = byteValue;            
+            this.ByteValue = byteValue;
         }        
 
-        public NodeDecompress Left
-        {
-            get { return left; }
-            set { left = value; }
-        }
+        public NodeDecompress Left { get; set; }
 
-        public NodeDecompress Right
-        {
-            get { return right; }
-            set { right = value; }
-        }
-
-        NodeDecompress left;
-        NodeDecompress right;       
+        public NodeDecompress Right { get; set; }
     }
 }
+
