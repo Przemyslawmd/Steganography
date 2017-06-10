@@ -13,7 +13,7 @@ namespace Stegan
         {
             int[] DataCount = new int[1];            
             sourceData = source.ToArray();
-            GetCodesFromSource( source.ToArray() );
+            GetCodesFromSource( source );
 
             Buffer.BlockCopy( sourceData, dataIndex + 1, DataCount, 0, 4 );
             dataIndex += 4;
@@ -27,7 +27,7 @@ namespace Stegan
         // Get Huffman codes from compressed data
         // Huffman codes are merged with compressed data after compression
 
-        private void GetCodesFromSource( byte[] data )
+        private void GetCodesFromSource( List<byte> data )
         {
             // Get number of codes from source data, this value is stored in first four bytes            
             int codesCount = 0;

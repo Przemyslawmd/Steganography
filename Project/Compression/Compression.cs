@@ -10,35 +10,35 @@ namespace Stegan
         /************************************************************************************************/
         /* COMPRESS DATA ********************************************************************************/
         // Public method to start compression                
-        // Returns compressed data merged with Huffman codes
+        // It returns compressed data merged with Huffman codes
 
         public List<byte> Compress( List<byte> source )
         {
             int sizeBeforeCompress = source.Count;
 
-            NodeCompress root = new HuffmanTree().BuildTree( source.ToArray() );
+            NodeCompress root = new HuffmanTree().BuildTree( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
 
-            compressedData = StartCompress( source.ToArray() );
-            List<byte> codesData = InsertCodes();
+            StartCompress( source );
 
-            codesData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );
-            codesData.AddRange( compressedData );
-            return codesData;
+            List<byte> finalCompressedData = InsertCodes();
+            finalCompressedData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );
+            finalCompressedData.AddRange( compressedData );
+            return finalCompressedData;
         }
 
         /************************************************************************************************/
         /* START COMPRESS *******************************************************************************/
         // Main method for compression, returns compressed data
 
-        private List<byte> StartCompress( byte[] source )
+        private void StartCompress( List<byte> source )
         {
             int bitShift = 0;
             byte temp = 0;
             char[] code = null;
             compressedData = new List<byte>();
             
-            for (int i = 0; i < source.Length; i++)
+            for (int i = 0; i < source.Count; i++)
             {
                 // Get code for byte 
                 code = codes[source[i]].ToCharArray();
@@ -65,8 +65,6 @@ namespace Stegan
                 temp <<= ( BitsInByte - bitShift );
                 compressedData.Add( temp );
             }
-            
-            return compressedData;
         }
 
         /**************************************************************************************************/
@@ -112,8 +110,12 @@ namespace Stegan
         /********************************************************************************************************/
         /********************************************************************************************************/
 
-        private List<byte> compressedData;     
-        private Dictionary<byte, string> codes;    // final codes : byte values with bit sequences  
+        private List<byte> compressedData;
+
+        // Final codes - byte values linked with sequence of bits
+        // Sequence of bits is a string because it may have length more than 64
+        private Dictionary<byte, string> codes;
+
         readonly int BitsInByte = 8;     
     }
 }

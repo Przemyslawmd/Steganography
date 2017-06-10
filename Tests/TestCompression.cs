@@ -36,7 +36,7 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            byte[] data = new byte[10] { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
+            List<byte> data = new List<byte> { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
             nodes = (List<NodeCompress>)(obj.Invoke( "CreateNodes", data ));
             nodes = nodes.OrderBy( x => x.Count ).ToList();
