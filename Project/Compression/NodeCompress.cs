@@ -4,18 +4,17 @@ namespace Stegan
 {
     class NodeCompress : Node
     {
-        public NodeCompress( int count, byte byteValue ) : base( true )
+        public NodeCompress( int count, byte byteValue )
         {
-            this.ByteValue = byteValue;
-            this.Count = count;
-            this.Leaf = true;
+            ByteValue = byteValue;
+            Count = count;
         }
 
-        public NodeCompress( int count, NodeCompress left, NodeCompress right ) : base( false )
+        public NodeCompress( int count, NodeCompress left, NodeCompress right )
         {
-            this.Count = count;
-            this.Left = left;
-            this.Right = right;
+            Count = count;
+            Left = left;
+            Right = right;
         }        
         
         public int Count { get; set; }
@@ -25,5 +24,10 @@ namespace Stegan
         public NodeCompress Right { get; set; }
 
         public NodeCompress Parent { get; set; }
+
+        public bool isLeaf()
+        {
+            return ( Left == null ) && ( Right == null );
+        }
     }   
 }

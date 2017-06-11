@@ -153,7 +153,7 @@ namespace Stegan
                         node = node.Right;                                                                  
                     }
 
-                    if ( node.Leaf )
+                    if ( node.isLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
                         if ( ++Count == DataCount )
