@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Cryptography;
@@ -8,6 +9,9 @@ namespace Stegan
 {
     class Controller
     {
+        /**********************************************************************************************/
+        /** COVER DATA ********************************************************************************/
+
         public static bool CoverData( List<byte> data, Bitmap bitmap, Messages.MessageCode code )
         {
             if ( Settings.GetEncryptionState() )
@@ -55,6 +59,51 @@ namespace Stegan
            
             new Covering().CoverData( bitmap, data, Settings.GetCompressionState() );
             return true;
-        }        
+        }
+
+        /**********************************************************************************************/
+        /* UNCOVER DATA *******************************************************************************/
+
+        public static List<byte> UncoverData( Bitmap bitmap, Messages.MessageCode code )
+        {
+            Boolean flagCompress = false;
+            List<byte> data = new List<byte>();
+
+            try
+            {
+                data = new Uncovering().UncoverData( bitmap, ref flagCompress );
+                if ( flagCompress )
+                    data = new Decompression().Decompress( data );
+            }
+            catch ( Exception e )
+            {
+                code = Messages.MessageCode.ERROR_DECOMPRESSION;
+                return null;
+            }
+
+            if ( Settings.GetEncryptionState() )
+            {
+                string password = Settings.GetPassword();
+
+                if ( password.Equals( "" ) )
+                {
+                    code = Messages.MessageCode.NO_PASSWORD;
+                    return null;
+                }
+
+                try
+                {
+                    data = new Decryption().Decrypt( data, password );
+                }
+                catch ( Exception e )
+                {
+                    code = Messages.MessageCode.ERROR_DECRYPTION;
+                    return null;
+                }
+            }
+
+            return data;
+        }
     }    
 }
+

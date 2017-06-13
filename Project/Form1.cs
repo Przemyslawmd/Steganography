@@ -17,8 +17,8 @@ namespace Stegan
             messages = new Messages();
         }        
 
-        /************************************************************************************************************/ 
-        /* OPEN A GRAPHIC FILE **************************************************************************************/
+        /*********************************************************************************************/
+        /* OPEN A GRAPHIC FILE ***********************************************************************/
 
         private void OpenGraphicFile( object sender, EventArgs e )
         {        
@@ -51,8 +51,8 @@ namespace Stegan
             }            
         }
 
-        /*****************************************************************************************************************/
-        /* SAVE GRAPHIC WITH HIDDEN DATA *********************************************************************************/
+        /*********************************************************************************************/
+        /* SAVE GRAPHIC WITH HIDDEN DATA *************************************************************/
 
         private void SaveGraphic( object sender, EventArgs e )
         {
@@ -82,8 +82,8 @@ namespace Stegan
             }
         }
 
-        /****************************************************************************************************************************/
-        /* REMOVE GRAPHIC ***********************************************************************************************************/
+        /*********************************************************************************************/
+        /* REMOVE GRAPHIC ****************************************************************************/
 
         private void RemoveGraphic( object sender, EventArgs e )
         {
@@ -93,9 +93,9 @@ namespace Stegan
             EnableMenu( false, menuSaveGraphic, menuRemoveGraphic, menuCoverText, menuCoverFile, menuUncoverFile, menuDiscoverText );         
         }    
         
-        /****************************************************************************************************************/
-        /* OPEN A FILE TO BE HIDDEN *************************************************************************************/
-        /* Read data from a file and write it to a byte array ***********************************************************/
+        /*********************************************************************************************/
+        /* OPEN A FILE TO BE HIDDEN ******************************************************************/
+        /* Read data from a file and write it to a byte array ****************************************/
         
         private void OpenFile( object sender, EventArgs e )
         {            
@@ -124,8 +124,8 @@ namespace Stegan
             }
         }
 
-        /*******************************************************************************************************************/
-        /* GET DATA FROM A FILE AND COVER IT  ******************************************************************************/
+        /*********************************************************************************************/
+        /* GET DATA FROM A FILE AND COVER IT  ********************************************************/
         
         private void StartCoverFile( object sender, EventArgs e )
         {            
@@ -148,8 +148,8 @@ namespace Stegan
                 MessageBox.Show( messages.GetMessageText( code ) );
         }
 
-        /********************************************************************************************************************/
-        /* GET DATA FROM A TEXTBOX CONTROL AND COVER IT  ********************************************************************/
+        /*********************************************************************************************/
+        /* GET DATA FROM A TEXTBOX CONTROL AND COVER IT  *********************************************/
 
         private void StartCoverText( object sender, EventArgs e )
         {
@@ -172,76 +172,42 @@ namespace Stegan
                 MessageBox.Show( messages.GetMessageText( code ) );
         }
 
-        /**********************************************************************************************************************/
-        /* START UNCOVERING PROCESS TO A FILE *********************************************************************************/
+        /*********************************************************************************************/
+        /* START UNCOVERING TO BE SAVED AS A FILE ****************************************************/
         
         private void StartUncoverFile( object sender, EventArgs e )
-        {            
-            if ( UncoverData() == false )
-                return;
+        {
+            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, code );
 
-            FileBuffer = dataBuffer.ToArray();
-            fileNameControl.Text = "Number of uncovered bytes: " + dataBuffer.Count.ToString();
+            if ( data == null )
+            {
+                MessageBox.Show( messages.GetMessageText( code ) );
+                return;
+            }
+
+            FileBuffer = data.ToArray();
+            fileNameControl.Text = "Number of uncovered bytes: " + data.Count.ToString();
             EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
-        /************************************************************************************************************************/
-        /* START UNCOVERING PROCESS TO TEXT CONTROL *****************************************************************************/
+        /*********************************************************************************************/
+        /* START UNCOVER DATA TO BE DISPLAYED AS A TEXT **********************************************/
 
         private void StartUncoverText( object sender, EventArgs e )
         {
-            if ( UncoverData() == false )
+            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, code );
+
+            if ( data == null )
+            {
+                MessageBox.Show( messages.GetMessageText( code ) );
                 return;
-
-            textControl.Text = System.Text.Encoding.Unicode.GetString( dataBuffer.ToArray() );
-        }      
-        
-        /***********************************************************************************************************/
-        /* UNCOVER DATA ********************************************************************************************/
-
-        private Boolean UncoverData()
-        {
-            Bitmap bitmap = (Bitmap)pictureBox.Image;
-            Boolean flagCompress = false;
-
-            try
-            {
-                dataBuffer = new Uncovering().UncoverData( bitmap, ref flagCompress );
-                if ( flagCompress )
-                    dataBuffer = new Decompression().Decompress( dataBuffer );
-            }
-            catch ( Exception e )
-            {
-                MessageBox.Show( e.Message + e.Source + e.ToString() );
-                return false;
             }
 
-            if ( Settings.GetEncryptionState() )
-            {
-                string password = Settings.GetPassword();
-
-                if ( password.Equals( "" ) )
-                {
-                    MessageBox.Show( "Encryption is checked, but password is empty" );
-                    return false;
-                }
-
-                try
-                {
-                    dataBuffer = new Decryption().Decrypt( dataBuffer, password );
-                }
-                catch ( Exception e )
-                {
-                    MessageBox.Show( e.Message + e.Source + e.ToString() );
-                    return false;
-                }
-            }
-
-            return true;
+            textControl.Text = System.Text.Encoding.Unicode.GetString( data.ToArray() );
         }
         
-        /*********************************************************************************************************/
-        /* SAVE UNCOVERED DATA ***********************************************************************************/
+        /*********************************************************************************************/
+        /* SAVE UNCOVERED DATA ***********************************************************************/
 
         private void SaveUncoveredData( object sender, EventArgs e )
         {
@@ -258,8 +224,8 @@ namespace Stegan
             }
         }
 
-        /*********************************************************************************************************/
-        /* REMOVE DATA UNCOVERED/TO HIDE *************************************************************************/
+        /*********************************************************************************************/
+        /* REMOVE DATA UNCOVERED/TO HIDE *************************************************************/
 
         private void RemoveData( object sender, EventArgs e )
         {
@@ -269,16 +235,16 @@ namespace Stegan
             EnableMenu( false, menuRemoveData, menuSaveData, menuCoverFile );                        
         }      
         
-        /*************************************************************************************************************/
-        /* REMOVE TEXT FROM CONTROL **********************************************************************************/
+        /*********************************************************************************************/
+        /* REMOVE TEXT FROM CONTROL ******************************************************************/
 
         private void removeText(object sender, EventArgs e)
         {
             textControl.Text = "";            
         }              
 
-        /***************************************************************************************************************/
-        /* ENABLE/DISABLE MENU *****************************************************************************************/
+        /*********************************************************************************************/
+        /* ENABLE/DISABLE MENU ***********************************************************************/
 
         private void EnableMenu( bool state, params ToolStripMenuItem[] menus )
         {
@@ -286,8 +252,8 @@ namespace Stegan
                 menu.Enabled = state;
         }        
                
-        /*******************************************************************************************************************/
-        /* ABOUT WINDOW ****************************************************************************************************/
+        /*********************************************************************************************/
+        /* ABOUT WINDOW ******************************************************************************/
 
         private void ShowAbout(object sender, EventArgs e)
         {
@@ -315,10 +281,9 @@ namespace Stegan
             Form.Show();
         }
 
-        /*******************************************************************************************************************************/
-        /*******************************************************************************************************************************/
+        /********************************************************************************************/
+        /********************************************************************************************/
 
-        const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
         byte[] FileBuffer;
         List<byte> dataBuffer;
