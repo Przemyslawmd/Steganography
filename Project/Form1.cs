@@ -38,8 +38,6 @@ namespace Stegan
                         pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
                     pictureBox.Image = bitmap;
-                    heightImage = bitmap.Height;
-                    widthImage = bitmap.Width;                    
                     EnableMenu( false, menuOpenGraphic );
                     EnableMenu( true, menuCoverText, menuUncoverFile, menuDiscoverText, menuSaveGraphic, menuRemoveGraphic );
 
@@ -91,8 +89,6 @@ namespace Stegan
         {
             pictureBox.Image = null;
             pictureBox.Invalidate();
-            widthImage = 0;
-            heightImage = 0;
             EnableMenu( true, menuOpenGraphic );
             EnableMenu( false, menuSaveGraphic, menuRemoveGraphic, menuCoverText, menuCoverFile, menuUncoverFile, menuDiscoverText );         
         }    
@@ -137,10 +133,19 @@ namespace Stegan
             {
                 MessageBox.Show( "No file to hide" );
                 return;
-            }            
-            
-            dataBuffer = new List<byte>( FileBuffer );
-            CoverData();                      
+            }
+
+            Bitmap bitmap = (Bitmap)pictureBox.Image;
+            List<byte> data = new List<byte>( FileBuffer );
+
+            if ( Controller.CoverData( data, bitmap, code ) )
+            {
+                pictureBox.Image = bitmap;
+                pictureBox.Invalidate();
+                MessageBox.Show( "Data was covered in a graphic file successfully" );
+            }
+            else
+                MessageBox.Show( messages.GetMessageText( code ) );
         }
 
         /********************************************************************************************************************/
@@ -166,61 +171,7 @@ namespace Stegan
             else
                 MessageBox.Show( messages.GetMessageText( code ) );
         }
-        
-        /******************************************************************************************************************/
-        /* COVER DATA *****************************************************************************************************/
 
-        private void CoverData()
-        {
-            if ( Settings.GetEncryptionState() )
-            {
-                string password = Settings.GetPassword();
-
-                if ( password.Equals( "" ) )
-                {
-                    MessageBox.Show( "Encryption is checked, but password is empty" );
-                    return; 
-                } 
-
-                try
-                {
-                    dataBuffer = new Encryption().Encrypt( dataBuffer, password );
-                }
-                catch ( Exception e )
-                {
-                    MessageBox.Show( e.Message.ToString() );
-                    return;
-                }
-            }
-
-            if ( Settings.GetCompressionState() )
-            {                
-                try
-                {
-                    dataBuffer = new Compression().Compress( dataBuffer );
-                }
-                catch ( Exception e )
-                {
-                    MessageBox.Show( e.Message.ToString() );
-                    return;
-                }
-            }                  
-                        
-            // 8 value means bites in byte
-            if (( dataBuffer.Count * 8 ) > (( heightImage - 1 ) * widthImage ))
-            {
-                MessageBox.Show( "Too many data to be hidden into a loaded graphic" );
-                return;
-            }
-
-            Bitmap bitmap = (Bitmap)pictureBox.Image;            
-
-            new Covering().CoverData( bitmap, dataBuffer, Settings.GetCompressionState() );
-            pictureBox.Image = bitmap;
-            pictureBox.Invalidate();
-            MessageBox.Show( "Data was covered in a graphic file successfully" );
-        }
-        
         /**********************************************************************************************************************/
         /* START UNCOVERING PROCESS TO A FILE *********************************************************************************/
         
@@ -362,14 +313,11 @@ namespace Stegan
             Form.Disposed += ( object obj, EventArgs eventA ) => { menuStripOne.Enabled = true; };
             menuStripOne.Enabled = false;
             Form.Show();
-        }     
-               
+        }
+
         /*******************************************************************************************************************************/
         /*******************************************************************************************************************************/
-        
-        private int heightImage;
-        private int widthImage;
-                                  
+
         const String htmlBegin = "<html><body style='background-color:white; font-size:11px; font-family:Verdana; line-height:180%; margin:25px; margin-left:18px;'>";
         
         byte[] FileBuffer;
