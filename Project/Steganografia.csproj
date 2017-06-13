@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Compression\HuffmanCodes.cs" />
     <Compile Include="Compression\HuffmanTree.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="Covering\BaseCover.cs" />
     <Compile Include="Compression\Node.cs" />
     <Compile Include="Covering\Covering.cs" />
@@ -89,6 +90,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Compression\NodeCompress.cs" />
+    <Compile Include="Messages.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />

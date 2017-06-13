@@ -13,7 +13,8 @@ namespace Stegan
     {
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            messages = new Messages();
         }        
 
         /************************************************************************************************************/ 
@@ -152,9 +153,18 @@ namespace Stegan
                 MessageBox.Show( "There is no text to hide" );
                 return;
             }
-            
-            dataBuffer = new List<byte>( Encoding.Unicode.GetBytes( textControl.Text ));
-            CoverData();                              
+
+            Bitmap bitmap = (Bitmap)pictureBox.Image;
+            List<byte> data = new List<byte>( Encoding.Unicode.GetBytes( textControl.Text ) );
+
+            if ( Controller.CoverData( data, bitmap, code ) )
+            {
+                pictureBox.Image = bitmap;
+                pictureBox.Invalidate();
+                MessageBox.Show( "Data was covered in a graphic file successfully" );
+            }
+            else
+                MessageBox.Show( messages.GetMessageText( code ) );
         }
         
         /******************************************************************************************************************/
@@ -364,6 +374,8 @@ namespace Stegan
         
         byte[] FileBuffer;
         List<byte> dataBuffer;
+        Messages messages;
+        Messages.MessageCode code;
     }
 }
 
