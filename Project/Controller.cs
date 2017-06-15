@@ -12,7 +12,7 @@ namespace Stegan
         /**********************************************************************************************/
         /** COVER DATA ********************************************************************************/
 
-        public static bool CoverData( List<byte> data, Bitmap bitmap, Messages.MessageCode code )
+        public static bool CoverData( List<byte> data, Bitmap bitmap, ref Messages.MessageCode code )
         {
             if ( Settings.GetEncryptionState() )
             {
@@ -28,7 +28,7 @@ namespace Stegan
                 {
                     data = new Encryption().Encrypt( data, password );
                 }
-                catch ( Exception e )
+                catch ( Exception )
                 {
                     code = Messages.MessageCode.ERROR_ENCRYPTION;
                     return false;
@@ -41,7 +41,7 @@ namespace Stegan
                 {
                     data = new Compression().Compress( data );
                 }
-                catch ( Exception e )
+                catch ( Exception )
                 {
                     code = Messages.MessageCode.ERROR_COMPRESSION;
                     return false;
@@ -64,7 +64,7 @@ namespace Stegan
         /**********************************************************************************************/
         /* UNCOVER DATA *******************************************************************************/
 
-        public static List<byte> UncoverData( Bitmap bitmap, Messages.MessageCode code )
+        public static List<byte> UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
         {
             Boolean flagCompress = false;
             List<byte> data = new List<byte>();
@@ -75,7 +75,7 @@ namespace Stegan
                 if ( flagCompress )
                     data = new Decompression().Decompress( data );
             }
-            catch ( Exception e )
+            catch ( Exception )
             {
                 code = Messages.MessageCode.ERROR_DECOMPRESSION;
                 return null;
@@ -95,7 +95,12 @@ namespace Stegan
                 {
                     data = new Decryption().Decrypt( data, password );
                 }
-                catch ( Exception e )
+                catch ( ExceptionEncryption exc )
+                {
+                    code = exc.code;
+                    return null;
+                }
+                catch ( Exception )
                 {
                     code = Messages.MessageCode.ERROR_DECRYPTION;
                     return null;

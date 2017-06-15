@@ -37,17 +37,14 @@ namespace Stegan
                     else
                         pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
-                    pictureBox.Image = bitmap;
+                    pictureBox.Image = new Bitmap( bitmap );
                     EnableMenu( false, menuOpenGraphic );
-                    EnableMenu( true, menuCoverText, menuUncoverFile, menuDiscoverText, menuSaveGraphic, menuRemoveGraphic );
-
-                    if ( dataBuffer != null )
-                        menuCoverFile.Enabled = true;
+                    EnableMenu( true, menuCoverText, menuUncoverFile, menuDiscoverText, menuSaveGraphic, menuRemoveGraphic, menuCoverFile );
                  }
             }
             catch( Exception )
             {
-                MessageBox.Show( "Loading graphic failed" );               
+                MessageBox.Show( "Loading graphic file failed" );
             }            
         }
 
@@ -78,7 +75,7 @@ namespace Stegan
             }
             catch ( Exception )
             {
-                MessageBox.Show( "An error because a new graphic is being saved with the same name as original name" );
+                MessageBox.Show( "An error while saving graphic" );
             }
         }
 
@@ -114,7 +111,7 @@ namespace Stegan
                     EnableMenu( true, menuRemoveData );
                     EnableMenu( false, menuOpenFile );
 
-                    if (pictureBox.Image != null)
+                    if ( pictureBox.Image != null )
                         menuCoverFile.Enabled = true;
                 }
             }
@@ -125,31 +122,22 @@ namespace Stegan
         }
 
         /*********************************************************************************************/
-        /* GET DATA FROM A FILE AND COVER IT  ********************************************************/
+        /* GET DATA FROM A FILE TO COVER *************************************************************/
         
         private void StartCoverFile( object sender, EventArgs e )
         {            
             if ( FileBuffer == null )
             {
-                MessageBox.Show( "No file to hide" );
+                MessageBox.Show( "There is no loaded file to hide" );
                 return;
             }
 
-            Bitmap bitmap = (Bitmap)pictureBox.Image;
             List<byte> data = new List<byte>( FileBuffer );
-
-            if ( Controller.CoverData( data, bitmap, code ) )
-            {
-                pictureBox.Image = bitmap;
-                pictureBox.Invalidate();
-                MessageBox.Show( "Data was covered in a graphic file successfully" );
-            }
-            else
-                MessageBox.Show( messages.GetMessageText( code ) );
+            CoverData( data );
         }
 
         /*********************************************************************************************/
-        /* GET DATA FROM A TEXTBOX CONTROL AND COVER IT  *********************************************/
+        /* GET DATA FROM A TEXTBOX TO COVER IT  ******************************************************/
 
         private void StartCoverText( object sender, EventArgs e )
         {
@@ -159,10 +147,18 @@ namespace Stegan
                 return;
             }
 
-            Bitmap bitmap = (Bitmap)pictureBox.Image;
             List<byte> data = new List<byte>( Encoding.Unicode.GetBytes( textControl.Text ) );
+            CoverData( data );
+        }
 
-            if ( Controller.CoverData( data, bitmap, code ) )
+        /*********************************************************************************************/
+        /* COVER DATA ********************************************************************************/
+
+        private void CoverData( List<byte> data )
+        {
+            Bitmap bitmap = (Bitmap)pictureBox.Image;
+
+            if ( Controller.CoverData( data, bitmap, ref code ) )
             {
                 pictureBox.Image = bitmap;
                 pictureBox.Invalidate();
@@ -177,7 +173,7 @@ namespace Stegan
         
         private void StartUncoverFile( object sender, EventArgs e )
         {
-            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, code );
+            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, ref code );
 
             if ( data == null )
             {
@@ -195,7 +191,7 @@ namespace Stegan
 
         private void StartUncoverText( object sender, EventArgs e )
         {
-            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, code );
+            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, ref code );
 
             if ( data == null )
             {
@@ -270,7 +266,7 @@ namespace Stegan
             browser.Dock = DockStyle.Fill;
             browser.DocumentText = "<html><body style='font-size:11px; font-family: Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" + 
                 "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>Steganography application</p>" + 
-                "<pre>Version 1.3</pre>" +
+                "<pre>Version 1.3.1</pre>" +
                 "<pre>Author:           Przemyslaw Madej, Warsaw 2017 </pre>" + 
                 "<pre>Email:            przemyslawmd@gmail.com</pre>" +
                 "<pre>Home page:        http://www.przemeknet.pl/steganEn.aspx</pre></body></html>"; 
@@ -286,6 +282,8 @@ namespace Stegan
 
         
         byte[] FileBuffer;
+
+        // Buffer for uncovered data that may be saved as a file
         List<byte> dataBuffer;
         Messages messages;
         Messages.MessageCode code;

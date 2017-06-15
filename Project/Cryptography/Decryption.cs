@@ -1,5 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using Stegan;
 
 namespace Cryptography
 {
@@ -15,7 +17,7 @@ namespace Cryptography
             Array.Resize( ref dataToDecrypt, dataToDecrypt.Length - 1 );
 
             if ( dataToDecrypt.Length % 16 != 0 )
-                throw new ExceptionEncryption( "Data to be encrypted must be divided by 16" );
+                throw new ExceptionEncryption( Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT );
 
             for ( int i = 0; i < dataToDecrypt.Length; i += 16 )
             {

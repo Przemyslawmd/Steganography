@@ -31,8 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStripOne = new System.Windows.Forms.MenuStrip();
             this.fileMenuStripOne = new System.Windows.Forms.ToolStripMenuItem( "File" );            
-            this.menuOpenGraphic = new System.Windows.Forms.ToolStripMenuItem( "Open Graphic File" );           
-            this.menuOpenFile = new System.Windows.Forms.ToolStripMenuItem( "Open File to be Covered" );            
+            this.menuOpenGraphic = new System.Windows.Forms.ToolStripMenuItem( "Load Graphic File" );
+            this.menuOpenFile = new System.Windows.Forms.ToolStripMenuItem( "Load File to be Covered" );
             this.menuSaveGraphic = new System.Windows.Forms.ToolStripMenuItem( "Save Graphic File" );            
             this.menuSaveData = new System.Windows.Forms.ToolStripMenuItem( "Save Uncovered Data as File" );            
             this.menuRemoveGraphic = new System.Windows.Forms.ToolStripMenuItem( "Remove Graphic File" );            
@@ -54,9 +54,8 @@
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // MENU MAIN STRIP 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.menuStripOne.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenuStripOne,
@@ -67,9 +66,8 @@
             this.menuStripOne.Size = new System.Drawing.Size(1018, 24);
             this.menuStripOne.TabIndex = 0;
                        
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MENU FILE
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.fileMenuStripOne.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenGraphic,            
@@ -85,51 +83,57 @@
             this.menuRemoveData,
             new System.Windows.Forms.ToolStripSeparator(),
             this.menuClearText});            
-            this.fileMenuStripOne.Size = new System.Drawing.Size( 12, 20 );            
-           
+            this.fileMenuStripOne.Size = new System.Drawing.Size( 12, 20 );
+
             // MENU OPEN GRAPHIC             
-            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+
             this.menuOpenGraphic.Size = new System.Drawing.Size( 67, 22 );
-            this.menuOpenGraphic.Click += new System.EventHandler( this.OpenGraphicFile );              
-             
+            this.menuOpenGraphic.Click += new System.EventHandler( this.OpenGraphicFile );
+
             // MENU OPEN FILE             
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
                         
             this.menuOpenFile.Size = new System.Drawing.Size( 67, 22 );
-            this.menuOpenFile.Click += new System.EventHandler( this.OpenFile );                   
-           
+            this.menuOpenFile.Click += new System.EventHandler( this.OpenFile );
+
             // MENU SAVE GRAPHIC
-            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+
             this.menuSaveGraphic.Enabled = false;
             this.menuSaveGraphic.ShowShortcutKeys = false;
             this.menuSaveGraphic.Size = new System.Drawing.Size( 67, 22 );
-            this.menuSaveGraphic.Click += new System.EventHandler( this.SaveGraphic );                  
-             
+            this.menuSaveGraphic.Click += new System.EventHandler( this.SaveGraphic );
+
             // MENU SAVE DATA
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuSaveData.Enabled = false;            
             this.menuSaveData.Size = new System.Drawing.Size( 67, 22 );
-            this.menuSaveData.Click += new System.EventHandler( this.SaveUncoveredData );            
-             
+            this.menuSaveData.Click += new System.EventHandler( this.SaveUncoveredData );
+
             // MENU REMOVE GRAPHIC
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuRemoveGraphic.Enabled = false;            
             this.menuRemoveGraphic.Size = new System.Drawing.Size( 67, 22 );
-            this.menuRemoveGraphic.Click += new System.EventHandler( this.RemoveGraphic );             
-                         
+            this.menuRemoveGraphic.Click += new System.EventHandler( this.RemoveGraphic );
+
             // MENU REMOVE DATA
-             
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
             this.menuRemoveData.Enabled = false;            
             this.menuRemoveData.Size = new System.Drawing.Size( 67, 22 );
-            this.menuRemoveData.Click += new System.EventHandler( this.RemoveData );                   
-            
+            this.menuRemoveData.Click += new System.EventHandler( this.RemoveData );
+
             // MENU CLEAR TEXT            
-            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+
             this.menuClearText.Size = new System.Drawing.Size( 67, 22 );
             this.menuClearText.Click += new System.EventHandler( this.removeText );
             
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MENU ACTION
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.actionMenuStripOne.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCoverText,
@@ -140,48 +144,49 @@
             new System.Windows.Forms.ToolStripSeparator(),
             this.menuUncoverFile});            
             this.actionMenuStripOne.Size = new System.Drawing.Size(12, 20);
-             
+
             // MENU COVER TEXT
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuCoverText.Enabled = false;            
             this.menuCoverText.Size = new System.Drawing.Size(67, 22);
-            this.menuCoverText.Click += new System.EventHandler(this.StartCoverText);        
-             
+            this.menuCoverText.Click += new System.EventHandler(this.StartCoverText);
+
             // MENU COVER DATA FROM FILE
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuCoverFile.Enabled = false;            
             this.menuCoverFile.Size = new System.Drawing.Size(67, 22);
-            this.menuCoverFile.Click += new System.EventHandler(this.StartCoverFile);           
-             
+            this.menuCoverFile.Click += new System.EventHandler(this.StartCoverFile);
+
             // MENU UNCOVER TEXT
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuDiscoverText.Enabled = false;           
             this.menuDiscoverText.Size = new System.Drawing.Size(67, 22);
-            this.menuDiscoverText.Click += new System.EventHandler(this.StartUncoverText);           
-             
+            this.menuDiscoverText.Click += new System.EventHandler(this.StartUncoverText);
+
             // MENU UNCOVER DATA
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
              
             this.menuUncoverFile.Enabled = false;           
             this.menuUncoverFile.Size = new System.Drawing.Size(67, 22);
             this.menuUncoverFile.Click += new System.EventHandler(this.StartUncoverFile);
             
-            ////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MENU SETINGS
-            ////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.settingsMenuStripOne.Size = new System.Drawing.Size(12, 20);
             this.settingsMenuStripOne.Click += new System.EventHandler(this.showSetting);   
                       
-            ////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MENU INFO
-            ////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
                         
             this.infoMenuStrip.Size = new System.Drawing.Size(12, 20);
             this.infoMenuStrip.Click += new System.EventHandler( this.ShowAbout );                  
                                              
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // PICTURE BOX
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.pictureBox.BackColor = System.Drawing.Color.Lavender;
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -189,9 +194,8 @@
             this.pictureBox.Size = new System.Drawing.Size(573, 444);
             this.pictureBox.TabStop = false;            
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // TEXT CONTROL 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.textControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textControl.Location = new System.Drawing.Point(642, 64);
@@ -199,18 +203,15 @@
             this.textControl.Size = new System.Drawing.Size(353, 361);           
             this.textControl.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;                     
             
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // DATA FROM FILE CONTROL
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.fileNameControl.BackColor = System.Drawing.Color.White;
             this.fileNameControl.Location = new System.Drawing.Point(7, 12);            
             this.fileNameControl.Size = new System.Drawing.Size(334, 24);
-                      
             
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // PANEL
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -220,9 +221,8 @@
             this.panel1.Size = new System.Drawing.Size(353, 45);
             this.panel1.TabIndex = 5;
             
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
             // MAIN FORM
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
             
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
