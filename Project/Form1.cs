@@ -104,9 +104,8 @@ namespace Stegan
                 {
                     FileStream fileStream = new FileStream( open.FileName, FileMode.Open, FileAccess.Read );
                     BinaryReader binary = new BinaryReader( fileStream );
-                    long numBytes = new FileInfo( open.FileName ).Length;
-                    FileBuffer = binary.ReadBytes( (int)numBytes );
                     FileInfo fileInfo = new FileInfo( open.FileName );
+                    dataBuffer = new List<byte>( binary.ReadBytes( (int)fileInfo.Length ) );
                     fileNameControl.Text = "A file was loaded: " + fileInfo.Name;
                     EnableMenu( true, menuRemoveData );
                     EnableMenu( false, menuOpenFile );
@@ -126,14 +125,13 @@ namespace Stegan
         
         private void StartCoverFile( object sender, EventArgs e )
         {            
-            if ( FileBuffer == null )
+            if ( dataBuffer == null || dataBuffer.Count == 0 )
             {
                 MessageBox.Show( "There is no loaded file to hide" );
                 return;
             }
 
-            List<byte> data = new List<byte>( FileBuffer );
-            CoverData( data );
+            CoverData( dataBuffer );
         }
 
         /*********************************************************************************************/
@@ -173,16 +171,15 @@ namespace Stegan
         
         private void StartUncoverFile( object sender, EventArgs e )
         {
-            List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, ref code );
+            dataBuffer = Controller.UncoverData( (Bitmap)pictureBox.Image, ref code );
 
-            if ( data == null )
+            if ( dataBuffer == null  )
             {
                 MessageBox.Show( messages.GetMessageText( code ) );
                 return;
             }
 
-            FileBuffer = data.ToArray();
-            fileNameControl.Text = "Number of uncovered bytes: " + data.Count.ToString();
+            fileNameControl.Text = "Number of uncovered bytes: " + dataBuffer.Count.ToString();
             EnableMenu( true, menuRemoveData, menuSaveData );          
         }
 
@@ -191,6 +188,7 @@ namespace Stegan
 
         private void StartUncoverText( object sender, EventArgs e )
         {
+            // In case of text dataBuffer in not used
             List<byte> data = Controller.UncoverData( (Bitmap)pictureBox.Image, ref code );
 
             if ( data == null )
@@ -215,7 +213,7 @@ namespace Stegan
             {
                 FileInfo fileInfo = new FileInfo( saveFileDialog.FileName );
                 FileStream fileStream = fileInfo.Open( FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None );
-                fileStream.Write( FileBuffer, 0, FileBuffer.Length );                
+                fileStream.Write( dataBuffer.ToArray(), 0, dataBuffer.Count );
                 fileStream.Close();          
             }
         }
@@ -280,11 +278,10 @@ namespace Stegan
         /********************************************************************************************/
         /********************************************************************************************/
 
-        
-        byte[] FileBuffer;
-
-        // Buffer for uncovered data that may be saved as a file
+        // Buffer is used in two cases, to store data from a file to be covered,
+        // and to store uncovered data from a graphic that is intented to save as a file
         List<byte> dataBuffer;
+
         Messages messages;
         Messages.MessageCode code;
     }
