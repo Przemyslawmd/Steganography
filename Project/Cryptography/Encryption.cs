@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
@@ -7,25 +8,17 @@ namespace Cryptography
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( List<byte> data, String password )
+        public List<byte> Encrypt( List<byte> dataToEncrypt, String password )
         {
-            byte[] dataToEncrypt = data.ToArray();
-            byte[][] key = Key.CreateKeys( password );
-
-            dataToEncrypt = AlignData( dataToEncrypt );
-
             byte[,] state = new byte[4, 4];
+            byte[][] key = Key.CreateKeys( password );
+            int alignment = AlignData( dataToEncrypt );
 
-            List<byte> data_ = new List<byte>( dataToEncrypt );
-
-            data_.Reverse();
-            Stack<byte> stack = new Stack<byte>( data_ );
-
-            int alignment = dataToEncrypt[dataToEncrypt.Length - 1];
-
+            dataToEncrypt.Reverse();
+            Stack<byte> stack = new Stack<byte>( dataToEncrypt );
             List<byte> dataEncrypted = new List<byte>();
 
-            for ( int i = 0; i < dataToEncrypt.Length; i += 16 )
+            for ( int i = 0; i < dataToEncrypt.Count; i += 16 )
             {
                 InputIntoState( stack , state );
                 EncryptBlockData( state, key );
@@ -57,21 +50,20 @@ namespace Cryptography
             AddRoundKey( state, key[NumOfRounds - 1] );
         }
 
+        /**********************************************************************************************/
         /* ALIGN DATA *********************************************************************************/
-        /* Add additional bytes for data to be divided by block size **********************************/
+        // Add additional bytes because data to be encrypted must be divided by block size (16) 
 
-        private byte[] AlignData( byte[] source )
+        private int AlignData( List<byte> source )
         {
-            const int KeyLenghtInBytes = 16;
-            int beginSize = source.Length;
-            int alignment = 16 - ( beginSize % ( KeyLenghtInBytes ));            
-            Array.Resize( ref source, beginSize + alignment );
+            int beginSize = source.Count;
+            int alignment = 16 - ( beginSize % 16 );
 
             for ( int i = 0; i < alignment - 1; i++ )
-                source[beginSize + i] = ( 0x00 );
+                source.Add( 0x00 );
 
-            source[beginSize + alignment - 1] = (byte)alignment;
-            return source;
+            source.Add( (byte)alignment );
+            return alignment;
         }
 
         /************************************************************************************************/
@@ -136,3 +128,4 @@ namespace Cryptography
         }        
     }
 }
+
