@@ -1,18 +1,20 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Cryptography
 {
     class BaseCryptography
     {
         /*************************************************************************************/
-        /* CHANGE STREAM INTO TWO DIMENSION ARRAY ********************************************/
-        /* This array is "after transpontation" **********************************************/
+        /* INPUT INTO STATE ******************************************************************/
+        // Pop sixteen bytes from stack with data to be encrypted and insert it into state array
 
-        protected void InputIntoState( byte[] input, int index, byte[,] state )
+        protected void InputIntoState( Stack<byte> stack, byte[,] state )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    state[i, j] = input[index + i + j * 4];
+                    state[j, i] = stack.Pop();
             }
         }
 

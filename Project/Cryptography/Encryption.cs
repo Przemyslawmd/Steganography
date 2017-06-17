@@ -11,14 +11,21 @@ namespace Cryptography
         {
             byte[] dataToEncrypt = data.ToArray();
             byte[][] key = Key.CreateKeys( password );
+
             dataToEncrypt = AlignData( dataToEncrypt );
+
             byte[,] state = new byte[4, 4];
+
+            List<byte> data_ = new List<byte>( dataToEncrypt );
+
+            data_.Reverse();
+            Stack<byte> stack = new Stack<byte>( data_ );
 
             int alignment = dataToEncrypt[dataToEncrypt.Length - 1];
 
             for ( int i = 0; i < dataToEncrypt.Length; i += 16 )
             {
-                InputIntoState( dataToEncrypt , i, state );
+                InputIntoState( stack , state );
                 EncryptBlockData( state, key );
                 StateIntoOutput( dataToEncrypt, i, state );
             }

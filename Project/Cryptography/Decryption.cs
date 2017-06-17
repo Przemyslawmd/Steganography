@@ -19,9 +19,13 @@ namespace Cryptography
             if ( dataToDecrypt.Length % 16 != 0 )
                 throw new ExceptionEncryption( Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT );
 
+            data.RemoveAt( data.Count - 1 );
+            data.Reverse();
+            Stack<byte> stack = new Stack<byte>( data );
+
             for ( int i = 0; i < dataToDecrypt.Length; i += 16 )
             {
-                InputIntoState( dataToDecrypt, i, state );
+                InputIntoState( stack, state );
                 DecryptBlockData( state, key );
                 StateIntoOutput( dataToDecrypt, i, state );
             }
