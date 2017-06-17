@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Drawing;
 using System.Collections.Generic;
 
@@ -13,7 +14,6 @@ namespace Stegan
         {
             Color color;
             byteCount = dataToCover.Count;
-
             dataToCover.Reverse();
             stack = new Stack<byte>( dataToCover );
 
@@ -35,8 +35,8 @@ namespace Stegan
             red = ( isCompress ) ? ( color.R | Mask1 ) : ( color.R & Mask0 );          
             Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
             
-            // Cover data starting from a second row of a bitmap                   
-            // bitNumber variable has initial value less than zero in order to get a byte at the beginning
+            // Cover data starting from a second row of a bitmap
+            // Variable bitNumber has initial value less than zero to pop a byte from a stack
             bitNumber = -1;
 	
             for ( int y = 1; y < Image.Height; y++ )
@@ -72,12 +72,13 @@ namespace Stegan
         
         /***********************************************************************************************/
         /* CHECK BIT NUMBER ****************************************************************************/
-        // Check bit number in byte is being covered
+        // Check bit number in being covered byte
 
         private bool CheckBitNumber()
         {
             if ( bitNumber < 0 )
             {
+                // All bytes have been covered
                 if ( stack.Count == 0 )
                     return false;
 
@@ -88,7 +89,7 @@ namespace Stegan
         }
 
         /***********************************************************************************************/
-        /* CHANGE CHOOSEN RGB COMPONENT WHILE COVERING DATA SIZE ***************************************/
+        /* CHANGE RGB COMPONENT WHILE COVERING DATA SIZE ***********************************************/
 
         private int ChangeColorCoveringSize( byte componentRGB )
         {
@@ -99,7 +100,7 @@ namespace Stegan
         }
 
         /**********************************************************************************************/
-        /* CHANGE COLOR *******************************************************************************/
+        /* CHANGE RGB COMPONENT WHILE COVERING DATA ***************************************************/
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
@@ -112,7 +113,7 @@ namespace Stegan
         /**********************************************************************************************/
         /**********************************************************************************************/
 
-        // Data to be covered are arranged into stack
+        // Data to be covered is arranged into stack
         Stack<byte> stack;
     }
 }
