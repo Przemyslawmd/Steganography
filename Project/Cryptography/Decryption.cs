@@ -23,16 +23,17 @@ namespace Cryptography
             data.Reverse();
             Stack<byte> stack = new Stack<byte>( data );
 
+            List<byte> dec = new List<byte>();
+
             for ( int i = 0; i < dataToDecrypt.Length; i += 16 )
             {
                 InputIntoState( stack, state );
                 DecryptBlockData( state, key );
-                StateIntoOutput( dataToDecrypt, i, state );
+                StateIntoOutput( dec, state );
             }
 
-            byte[] decryptedData = new byte[dataToDecrypt.Length - alignment];
-            Array.Copy( dataToDecrypt, decryptedData, decryptedData.Length );
-            return new List<byte>( decryptedData );
+            dec.RemoveRange( dec.Count - alignment, alignment );
+            return dec;
         }
 
         /***********************************************************************************************/

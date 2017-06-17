@@ -21,12 +21,12 @@ namespace Cryptography
         /**************************************************************************************/
         /* CHANGE STATE INTO STREAM ***********************************************************/
 
-        protected void StateIntoOutput( byte[] output, int index, byte[,] state )
+        protected void StateIntoOutput( List<byte> output, byte[,] state )
         {
             for ( int i = 0; i < 4; i++ )
             {
                 for ( int j = 0; j < 4; j++ )
-                    output[index + i * 4 + j] = state[j, i];
+                    output.Add( state[j, i] );
             }
         }
 

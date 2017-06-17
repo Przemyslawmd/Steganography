@@ -23,16 +23,17 @@ namespace Cryptography
 
             int alignment = dataToEncrypt[dataToEncrypt.Length - 1];
 
+            List<byte> dataEncrypted = new List<byte>();
+
             for ( int i = 0; i < dataToEncrypt.Length; i += 16 )
             {
                 InputIntoState( stack , state );
                 EncryptBlockData( state, key );
-                StateIntoOutput( dataToEncrypt, i, state );
+                StateIntoOutput( dataEncrypted, state );
             }
 
-            Array.Resize( ref dataToEncrypt, dataToEncrypt.Length + 1 );
-            dataToEncrypt[dataToEncrypt.Length - 1] = (byte)alignment;
-            return new List<byte>( dataToEncrypt );
+            dataEncrypted.Add( (byte)alignment );
+            return dataEncrypted;
         }             
         
         /***********************************************************************************************/
