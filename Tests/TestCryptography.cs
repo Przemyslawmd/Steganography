@@ -149,21 +149,32 @@ namespace Tests
         public void TestAESDataAlignment()
         {                                
             PrivateObject obj = new PrivateObject( new Encryption() );
+            List<byte> data = new List<byte>();
 
-            byte[] data = new byte[5];
-            data = (byte[])obj.Invoke( "AlignData", data );
-            Assert.AreEqual( data.Length, 16 );
-            Assert.AreEqual( data[data.Length - 1], 11 );
+            for ( int i = 0; i < 5; i++ )
+                data.Add( 0x00 );
 
-            data = new byte[22];
-            data = (byte[])obj.Invoke( "AlignData", data );
-            Assert.AreEqual( data.Length, 32 );
-            Assert.AreEqual( data[data.Length - 1], 10 );
+            obj.Invoke( "AlignData", data );
+            Assert.AreEqual( data.Count, 16 );
+            Assert.AreEqual( data[data.Count - 1], 11 );
+            data.Clear();
 
-            data = new byte[16] ;
-            data = (byte[]) obj.Invoke( "AlignData", data );
-            Assert.AreEqual( data.Length, 32 );
-            Assert.AreEqual( data[data.Length - 1], 16 );
+
+            for ( int i = 0; i < 22; i++ )
+                data.Add( 0x00 );
+
+            obj.Invoke( "AlignData", data );
+            Assert.AreEqual( data.Count, 32 );
+            Assert.AreEqual( data[data.Count - 1], 10 );
+            data.Clear();
+
+
+            for ( int i = 0; i < 16; i++ )
+                data.Add( 0x00 );
+
+            obj.Invoke( "AlignData", data );
+            Assert.AreEqual( data.Count, 32 );
+            Assert.AreEqual( data[data.Count - 1], 16 );
         }
 
         /************************************************************************************************************/
