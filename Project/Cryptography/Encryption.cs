@@ -56,8 +56,7 @@ namespace Cryptography
 
         private int AlignData( List<byte> source )
         {
-            int beginSize = source.Count;
-            int alignment = 16 - ( beginSize % 16 );
+            int alignment = 16 - ( source.Count % 16 );
 
             for ( int i = 0; i < alignment - 1; i++ )
                 source.Add( 0x00 );

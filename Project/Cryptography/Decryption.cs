@@ -11,29 +11,26 @@ namespace Cryptography
         {
             byte[][] key = Key.CreateKeys( password );
             byte[,] state = new byte[4, 4];
-            byte[] dataToDecrypt = data.ToArray();
 
-            int alignment = dataToDecrypt[dataToDecrypt.Length - 1];
-            Array.Resize( ref dataToDecrypt, dataToDecrypt.Length - 1 );
+            int alignment = data[data.Count - 1];
+            data.RemoveAt( data.Count - 1 );
 
-            if ( dataToDecrypt.Length % 16 != 0 )
+            if ( data.Count % 16 != 0 )
                 throw new ExceptionEncryption( Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT );
 
-            data.RemoveAt( data.Count - 1 );
             data.Reverse();
             Stack<byte> stack = new Stack<byte>( data );
+            List<byte> decryptedData = new List<byte>();
 
-            List<byte> dec = new List<byte>();
-
-            for ( int i = 0; i < dataToDecrypt.Length; i += 16 )
+            for ( int i = 0; i < data.Count; i += 16 )
             {
                 InputIntoState( stack, state );
                 DecryptBlockData( state, key );
-                StateIntoOutput( dec, state );
+                StateIntoOutput( decryptedData, state );
             }
 
-            dec.RemoveRange( dec.Count - alignment, alignment );
-            return dec;
+            decryptedData.RemoveRange( decryptedData.Count - alignment, alignment );
+            return decryptedData;
         }
 
         /***********************************************************************************************/
