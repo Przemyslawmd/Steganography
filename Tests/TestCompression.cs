@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,27 +19,27 @@ namespace Tests
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
-            List<byte> data = new List<byte>( File.ReadAllBytes( filePath ) );
-                        
-            List<byte> dataCompressed = new Compression().Compress( data );
-            CollectionAssert.AreNotEqual( data, dataCompressed );
-            Assert.IsTrue( dataCompressed.Count < data.Count );
+            List<byte> dataToCompress = new List<byte>( File.ReadAllBytes( filePath ) );
+            List<byte> dataCompressed = new Compression().Compress( dataToCompress );
+
+            CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
+            Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
             
             List<byte> dataDecompressed = new Decompression().Decompress( dataCompressed );
-            CollectionAssert.AreEqual( data, dataDecompressed );
+            CollectionAssert.AreEqual( dataToCompress, dataDecompressed );
         }
 
         /********************************************************************************************/
         /* TEST CREATING NODES USED TO BUILD HUFFMAN TREE *******************************************/
+        // List of NodeCompress objects should be sorted by count 
 
         [TestMethod]
         public void TestCompressionCreatingNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
-
             List<byte> data = new List<byte> { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
-            nodes = (List<NodeCompress>)(obj.Invoke( "CreateNodes", data ));
+            nodes = ( List<NodeCompress> )( obj.Invoke( "CreateNodes", data ) );
             nodes = nodes.OrderBy( x => x.Count ).ToList();
 
             Assert.AreEqual( nodes.Count, 7 );
@@ -55,7 +56,7 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            // Create a list of NodeCompress objects sorted by count member class 
+            // Create a list of NodeCompress objects sorted by count
             nodes = new List<NodeCompress>();
             nodes.Add( new NodeCompress( 1, 0x10 ) );
             nodes.Add( new NodeCompress( 1, 0x11 ) );
@@ -66,6 +67,8 @@ namespace Tests
             obj.Invoke( "BuildTree", nodes );
 
             NodeCompress root = nodes[0];
+
+            // Check choosen nodes of Huffman tree
 
             NodeCompress node = root.Left.Left;
             Assert.AreEqual( node.ByteValue, 0x12 );
@@ -83,6 +86,7 @@ namespace Tests
 
         /*********************************************************************************************/
         /* TEST CREATING HUFFMAN CODES ***************************************************************/
+        // Dependend on the TestCompressionBuildingTree
 
         [TestMethod]
         public void TestCompressionGeneratingCodes()
