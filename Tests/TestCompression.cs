@@ -70,17 +70,17 @@ namespace Tests
 
             // Check choosen nodes of Huffman tree
 
-            NodeCompress node = root.Left.Left;
+            Node node = root.Left.Left;
             Assert.AreEqual( node.ByteValue, 0x12 );
-            Assert.AreEqual( node.Count, 2 );
+            Assert.AreEqual( ((NodeCompress)node).Count, 2 );
 
             node = root.Right.Left;
             Assert.AreEqual( node.isLeaf(), false );
-            Assert.AreEqual( node.Count, 2 );
+            Assert.AreEqual( ((NodeCompress)node).Count, 2 );
 
             node = root.Right.Left.Right;
             Assert.AreEqual( node.isLeaf(), true );
-            Assert.AreEqual( node.Count, 1 );
+            Assert.AreEqual( ((NodeCompress)node).Count, 1 );
             Assert.AreEqual( node.ByteValue, 0x11 );
         }
 

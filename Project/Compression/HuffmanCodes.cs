@@ -22,7 +22,7 @@ namespace Stegan
         /* GENERATE CODES ***************************************************************/
         // Recursive method that traverses tree and generates codes 
 
-        private void GenerateCodes( NodeCompress node, char token )
+        private void GenerateCodes( Node node, char token )
         {
             code.Add( token );
 

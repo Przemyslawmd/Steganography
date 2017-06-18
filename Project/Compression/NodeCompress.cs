@@ -10,7 +10,7 @@ namespace Stegan
             Count = count;
         }
 
-        public NodeCompress( int count, NodeCompress left, NodeCompress right )
+        public NodeCompress( int count, Node left, Node right )
         {
             Count = count;
             Left = left;
@@ -19,15 +19,6 @@ namespace Stegan
         
         public int Count { get; set; }
 
-        public NodeCompress Left { get; set; }
-
-        public NodeCompress Right { get; set; }
-
         public NodeCompress Parent { get; set; }
-
-        public bool isLeaf()
-        {
-            return ( Left == null ) && ( Right == null );
-        }
     }   
 }
