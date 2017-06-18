@@ -1,12 +1,15 @@
-﻿using System;
-
+﻿
 namespace Stegan
 {
     class Node
     {
-        public Node() { }
+        public Node( Node left, Node right )
+        {
+            Left = left;
+            Right = right;
+        }
 
-        public Node( byte value, bool isLeaf )
+        public Node( byte value )
         {
             this.ByteValue = value;
         }

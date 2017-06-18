@@ -84,7 +84,7 @@ namespace Stegan
 
         private void BuildTree()
         {
-            root = new Node( 0, false );
+            root = new Node( 0 );
             Node node;
             
             List<byte> tempByte = new List<byte>();
@@ -101,23 +101,23 @@ namespace Stegan
                     if ( tempCode[j] == '0' )
                     {
                         if ( node.Left == null )
-                            node.Left = new Node( 0, false );
+                            node.Left = new Node( 0 );
                         node = node.Left;
                     }
 
                     else if ( tempCode[j] == '1' )
                     {
                         if ( node.Right == null )
-                            node.Right = new Node( 0, false );
+                            node.Right = new Node( 0 );
                         node = node.Right;
                     }
                 }
 
                 // Check last char in code - add leaves
                 if ( tempCode[tempCode.Length - 1] == '0' )                
-                    node.Left = new Node( byteValue[i], true );
+                    node.Left = new Node( byteValue[i] );
                 else if ( tempCode[tempCode.Length - 1] == '1' )                
-                    node.Right = new Node( byteValue[i], true );
+                    node.Right = new Node( byteValue[i] );
              }           
         }
 
