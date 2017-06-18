@@ -13,14 +13,15 @@ namespace Stegan
         public void CoverData( Bitmap Image, List<byte> dataToCover, Boolean isCompress ) 
         {
             Color color;
+            int red, green, blue;
             byteCount = dataToCover.Count;
             dataToCover.Reverse();
             stack = new Stack<byte>( dataToCover );
 
             // Save data size to be covered                                                    
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
-            bitNumber = 17;            
-            
+            bitNumber = 17;
+
             for ( int x = 0; x < DataSizePixel; x++ )
             {	
                 color = Image.GetPixel( x, 0 );
@@ -114,7 +115,9 @@ namespace Stegan
         /**********************************************************************************************/
 
         // Data to be covered is arranged into stack
-        Stack<byte> stack;
+        private Stack<byte> stack;
+
+        private const byte Mask0 = 0;
     }
 }
 
