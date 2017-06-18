@@ -14,9 +14,9 @@ namespace Stegan
 
         public static bool CoverData( List<byte> data, Bitmap bitmap, ref Messages.MessageCode code )
         {
-            if ( Settings.GetEncryptionState() )
+            if ( Settings.Encryption )
             {
-                string password = Settings.GetPassword();
+                string password = Settings.Password;
 
                 if ( password.Equals( "" ) )
                 {
@@ -35,7 +35,7 @@ namespace Stegan
                 }
             }
 
-            if ( Settings.GetCompressionState() )
+            if ( Settings.Compression )
             {
                 try
                 {
@@ -57,7 +57,7 @@ namespace Stegan
                 return false; 
             }
            
-            new Covering().CoverData( bitmap, data, Settings.GetCompressionState() );
+            new Covering().CoverData( bitmap, data, Settings.Compression );
             return true;
         }
 
@@ -81,9 +81,9 @@ namespace Stegan
                 return null;
             }
 
-            if ( Settings.GetEncryptionState() )
+            if ( Settings.Encryption )
             {
-                string password = Settings.GetPassword();
+                string password = Settings.Password;
 
                 if ( password.Equals( "" ) )
                 {

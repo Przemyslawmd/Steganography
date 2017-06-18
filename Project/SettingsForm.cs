@@ -18,14 +18,14 @@ namespace Stegan
                   
 
             GroupBox groupCompression = CreateGroupBox( 10, 20, 50, 330 );
-            CheckBox checkCompression = CreateCheckBox( 300, 15, 15, Settings.GetCompressionState() );
+            CheckBox checkCompression = CreateCheckBox( 300, 15, 15, Settings.Compression );
             groupCompression.Controls.Add( checkCompression );
             groupCompression.Controls.Add( CreateLabel( 10, 20, "Data compression", 100 ) );
 
 
             GroupBox groupEncryption =  CreateGroupBox( 10, 90, 90, 330 );
-            CheckBox checkEncryption = CreateCheckBox( 300, 15, 15, Settings.GetEncryptionState() );            
-            TextBox textBoxEncryption = CreateTextBox( 213, 50, 100, Settings.GetPassword() );
+            CheckBox checkEncryption = CreateCheckBox( 300, 15, 15, Settings.Encryption );
+            TextBox textBoxEncryption = CreateTextBox( 213, 50, 100, Settings.Password );
             groupEncryption.Controls.Add( CreateLabel( 10, 20, "Data encryption", 100 ) );
             groupEncryption.Controls.Add( checkEncryption );
             groupEncryption.Controls.Add( CreateLabel( 10, 55, "Password", 100 ) );
@@ -35,9 +35,9 @@ namespace Stegan
             Button buttonAccept = new Button();
             buttonAccept.Text = "Accept";
             buttonAccept.Location = new Point( 140, 210 );
-            buttonAccept.Click += ( object senderAc, EventArgs eAc ) => { Settings.SetCompressionState( checkCompression.Checked ); };
-            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.SetEncryptionState( checkEncryption.Checked ); };
-            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.SetPassword( textBoxEncryption.Text ); };
+            buttonAccept.Click += ( object senderAc, EventArgs eAc ) => { Settings.Compression = checkCompression.Checked; };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.Encryption = checkEncryption.Checked; };
+            buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { Settings.Password = textBoxEncryption.Text; };
             buttonAccept.Click += ( object senderAc, EventArgs aAc ) => { settingForm.Dispose(); };
                      
             settingForm.Controls.Add( groupCompression );
