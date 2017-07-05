@@ -10,9 +10,9 @@ namespace Stegan
         /********************************************************************************/
         /* CREATE DICTIONARY WITH CODES *************************************************/        
 
-        public Dictionary<byte, String> CreateCodesDictionary( NodeCompress root )
+        public Dictionary<byte, List<char>> CreateCodesDictionary( NodeCompress root )
         {
-            codes = new Dictionary<byte, string>();
+            codes = new Dictionary<byte, List<char>>();
             code = new List<char>();
             GenerateCodes( root, '1' );
             return codes;
@@ -31,7 +31,7 @@ namespace Stegan
             if ( node.Right != null )
                 GenerateCodes( node.Right, '1' );
             else
-                codes.Add( node.ByteValue, String.Concat( code ) );
+                codes.Add( node.ByteValue, new List<char>( code ));
 
             code.RemoveAt( code.Count - 1 );
         }
@@ -43,6 +43,6 @@ namespace Stegan
         // for example, Long type 
         private List<char> code;
 
-        private Dictionary<byte, string> codes;
+        private Dictionary<byte, List<char>> codes;
     }
 }

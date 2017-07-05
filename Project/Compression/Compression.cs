@@ -35,15 +35,14 @@ namespace Stegan
         {
             int bitShift = 0;
             byte temp = 0;
-            char[] code = null;
+            List<char> code = new List<char>();
             compressedData = new List<byte>();
             
-            for (int i = 0; i < source.Count; i++)
+            foreach ( byte value in source )
             {
-                // Get code for byte 
-                code = codes[source[i]].ToCharArray();
-               
-                for (int j = 0; j < code.Length; j++)
+                code = codes[value];
+
+                foreach ( char token in code )
                 {
                     if ( bitShift == BitsInByte )
                     {
@@ -53,7 +52,7 @@ namespace Stegan
                     }
                     
                     temp <<= 1;
-                    if ( code[j] == '1' ) 
+                    if ( token == '1' )
                         temp += 1;
                     bitShift++;
                 }
@@ -76,7 +75,7 @@ namespace Stegan
             List<byte> codesData = new List<byte>();
             byte[] keys = new byte[codes.Count];
             int temp;
-            char[] tempCode;
+            List<char> tempCode = new List<char>();
 
             // In first four bytes there is an information about size of Dictionary
             temp = codes.Count;
@@ -88,17 +87,17 @@ namespace Stegan
             for ( int i = 0; i < codes.Count; i++ )
             {
                 codesData.Add(keys[i]);
-                tempCode = codes[keys[i]].ToCharArray();
+                tempCode = codes[keys[i]];
                 temp = 0;
 
-                for ( int k = 0; k < tempCode.Length - 1; k++ )
+                for ( int k = 0; k < tempCode.Count - 1; k++ )
                 {
                     if ( tempCode[k] == '1' )
                         temp += 1;
                     temp <<= 1;
                 }
 
-                if ( tempCode[tempCode.Length - 1] == '1' )
+                if ( tempCode[tempCode.Count - 1] == '1' )
                     temp += 1;
 
                 for ( int k = 0, j = 24; k < 4; k++, j -= BitsInByte )
@@ -114,7 +113,7 @@ namespace Stegan
 
         // Final codes - byte values linked with sequence of bits
         // Sequence of bits is a string because it may have length more than 64
-        private Dictionary<byte, string> codes;
+        private Dictionary<byte, List<char>> codes;
 
         readonly int BitsInByte = 8;     
     }

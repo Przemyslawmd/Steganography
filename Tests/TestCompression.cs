@@ -1,5 +1,4 @@
 ﻿
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,19 +91,19 @@ namespace Tests
         public void TestCompressionGeneratingCodes()
         {
             NodeCompress root = nodes[0];
-            Dictionary<byte, String> codes = new HuffmanCodes().CreateCodesDictionary( root );
-            String code;
+            Dictionary<byte, List<char>> codes = new HuffmanCodes().CreateCodesDictionary( root );
+            List<char> code;
 
             codes.TryGetValue( 0x12, out code );
-            Assert.AreEqual( code, "100" );
+            CollectionAssert.AreEqual( code, new List<char> { '1', '0', '0' } );
             codes.TryGetValue( 0x13, out code );
-            Assert.AreEqual( code, "101" );
+            CollectionAssert.AreEqual( code, new List<char> { '1', '0', '1' } );
             codes.TryGetValue( 0x14, out code );
-            Assert.AreNotEqual( code, "100" );
+            CollectionAssert.AreNotEqual( code, new List<char> { '1', '0', '0' } );
             codes.TryGetValue( 0x11, out code );
-            Assert.AreEqual( code, "1101" );
+            CollectionAssert.AreEqual( code, new List<char> { '1', '1', '0', '1' } );
             codes.TryGetValue( 0x10, out code );
-            Assert.AreEqual( code, "1100" );
+            CollectionAssert.AreEqual( code, new List<char> { '1', '1', '0', '0' } );
         }
         
         /********************************************************************************************/
