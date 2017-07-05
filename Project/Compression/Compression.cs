@@ -15,16 +15,14 @@ namespace Stegan
         public List<byte> Compress( List<byte> source )
         {
             int sizeBeforeCompress = source.Count;
-
             NodeCompress root = new HuffmanTree().BuildTree( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
-
             StartCompress( source );
 
-            List<byte> finalCompressedData = InsertCodes();
-            finalCompressedData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );
-            finalCompressedData.AddRange( compressedData );
-            return finalCompressedData;
+            List<byte> finalData = InsertCodes();
+            finalData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );
+            finalData.AddRange( compressedData );
+            return finalData;
         }
 
         /************************************************************************************************/
@@ -73,21 +71,18 @@ namespace Stegan
         private List<byte> InsertCodes()
         {
             List<byte> codesData = new List<byte>();
-            byte[] keys = new byte[codes.Count];
-            int temp;
             List<char> tempCode = new List<char>();
+            int temp;
 
-            // In first four bytes there is an information about size of Dictionary
+            // First four bytes contain an information about size of Dictionary
             temp = codes.Count;
             for ( int i = 0, j = 24; i < 4; i++, j -= BitsInByte )
                 codesData.Add(( byte )( temp >> j ));
                         
-            codes.Keys.CopyTo( keys, 0 );            
-            
-            for ( int i = 0; i < codes.Count; i++ )
+            foreach ( KeyValuePair<byte, List<char>> code in codes )
             {
-                codesData.Add(keys[i]);
-                tempCode = codes[keys[i]];
+                codesData.Add( code.Key );
+                tempCode = code.Value;
                 temp = 0;
 
                 for ( int k = 0; k < tempCode.Count - 1; k++ )
