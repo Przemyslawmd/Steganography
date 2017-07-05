@@ -107,6 +107,30 @@ namespace Tests
             Assert.AreEqual( code, "1100" );
         }
         
+        [TestMethod]
+        public void TestCompressionGeneratingCodesNew()
+        {
+            NodeCompress root = nodes[0];
+            Dictionary<byte, Code> codes = new HuffmanCodes().CreateCodesDictionaryNew( root );
+            Code code;
+
+            codes.TryGetValue( 0x12, out code );
+            Assert.AreEqual( code.GetLength(), 3 );
+            Assert.AreEqual( code.GetTokens()[0], 128 );       // 1000 0000
+
+            codes.TryGetValue( 0x13, out code );
+            Assert.AreEqual( code.GetLength(), 3 );
+            Assert.AreEqual( code.GetTokens()[0], 160 );       // 1010 0000
+
+            codes.TryGetValue( 0x11, out code );
+            Assert.AreEqual( code.GetLength(), 4 );
+            Assert.AreEqual( code.GetTokens()[0], 208 );       // 1101 0000
+
+            codes.TryGetValue( 0x10, out code );
+            Assert.AreEqual( code.GetLength(), 4 );
+            Assert.AreEqual( code.GetTokens()[0], 192 );       // 1100 0000
+        }
+
         /********************************************************************************************/
         /********************************************************************************************/
 

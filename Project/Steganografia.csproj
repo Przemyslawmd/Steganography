@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\Code.cs" />
     <Compile Include="Compression\HuffmanCodes.cs" />
     <Compile Include="Compression\HuffmanTree.cs" />
     <Compile Include="Controller.cs" />
