@@ -13,14 +13,12 @@ namespace Stegan
 
         public List<byte> Decompress( List<byte> source )
         {
-            sourceData = source.ToArray();
             Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
-            dataCount = BitConverter.ToInt32( sourceData, dataIndex + 1 );
+            dataCount = BitConverter.ToInt32( source.ToArray(), dataIndex + 1 );
 
             dataIndex += 4;
             BuildTree( codes );
-                      
-            return Decode();
+            return Decode( source );
         }
 
         /**********************************************************************************/
@@ -58,7 +56,7 @@ namespace Stegan
                 }
                 
                 codeInt += (int)data[index];
-                if (i != ( codesCount - 1 ))
+                if ( i != ( codesCount - 1 ))
                     index++;
                 
                 // Change code from an integer into an array of char                
@@ -108,7 +106,7 @@ namespace Stegan
                     }
                 }
 
-                // Check last char in code - add leaves
+                // Check last char in code - add leaf
                 if ( code.Value.Last() == '0' )
                     node.Left = new Node( code.Key );
                 else
@@ -120,7 +118,7 @@ namespace Stegan
         /* DECODE ************************************************************************/
         // Decompress data - change codes into byte values
 
-        private List<byte> Decode()
+        private List<byte> Decode( List<byte> source )
         {                        
             List<byte> decompressedData = new List<byte>();
             byte[] mask = { 128, 64, 32, 16, 8, 4, 2, 1 };
@@ -129,12 +127,12 @@ namespace Stegan
             int Count = 0;
 
             // Get byte from data to be decompressed
-            for ( int i = dataIndex + 1; i < sourceData.Length; i++ )            
+            foreach ( byte symbol in source.Skip( dataIndex + 1 ))
             {
                 // Check each bite in a byte and traverse tree
                 for ( int j = 0; j < 8; j++ )
                 {                                        
-                    if ( ( mask[j] & sourceData[i] ) == 0 )
+                    if (( mask[j] & symbol ) == 0 )
                     {
                         node = node.Left;                                                                 
                     }         
@@ -165,7 +163,6 @@ namespace Stegan
 
         int dataCount;                      // count of bytes to be decompressed
         private Node root;
-        private byte[] sourceData;          // data to be decompressed              
         private int dataIndex;              // index in sourceData
     }
 }
