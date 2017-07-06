@@ -1,5 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Stegan
 {
@@ -84,26 +86,21 @@ namespace Stegan
         {
             root = new Node( 0 );
             Node node;
-            
-            List<byte> tempByte = new List<byte>();
-            List<char> tempCode;
 
             foreach ( KeyValuePair<byte, List<char>> code in codes )
             {
                 node = root;
-                tempCode = code.Value;
 
-                // Traverse chars in code in exception of first char - each code begins with '1'
-                for ( int j = 1; j < tempCode.Count - 1; j++ )
+                // Traverse chars in code in exception of first and last char - each code begins with char '1'
+                foreach ( char token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ))
                 {
-                    if ( tempCode[j] == '0' )
+                    if ( token == '0' )
                     {
                         if ( node.Left == null )
                             node.Left = new Node( 0 );
                         node = node.Left;
                     }
-
-                    else if ( tempCode[j] == '1' )
+                    else
                     {
                         if ( node.Right == null )
                             node.Right = new Node( 0 );
@@ -112,9 +109,9 @@ namespace Stegan
                 }
 
                 // Check last char in code - add leaves
-                if ( tempCode[tempCode.Count - 1] == '0' )
+                if ( code.Value.Last() == '0' )
                     node.Left = new Node( code.Key );
-                else if ( tempCode[tempCode.Count - 1] == '1' )
+                else
                     node.Right = new Node( code.Key );
              }
         }
