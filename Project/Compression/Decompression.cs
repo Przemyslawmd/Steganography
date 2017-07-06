@@ -13,11 +13,11 @@ namespace Stegan
         {
             int[] DataCount = new int[1];            
             sourceData = source.ToArray();
-            GetCodesFromSource( source  );
+            Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
 
             Buffer.BlockCopy( sourceData, dataIndex + 1, DataCount, 0, 4 );
             dataIndex += 4;
-            BuildTree(); 
+            BuildTree( codes );
                       
             return Decode( DataCount[0] );    
         }
@@ -27,7 +27,7 @@ namespace Stegan
         // Get Huffman codes from compressed data
         // Huffman codes are merged with compressed data after compression
 
-        private void GetCodesFromSource( List<byte> data )
+        private Dictionary<byte, List<char>> GetCodesFromSource( List<byte> data )
         {
             // Get number of codes from source data, this value is stored in first four bytes            
             int codesCount = 0;
@@ -38,8 +38,7 @@ namespace Stegan
             }
             codesCount += (int)data[3];
 
-            byteValue = new List<byte>( codesCount );
-            codeValue = new List<char[]>( codesCount ); 
+            Dictionary<byte, List<char>> codes = new Dictionary<byte, List<char>>();
                         
             byte tempByte;
             int index = 4;
@@ -71,32 +70,32 @@ namespace Stegan
                     codeInt >>= 1;
                 }
 
-                byteValue.Add( tempByte );
-                codeValue.Add( code.ToArray() );               
+                codes.Add( tempByte, new List<char>( code ));
                 code.Clear();
             }
 
-            dataIndex = index;            
+            dataIndex = index;
+            return codes;
         }
 
         /********************************************************************************/
         /* BUILD TREE *******************************************************************/
 
-        private void BuildTree()
+        private void BuildTree( Dictionary<byte, List<char>> codes )
         {
             root = new Node( 0 );
             Node node;
             
             List<byte> tempByte = new List<byte>();
-            char[] tempCode = null;                     
+            List<char> tempCode;
 
-            for ( int i = 0; i < byteValue.Count; i++ )
+            foreach ( KeyValuePair<byte, List<char>> code in codes )
             {
                 node = root;
-                tempCode = codeValue[i];
+                tempCode = code.Value;
 
                 // Traverse chars in code in exception of first char - each code begins with '1'
-                for ( int j = 1; j < tempCode.Length - 1; j++ )
+                for ( int j = 1; j < tempCode.Count - 1; j++ )
                 {
                     if ( tempCode[j] == '0' )
                     {
@@ -114,11 +113,11 @@ namespace Stegan
                 }
 
                 // Check last char in code - add leaves
-                if ( tempCode[tempCode.Length - 1] == '0' )                
-                    node.Left = new Node( byteValue[i] );
-                else if ( tempCode[tempCode.Length - 1] == '1' )                
-                    node.Right = new Node( byteValue[i] );
-             }           
+                if ( tempCode[tempCode.Count - 1] == '0' )
+                    node.Left = new Node( code.Key );
+                else if ( tempCode[tempCode.Count - 1] == '1' )
+                    node.Right = new Node( code.Key );
+             }
         }
 
         /*********************************************************************************/
@@ -169,8 +168,6 @@ namespace Stegan
         /**************************************************************************************/
 
         private Node root;
-        private List<byte> byteValue;
-        private List<char[]> codeValue;        
         private byte[] sourceData;          // data to be decompressed              
         private int dataIndex;              // index in sourceData
     }
