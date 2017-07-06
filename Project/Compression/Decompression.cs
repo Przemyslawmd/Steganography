@@ -11,15 +11,14 @@ namespace Stegan
 
         public List<byte> Decompress( List<byte> source )
         {
-            int[] DataCount = new int[1];            
             sourceData = source.ToArray();
             Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
+            dataCount = BitConverter.ToInt32( sourceData, dataIndex + 1 );
 
-            Buffer.BlockCopy( sourceData, dataIndex + 1, DataCount, 0, 4 );
             dataIndex += 4;
             BuildTree( codes );
                       
-            return Decode( DataCount[0] );    
+            return Decode();
         }
 
         /**********************************************************************************/
@@ -124,7 +123,7 @@ namespace Stegan
         /* DECODE ************************************************************************/
         // Decompress data - change codes into byte values
 
-        private List<byte> Decode( int DataCount )
+        private List<byte> Decode()
         {                        
             List<byte> decompressedData = new List<byte>();
             byte[] mask = { 128, 64, 32, 16, 8, 4, 2, 1 };
@@ -155,18 +154,19 @@ namespace Stegan
                     if ( node.isLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
-                        if ( ++Count == DataCount )
+                        if ( ++Count == dataCount )
                             return decompressedData;
                         node = null;
                     }
                 }
             }                       
             return decompressedData;
-        } 
-        
+        }
+
         /**************************************************************************************/
         /**************************************************************************************/
 
+        int dataCount;                      // count of bytes to be decompressed
         private Node root;
         private byte[] sourceData;          // data to be decompressed              
         private int dataIndex;              // index in sourceData
