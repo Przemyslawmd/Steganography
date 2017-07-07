@@ -1,5 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
@@ -71,7 +73,6 @@ namespace Stegan
         private List<byte> InsertCodes()
         {
             List<byte> codesData = new List<byte>();
-            List<char> tempCode = new List<char>();
             int temp;
 
             // First four bytes contain an information about size of Dictionary
@@ -82,17 +83,16 @@ namespace Stegan
             foreach ( KeyValuePair<byte, List<char>> code in codes )
             {
                 codesData.Add( code.Key );
-                tempCode = code.Value;
                 temp = 0;
 
-                for ( int k = 0; k < tempCode.Count - 1; k++ )
+                foreach ( char token in code.Value.Take( code.Value.Count - 1 ))
                 {
-                    if ( tempCode[k] == '1' )
+                    if ( token == '1' )
                         temp += 1;
                     temp <<= 1;
                 }
 
-                if ( tempCode[tempCode.Count - 1] == '1' )
+                if ( code.Value.Last() == '1' )
                     temp += 1;
 
                 for ( int k = 0, j = 24; k < 4; k++, j -= BitsInByte )
