@@ -16,13 +16,14 @@ namespace Stegan
 
         public List<byte> Compress( List<byte> source )
         {
-            int sizeBeforeCompress = source.Count;
+            int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTree( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
             StartCompress( source );
 
+            // Final data at the beginning is filled with codes
             List<byte> finalData = InsertCodes();
-            finalData.AddRange( BitConverter.GetBytes( sizeBeforeCompress ) );
+            finalData.AddRange( BitConverter.GetBytes( originalSize ));
             finalData.AddRange( compressedData );
             return finalData;
         }
@@ -35,14 +36,11 @@ namespace Stegan
         {
             int bitShift = 0;
             byte temp = 0;
-            List<char> code = new List<char>();
             compressedData = new List<byte>();
             
             foreach ( byte value in source )
             {
-                code = codes[value];
-
-                foreach ( char token in code )
+                foreach ( char token in codes[value] )
                 {
                     if ( bitShift == BitsInByte )
                     {
@@ -72,44 +70,56 @@ namespace Stegan
                     
         private List<byte> InsertCodes()
         {
-            List<byte> codesData = new List<byte>();
-            int temp;
+            List<byte> codesStream = new List<byte>();
 
-            // First four bytes contain an information about size of Dictionary
-            temp = codes.Count;
-            for ( int i = 0, j = 24; i < 4; i++, j -= BitsInByte )
-                codesData.Add(( byte )( temp >> j ));
-                        
             foreach ( KeyValuePair<byte, List<char>> code in codes )
             {
-                codesData.Add( code.Key );
-                temp = 0;
+                codesStream.Add( code.Key );
+                codesStream.Add( (byte)code.Value.Count );
+            }
 
-                foreach ( char token in code.Value.Take( code.Value.Count - 1 ))
+            byte temp = 0;
+            int shift = 0;
+
+            foreach ( KeyValuePair<byte, List<char>> code in codes )
+            {
+                foreach ( char token in code.Value )
                 {
+                    shift++;
+
+                    if ( shift > 1 )
+                        temp <<= 1;
                     if ( token == '1' )
                         temp += 1;
-                    temp <<= 1;
+
+                    if ( shift == BitsInByte )
+                    {
+                        codesStream.Add( temp );
+                        shift = 0;
+                        temp = 0;
+                    }
                 }
-
-                if ( code.Value.Last() == '1' )
-                    temp += 1;
-
-                for ( int k = 0, j = 24; k < 4; k++, j -= BitsInByte )
-                    codesData.Add(( byte )( temp >> j ));
             }
-            return codesData;
+
+            if ( shift != 0 )
+            {
+                temp <<= ( BitsInByte - shift );
+                codesStream.Add( temp );
+            }
+
+            // Size is being increased with 5 byte because of two statements below 
+            int codesStreamSize = codesStream.Count + 5;
+
+            codesStream.InsertRange( 0, BitConverter.GetBytes( codesStreamSize ));
+            codesStream.Insert( 4, (byte)codes.Count );
+            return codesStream;
         }
 
         /********************************************************************************************************/
         /********************************************************************************************************/
 
         private List<byte> compressedData;
-
-        // Final codes - byte values linked with sequence of bits
-        // Sequence of bits is a string because it may have length more than 64
         private Dictionary<byte, List<char>> codes;
-
-        readonly int BitsInByte = 8;     
+        readonly int BitsInByte = 8;
     }
 }
