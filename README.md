@@ -10,4 +10,4 @@ Implementation of encryption/decryption is based on AES 128.
 
 Used technology: C#, WinForms, IDE is VisualStudio Comunnity 2015.
 
-More information on a website: http://www.przemeknet.pl/steganEn.aspx 
+More information on a website: http://www.przemeknet.pl/Steganography 
