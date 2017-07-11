@@ -14,7 +14,7 @@ namespace Stegan
         public List<byte> Decompress( List<byte> source )
         {
             Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
-            dataCount = BitConverter.ToInt32( source.ToArray(), dataIndex + 1 );
+            dataCount = BitConverter.ToInt32( source.ToArray(), dataIndex );
 
             dataIndex += 4;
             Node root = new HuffmanTree().BuildTreeDecompression( codes );
@@ -29,52 +29,49 @@ namespace Stegan
         private Dictionary<byte, List<char>> GetCodesFromSource( List<byte> data )
         {
             // Get number of codes from source data, this value is stored in first four bytes            
-            int codesCount = 0;
-            for ( int i = 0; i < 3; i++ )
-            {
-                codesCount += (int)data[i];                
-                codesCount <<= 8;
-            }
-            codesCount += (int)data[3];
+            int codesSize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
+            int codesCount = (int)data[4];
 
             Dictionary<byte, List<char>> codes = new Dictionary<byte, List<char>>();
                         
-            byte tempByte;
-            int index = 4;
-            int codeInt = 0;
-            List<char> code = new List<char>();
-            
-            for (int i = 0; i < codesCount; i++)
-            {                
-                tempByte = data[index++];
+            dataIndex = 5;
+            int streamIndex = 5 + codesCount * 2;
+            int bitIndex = 1;
+            List<char> code;
 
-                // Get code as an integer
-                for ( int j = 0; j < 3; j++ )
-                {
-                    codeInt += (int)data[index++];
-                    codeInt <<= 8;
-                }
-                
-                codeInt += (int)data[index];
-                if ( i != ( codesCount - 1 ))
-                    index++;
-                
-                // Change code from an integer into an array of char                
-                while ( codeInt != 0 )
-                {
-                    if (( codeInt % 2 ) == 0 )
-                        code.Insert( 0, '0' );
-                    else
-                        code.Insert( 0, '1' );
-                    codeInt >>= 1;
-                }
-
-                codes.Add( tempByte, new List<char>( code ));
-                code.Clear();
+            for ( int i = 0; i < codesCount; i++ )
+            {
+                code = GetCodeFromStream( data, data[dataIndex + 1], ref streamIndex, ref bitIndex );
+                codes.Add( data[dataIndex], code );
+                dataIndex += 2;
             }
 
-            dataIndex = index;
+            dataIndex = codesSize;
             return codes;
+        }
+
+        /**********************************************************************************/
+        /* GET ONE CODE FROM SOURCE *******************************************************/
+
+        private List<char> GetCodeFromStream( List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
+        {
+            List<char> code = new List<char>();
+
+            for ( int i = 0; i < codeLenght; i++ )
+            {
+                if (( data[streamIndex] & mask[bitIndex] ) != 0 )
+                    code.Add( '1' );
+                else
+                    code.Add( '0' );
+
+                if ( ++bitIndex > 8 )
+                {
+                    bitIndex = 1;
+                    streamIndex++;
+                }
+            }
+
+            return code;
         }
 
         /*********************************************************************************/
@@ -84,17 +81,15 @@ namespace Stegan
         private List<byte> Decode( List<byte> source, Node root )
         {                        
             List<byte> decompressedData = new List<byte>();
-            byte[] mask = { 128, 64, 32, 16, 8, 4, 2, 1 };
-                        
             Node node = null;
             int Count = 0;
 
             // Get byte from data to be decompressed
-            foreach ( byte symbol in source.Skip( dataIndex + 1 ))
+            foreach ( byte symbol in source.Skip( dataIndex ))
             {
                 // Check each bite in a byte and traverse tree
-                for ( int j = 0; j < 8; j++ )
-                {                                        
+                for ( int j = 1; j <= 8; j++ )
+                {
                     if (( mask[j] & symbol ) == 0 )
                     {
                         node = node.Left;                                                                 
@@ -117,7 +112,8 @@ namespace Stegan
                         node = null;
                     }
                 }
-            }                       
+            }
+
             return decompressedData;
         }
 
@@ -126,5 +122,7 @@ namespace Stegan
 
         int dataCount;                      // count of bytes to be decompressed
         private int dataIndex;              // index in sourceData
+
+        static byte[] mask = new byte[9] { 0x00, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
     }
 }
