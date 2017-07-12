@@ -14,9 +14,9 @@ namespace Stegan
         public List<byte> Decompress( List<byte> source )
         {
             Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
-            dataCount = BitConverter.ToInt32( source.ToArray(), dataIndex );
-
+            originalSize = BitConverter.ToInt32( source.ToArray(), dataIndex );
             dataIndex += 4;
+
             Node root = new HuffmanTree().BuildTreeDecompression( codes );
             return Decode( source, root );
         }
@@ -28,24 +28,27 @@ namespace Stegan
 
         private Dictionary<byte, List<char>> GetCodesFromSource( List<byte> data )
         {
-            // Get number of codes from source data, this value is stored in first four bytes            
+            // Get size of codes stream and count of codes and move dataIndex
             int codesSize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
             int codesCount = (int)data[4];
+            dataIndex = 5;
 
             Dictionary<byte, List<char>> codes = new Dictionary<byte, List<char>>();
-                        
-            dataIndex = 5;
-            int streamIndex = 5 + codesCount * 2;
+
+            // Stream index indicates the beginning of bits sequence that represent codes
+            int streamIndex = dataIndex + codesCount * 2;
             int bitIndex = 1;
-            List<char> code;
+            List<char> code = new List<char>();
 
             for ( int i = 0; i < codesCount; i++ )
             {
-                code = GetCodeFromStream( data, data[dataIndex + 1], ref streamIndex, ref bitIndex );
-                codes.Add( data[dataIndex], code );
+                GetCodeFromStream( code, data, data[dataIndex + 1], ref streamIndex, ref bitIndex );
+                codes.Add( data[dataIndex], new List<char>( code ));
+                code.Clear();
                 dataIndex += 2;
             }
 
+            // Move data index at the place where codes end
             dataIndex = codesSize;
             return codes;
         }
@@ -53,10 +56,8 @@ namespace Stegan
         /**********************************************************************************/
         /* GET ONE CODE FROM SOURCE *******************************************************/
 
-        private List<char> GetCodeFromStream( List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
+        private void GetCodeFromStream( List<char> code, List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
         {
-            List<char> code = new List<char>();
-
             for ( int i = 0; i < codeLenght; i++ )
             {
                 if (( data[streamIndex] & mask[bitIndex] ) != 0 )
@@ -70,8 +71,6 @@ namespace Stegan
                     streamIndex++;
                 }
             }
-
-            return code;
         }
 
         /*********************************************************************************/
@@ -82,7 +81,6 @@ namespace Stegan
         {                        
             List<byte> decompressedData = new List<byte>();
             Node node = null;
-            int Count = 0;
 
             // Get byte from data to be decompressed
             foreach ( byte symbol in source.Skip( dataIndex ))
@@ -107,7 +105,8 @@ namespace Stegan
                     if ( node.isLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
-                        if ( ++Count == dataCount )
+                        // Case where some last bits were used as an alignment
+                        if ( decompressedData.Count == originalSize )
                             return decompressedData;
                         node = null;
                     }
@@ -120,9 +119,9 @@ namespace Stegan
         /**************************************************************************************/
         /**************************************************************************************/
 
-        int dataCount;                      // count of bytes to be decompressed
-        private int dataIndex;              // index in sourceData
+        int originalSize;                   // Size of data before compression
+        private int dataIndex;              // It is global index in a source data to be decompressed
 
-        static byte[] mask = new byte[9] { 0x00, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+        readonly byte[] mask = new byte[9] { 0x00, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
     }
 }
