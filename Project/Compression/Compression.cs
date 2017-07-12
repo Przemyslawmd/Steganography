@@ -85,10 +85,9 @@ namespace Stegan
             {
                 foreach ( char token in code.Value )
                 {
-                    shift++;
-
-                    if ( shift > 1 )
+                    if ( ++shift > 1 )
                         temp <<= 1;
+
                     if ( token == '1' )
                         temp += 1;
 

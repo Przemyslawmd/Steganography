@@ -28,7 +28,7 @@ namespace Stegan
             browser.Dock = DockStyle.Fill;
             browser.DocumentText = "<html><body style='font-size:11px; font-family: Arial; line-height:150%; margin-top:15px; margin-left:15px;'>" +
                 "<p style='font-weight:bold; font-size:12px; letter-spacing:2px;'>Steganography application</p>" +
-                "<pre>Version 1.3.1</pre>" +
+                "<pre>Version 1.3.2</pre>" +
                 "<pre>Author:           Przemyslaw Madej, Warsaw 2017 </pre>" +
                 "<pre>Email:            przemyslawmd@gmail.com</pre>" +
                 "<pre>Home page:        http://www.przemeknet.pl/Steganography</pre></body></html>";
