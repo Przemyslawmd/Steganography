@@ -65,30 +65,33 @@ namespace Stegan
         private List<NodeCompress> CreateNodes( List<byte> sourceData )
         {
             List<NodeCompress> list = new List<NodeCompress>();
-            list.Add( new NodeCompress( 1, sourceData[0] ) );
+            list.Add( new NodeCompress( 1, sourceData[0] ));
             Boolean isFound = false;
+            int index;
 
-            for ( int i = 1; i < sourceData.Count; i++ )
+            foreach ( byte symbol in sourceData.Skip( 1 ))
             {
-                for ( int j = 0; j < list.Count; j++ )
+                index = 0;
+                foreach ( NodeCompress node in list )
                 {
-                    if ( sourceData[i] == list[j].ByteValue )
+                    if ( symbol == node.ByteValue )
                     {
-                        list[j].Count++;
+                        node.Count++;
                         isFound = true;
                         break;
                     }
 
-                    if ( sourceData[i] < list[j].ByteValue )
+                    if ( symbol < node.ByteValue )
                     {
-                        list.Insert( j, new NodeCompress( 1, sourceData[i] ) );
+                        list.Insert( index, new NodeCompress( 1, symbol ));
                         isFound = true;
                         break;
                     }
+                    index++;
                 }
 
-                if ( !isFound )
-                    list.Add( new NodeCompress( 1, sourceData[i] ) );
+                if ( isFound == false )
+                    list.Add( new NodeCompress( 1, symbol ));
 
                 isFound = false;
             }
@@ -132,7 +135,7 @@ namespace Stegan
                 }
             }
 
-            if ( !isInserted )
+            if ( isInserted == false )
                 listNodes.Add( newNode );
         }
     }
