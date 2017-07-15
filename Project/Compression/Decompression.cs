@@ -30,7 +30,7 @@ namespace Stegan
         {
             // Get size of codes stream and count of codes and move dataIndex
             int codesSize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
-            int codesCount = (int)data[4];
+            int codesCount = ( (int)data[4] == 0 ) ? 256 : (int)data[4];
             dataIndex = 5;
 
             Dictionary<byte, List<char>> codes = new Dictionary<byte, List<char>>();

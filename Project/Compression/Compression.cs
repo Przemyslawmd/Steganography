@@ -106,11 +106,17 @@ namespace Stegan
                 codesStream.Add( temp );
             }
 
-            // Size is being increased with 5 byte because of two statements below 
+            // Size is being increased with 5 bytes because of two statements below
             int codesStreamSize = codesStream.Count + 5;
 
             codesStream.InsertRange( 0, BitConverter.GetBytes( codesStreamSize ));
-            codesStream.Insert( 4, (byte)codes.Count );
+
+            // To store count of codes inside one byte, 0 value indicates that there are 256 codes
+            if ( codes.Count == 256 )
+                codesStream.Insert( 4, 0 );
+            else
+                codesStream.Insert( 4, (byte)codes.Count );
+
             return codesStream;
         }
 
