@@ -33,7 +33,7 @@ namespace Stegan
             
             // Save information whether data is compressed                         
             color = Image.GetPixel( CompressPixel, 0 );
-            red = ( isCompress ) ? ( color.R | Mask1 ) : ( color.R & Mask0 );          
+            red = ( isCompress ) ? ( color.R | MaskOne ) : ( color.R & MaskZero );
             Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
             
             // Cover data starting from a second row of a bitmap
@@ -95,9 +95,9 @@ namespace Stegan
         private int ChangeColorCoveringSize( byte componentRGB )
         {
             if ((( byteCount >> bitNumber-- ) % 2 ) == 0 )
-                return componentRGB & Mask0;
+                return componentRGB & MaskZero;
             
-            return componentRGB | Mask1;           
+            return componentRGB | MaskOne;
         }
 
         /**********************************************************************************************/
@@ -106,9 +106,9 @@ namespace Stegan
         private int ChangeColorCoveringData( byte componentRGB )
         {
             if ( (( byteValue >> bitNumber-- ) % 2 ) == 0 ) 
-                return componentRGB & Mask0;
+                return componentRGB & MaskZero;
             
-            return componentRGB | Mask1;
+            return componentRGB | MaskOne;
         }
 
         /**********************************************************************************************/
@@ -117,7 +117,7 @@ namespace Stegan
         // Data to be covered is arranged into stack
         private Stack<byte> stack;
 
-        private const byte Mask0 = 0;
+        private const byte MaskZero = 254;
     }
 }
 

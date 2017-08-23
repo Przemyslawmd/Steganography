@@ -19,13 +19,13 @@ namespace Stegan
             {
                 color = Image.GetPixel( x, 0 );
 
-                byteCount |= ( color.R & Mask1 );
+                byteCount |= ( color.R & MaskOne );
                 byteCount <<= 1;
 
-                byteCount |= ( color.G & Mask1 );
+                byteCount |= ( color.G & MaskOne );
                 byteCount <<= 1;
 
-                byteCount |= ( color.B & Mask1 );
+                byteCount |= ( color.B & MaskOne );
 
                 if ( x != ( DataSizePixel - 1 ))
                     byteCount <<= 1;
@@ -60,7 +60,7 @@ namespace Stegan
         private bool UncoverDataFromPixel( byte componentRGB, List<byte> buffer )
         {
             if (( componentRGB % 2 ) == 1 )
-                byteValue |= Mask1;
+                byteValue |= MaskOne;
             bitNumber++;
 
             if ( bitNumber == ( LastBit + 1 ))
