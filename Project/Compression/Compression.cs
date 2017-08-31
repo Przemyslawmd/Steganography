@@ -9,33 +9,31 @@ namespace Stegan
     class Compression
     {
         /************************************************************************************************/
-        /* COMPRESS DATA ********************************************************************************/
-        // Public method to start compression                
-        // It returns compressed data merged with Huffman codes
+        /* COMPRESS *************************************************************************************/
+        // Return compressed data with Huffman codes
 
         public List<byte> Compress( List<byte> source )
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTree( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
-            StartCompress( source );
+            List<byte> compressedData = StartCompress( source );
 
-            // Final data at the beginning is filled with codes
-            List<byte> finalData = InsertCodes();
-            finalData.AddRange( BitConverter.GetBytes( originalSize ));
-            finalData.AddRange( compressedData );
-            return finalData;
+            // data to returat the beginning is filled with codes
+            List<byte> dataToReturn = CreateCodesData();
+            dataToReturn.AddRange( BitConverter.GetBytes( originalSize ));
+            dataToReturn.AddRange( compressedData );
+            return dataToReturn;
         }
 
         /************************************************************************************************/
         /* START COMPRESS *******************************************************************************/
-        // Main method for compression, returns compressed data
 
-        private void StartCompress( List<byte> source )
+        private List<byte> StartCompress( List<byte> source )
         {
             int bitShift = 0;
             byte temp = 0;
-            compressedData = new List<byte>();
+            List<byte> compressedData = new List<byte>();
             
             foreach ( byte value in source )
             {
@@ -61,13 +59,13 @@ namespace Stegan
                 temp <<= ( BitsInByte - bitShift );
                 compressedData.Add( temp );
             }
+            return compressedData;
         }
 
         /**************************************************************************************************/
-        /* INSERT CODES ***********************************************************************************/
-        // Get codes from dictionary and merge it with compressed data
+        /* CREATE CODES DATA ******************************************************************************/
                     
-        private List<byte> InsertCodes()
+        private List<byte> CreateCodesData()
         {
             List<byte> codesStream = new List<byte>();
 
@@ -122,7 +120,6 @@ namespace Stegan
         /********************************************************************************************************/
         /********************************************************************************************************/
 
-        private List<byte> compressedData;
         private Dictionary<byte, List<char>> codes;
         readonly int BitsInByte = 8;
     }

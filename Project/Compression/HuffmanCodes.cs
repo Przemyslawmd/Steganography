@@ -8,7 +8,7 @@ namespace Stegan
     class HuffmanCodes
     {
         /********************************************************************************/
-        /* CREATE DICTIONARY WITH CODES *************************************************/        
+        /* CREATE CODES DICTIONARY ******************************************************/        
 
         public Dictionary<byte, List<char>> CreateCodesDictionary( NodeCompress root )
         {
@@ -39,7 +39,7 @@ namespace Stegan
         /***********************************************************************************/
         /***********************************************************************************/
 
-        // In some extreme cases, code may be very long, that it is used List<Char> instead of, 
+        // In some extreme cases, code may be very long, this is the reason of using List<Char> instead of, 
         // for example, Long type 
         private List<char> code;
 

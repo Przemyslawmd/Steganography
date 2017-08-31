@@ -11,7 +11,7 @@ namespace Stegan
 
         public Node( byte value )
         {
-            this.ByteValue = value;
+            ByteValue = value;
         }
 
         public Node Left { get; set; }

@@ -9,7 +9,6 @@ namespace Stegan
     {
         /**********************************************************************************/
         /* DECOMPRESS DATA  ***************************************************************/
-        // Public Method to start decompression
 
         public List<byte> Decompress( List<byte> source )
         {
@@ -23,8 +22,6 @@ namespace Stegan
 
         /**********************************************************************************/
         /* GET CODES FROM SOURCE **********************************************************/
-        // Get Huffman codes from compressed data
-        // Huffman codes are merged with compressed data after compression
 
         private Dictionary<byte, List<char>> GetCodesFromSource( List<byte> data )
         {
@@ -54,7 +51,7 @@ namespace Stegan
         }
 
         /**********************************************************************************/
-        /* GET ONE CODE FROM SOURCE *******************************************************/
+        /* GET CODE FROM STREAM ***********************************************************/
 
         private void GetCodeFromStream( List<char> code, List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
         {
@@ -75,7 +72,7 @@ namespace Stegan
 
         /*********************************************************************************/
         /* DECODE ************************************************************************/
-        // Decompress data - change codes into byte values
+        // Decompress data - change codes into bytes 
 
         private List<byte> Decode( List<byte> source, Node root )
         {                        

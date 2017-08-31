@@ -21,7 +21,7 @@ namespace Stegan
         }
 
         /*****************************************************************************************/
-        /* BUILD TREE FOR DECOMPRESSION **********************************************************/
+        /* BUILD TREE DECOMPRESSION **************************************************************/
 
         public Node BuildTreeDecompression( Dictionary<byte, List<char>> codes )
         {
@@ -60,7 +60,6 @@ namespace Stegan
 
         /*****************************************************************************************/
         /* CREATE NODES **************************************************************************/
-        // Create and return list with instances of NodeCompress class
 
         private List<NodeCompress> CreateNodes( List<byte> sourceData )
         {
@@ -100,7 +99,6 @@ namespace Stegan
 
         /*********************************************************************************************/
         /* BUILD TREE ********************************************************************************/
-        // Build huffman tree from a list containing NodeCompress objects
         // There is no new allocation for tree structure, list is changed into tree
 
         private void BuildTree( List<NodeCompress> listNodes )
@@ -119,7 +117,7 @@ namespace Stegan
         }
 
         /***********************************************************************************************/
-        /* INSERT NODE INTO A TREE *********************************************************************/
+        /* INSERT NODE INTO TREE ***********************************************************************/
 
         private void InsertNodeIntoTree( NodeCompress newNode, List<NodeCompress> listNodes )
         {
