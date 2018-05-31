@@ -7,10 +7,7 @@ namespace Stegan
 {
     class Uncovering : BaseCover
     {        
-        /**********************************************************************************************************************************/
-        /* UNCOVER DATA FROM AN IMAGE *****************************************************************************************************/
-
-        public List<byte> UncoverData( Bitmap Image, ref bool CompressFlag )
+        public List< byte > UncoverData( Bitmap Image, ref bool CompressFlag )
         {
             Color color;
             
@@ -27,11 +24,13 @@ namespace Stegan
 
                 byteCount |= ( color.B & MaskOne );
 
-                if ( x != ( DataSizePixel - 1 ))
+                if ( x != (DataSizePixel - 1) )
+                {
                     byteCount <<= 1;
+                }
             }
 
-            List<byte> buffer = new List<byte>( byteCount );
+            List<byte> buffer = new List< byte >( byteCount );
             CompressFlag = (( Image.GetPixel( CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
             // Uncover data
@@ -42,25 +41,33 @@ namespace Stegan
                     color = Image.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, buffer ) == false )
+                    {
                         return buffer;
+                    }
 
                     if ( UncoverDataFromPixel( color.G, buffer ) == false )
+                    {
                         return buffer;
+                    }
 
                     if ( UncoverDataFromPixel( color.B, buffer ) == false )
+                    {
                         return buffer;
+                    }
                 }
             }
             return buffer;
         }        
         
-        /*****************************************************************************************************************************/
-        /* UNCOVER BIT FROM A PIXEL **************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private bool UncoverDataFromPixel( byte componentRGB, List<byte> buffer )
         {
             if (( componentRGB % 2 ) == 1 )
+            {
                 byteValue |= MaskOne;
+            }
             bitNumber++;
 
             if ( bitNumber == ( LastBit + 1 ))
@@ -69,7 +76,9 @@ namespace Stegan
 
                 // All bytes have been uncovered
                 if ( buffer.Count == byteCount )
+                {
                     return false;
+                }
 
                 byteValue = 0;
                 bitNumber = 0;

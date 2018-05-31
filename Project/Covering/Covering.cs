@@ -7,16 +7,13 @@ namespace Stegan
 {     
     class Covering : BaseCover
     {        
-        /***********************************************************************************************/
-        /* COVER DATA INSIDE AN IMAGE ******************************************************************/
-        
-        public void CoverData( Bitmap Image, List<byte> dataToCover, Boolean isCompress ) 
+        public void CoverData( Bitmap Image, List< byte > dataToCover, Boolean isCompress ) 
         {
             Color color;
             int red, green, blue;
             byteCount = dataToCover.Count;
             dataToCover.Reverse();
-            stack = new Stack<byte>( dataToCover );
+            dataToBeCovered = new Stack< byte >( dataToCover );
 
             // Save data size to be covered                                                    
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
@@ -71,53 +68,57 @@ namespace Stegan
             }            
         }
         
-        /***********************************************************************************************/
-        /* CHECK BIT NUMBER ****************************************************************************/
-        // Check bit number in being covered byte
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private bool CheckBitNumber()
         {
             if ( bitNumber < 0 )
             {
                 // All bytes have been covered
-                if ( stack.Count == 0 )
+                if ( dataToBeCovered.Count == 0)
+                {
                     return false;
+                }
 
-                byteValue = stack.Pop();
+                byteValue = dataToBeCovered.Pop();
                 bitNumber = LastBit;
             }
             return true;
         }
 
-        /***********************************************************************************************/
-        /* CHANGE RGB COMPONENT WHILE COVERING DATA SIZE ***********************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private int ChangeColorCoveringSize( byte componentRGB )
         {
             if ((( byteCount >> bitNumber-- ) % 2 ) == 0 )
+            {
                 return componentRGB & MaskZero;
+            }
             
             return componentRGB | MaskOne;
         }
 
-        /**********************************************************************************************/
-        /* CHANGE RGB COMPONENT WHILE COVERING DATA ***************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
-            if ( (( byteValue >> bitNumber-- ) % 2 ) == 0 ) 
+            if ((( byteValue >> bitNumber-- ) % 2 ) == 0 )
+            {
                 return componentRGB & MaskZero;
+            }
             
             return componentRGB | MaskOne;
         }
 
-        /**********************************************************************************************/
-        /**********************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        // Data to be covered is arranged into stack
-        private Stack<byte> stack;
+        private Stack< byte > dataToBeCovered;
 
-        private const byte MaskZero = 254;
+        private const byte MaskZero = 0xFE;
     }
 }
 
