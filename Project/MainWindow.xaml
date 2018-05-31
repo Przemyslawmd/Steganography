@@ -5,40 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Steganography"
         mc:Ignorable="d"
-        Title="" Height="600" Width="850">
+        Title="" Height="600" Width="850" >
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Load Graphic File" />
-                <Separator />
-                <MenuItem Header="Load File to Be Covered" />
-                <Separator />
-                <MenuItem Header="Save Graphic File" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Save Uncovered Data as File" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Remove Graphic File" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Remove Text in Control" />
-                <Separator />
-            </MenuItem>
-            <MenuItem Header="Action">
-                <MenuItem Header="Cover Text" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Cover Data from File" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Uncover Text" IsEnabled="False" />
-                <Separator />
-                <MenuItem Header="Uncover Data" IsEnabled="False" />
-            </MenuItem>
-            <MenuItem Header="Settings">
-            </MenuItem>
-            <MenuItem Header="About">
-            </MenuItem>
-        </Menu>
-        <TextBox AcceptsReturn="True" />
-    </DockPanel>
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Load Graphic File" Click="OpenGraphicFile" Name="LoadGraphic" />
+                    <Separator />
+                    <MenuItem Header="Load File to Be Covered" />
+                    <Separator />
+                    <MenuItem Header="Save Graphic File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Save Uncovered Data as File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Remove Graphic File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Remove Text in Control" />
+                    <Separator />
+                </MenuItem>
+                <MenuItem Header="Action">
+                    <MenuItem Header="Cover Text" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Cover Data from File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Uncover Text" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Uncover Data" IsEnabled="False" />
+                </MenuItem>
+                <MenuItem Header="Settings">
+                </MenuItem>
+                <MenuItem Header="About">
+                </MenuItem>
+            </Menu>
+            <TextBox AcceptsReturn="True" />
+        </DockPanel>
+
+        <Grid>
+            <Border Height="300" Width="300" BorderBrush="#00802B" Background="#CCFFDD" BorderThickness="3" >
+                <Image Name="imageControl" />
+            </Border>
+        </Grid>
+    
+    </Grid>
 </Window>
