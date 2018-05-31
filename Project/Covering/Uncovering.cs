@@ -23,14 +23,12 @@ namespace Stegan
                 byteCount <<= 1;
 
                 byteCount |= ( color.B & MaskOne );
-
-                if ( x != (DataSizePixel - 1) )
-                {
-                    byteCount <<= 1;
-                }
+                byteCount <<= 1;
             }
 
-            List<byte> buffer = new List< byte >( byteCount );
+            byteCount >>= 1;
+
+            List< byte > buffer = new List< byte >( byteCount );
             CompressFlag = (( Image.GetPixel( CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
             // Uncover data
@@ -40,17 +38,17 @@ namespace Stegan
                 {
                     color = Image.GetPixel( x, y );
 
-                    if ( UncoverDataFromPixel( color.R, buffer ) == false )
+                    if ( UncoverDataFromPixel( color.R, buffer ) == UncoverState.Completed )
                     {
                         return buffer;
                     }
 
-                    if ( UncoverDataFromPixel( color.G, buffer ) == false )
+                    if ( UncoverDataFromPixel( color.G, buffer ) == UncoverState.Completed )
                     {
                         return buffer;
                     }
 
-                    if ( UncoverDataFromPixel( color.B, buffer ) == false )
+                    if ( UncoverDataFromPixel( color.B, buffer ) == UncoverState.Completed )
                     {
                         return buffer;
                     }
@@ -62,7 +60,7 @@ namespace Stegan
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool UncoverDataFromPixel( byte componentRGB, List<byte> buffer )
+        private UncoverState UncoverDataFromPixel( byte componentRGB, List< byte > buffer )
         {
             if (( componentRGB % 2 ) == 1 )
             {
@@ -74,10 +72,9 @@ namespace Stegan
             {
                 buffer.Add( byteValue );
 
-                // All bytes have been uncovered
                 if ( buffer.Count == byteCount )
                 {
-                    return false;
+                    return UncoverState.Completed;
                 }
 
                 byteValue = 0;
@@ -87,7 +84,12 @@ namespace Stegan
             {
                 byteValue <<= 1;
             }
-            return true;
-        }          
+            return UncoverState.Uncompleted;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private enum UncoverState {  Completed, Uncompleted };
     }
 }
