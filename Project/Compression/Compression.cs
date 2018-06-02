@@ -14,11 +14,11 @@ namespace Stegan
         public List<byte> Compress( List<byte> source )
         {
             int originalSize = source.Count;
-            NodeCompress root = new HuffmanTree().BuildTree( source );
+            NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
             List< byte > compressedData = StartCompress( source );
 
-            // data to be returned the beginning is filled with codes
+            // data to be returned contains codes at the beginning
             List< byte > finalData = CreateCodesData();
             finalData.AddRange( BitConverter.GetBytes( originalSize ));
             finalData.AddRange( compressedData );
