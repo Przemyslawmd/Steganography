@@ -8,32 +8,31 @@ namespace Stegan
 {
     class Compression
     {
-        /************************************************************************************************/
-        /* COMPRESS *************************************************************************************/
-        // Return compressed data with Huffman codes
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         public List<byte> Compress( List<byte> source )
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTree( source );
             codes = new HuffmanCodes().CreateCodesDictionary( root );
-            List<byte> compressedData = StartCompress( source );
+            List< byte > compressedData = StartCompress( source );
 
-            // data to returat the beginning is filled with codes
-            List<byte> dataToReturn = CreateCodesData();
-            dataToReturn.AddRange( BitConverter.GetBytes( originalSize ));
-            dataToReturn.AddRange( compressedData );
-            return dataToReturn;
+            // data to be returned the beginning is filled with codes
+            List< byte > finalData = CreateCodesData();
+            finalData.AddRange( BitConverter.GetBytes( originalSize ));
+            finalData.AddRange( compressedData );
+            return finalData;
         }
 
-        /************************************************************************************************/
-        /* START COMPRESS *******************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        private List<byte> StartCompress( List<byte> source )
+        private List< byte > StartCompress( List< byte > source )
         {
             int bitShift = 0;
             byte temp = 0;
-            List<byte> compressedData = new List<byte>();
+            List<byte> compressedData = new List< byte >();
             
             foreach ( byte value in source )
             {
@@ -48,7 +47,9 @@ namespace Stegan
                     
                     temp <<= 1;
                     if ( token == '1' )
+                    {
                         temp += 1;
+                    }
                     bitShift++;
                 }
             }     
@@ -62,14 +63,14 @@ namespace Stegan
             return compressedData;
         }
 
-        /**************************************************************************************************/
-        /* CREATE CODES DATA ******************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
                     
         private List<byte> CreateCodesData()
         {
             List<byte> codesStream = new List<byte>();
 
-            foreach ( KeyValuePair<byte, List<char>> code in codes )
+            foreach ( KeyValuePair< byte, List< char >> code in codes )
             {
                 codesStream.Add( code.Key );
                 codesStream.Add( (byte)code.Value.Count );
@@ -83,10 +84,14 @@ namespace Stegan
                 foreach ( char token in code.Value )
                 {
                     if ( ++shift > 1 )
+                    {
                         temp <<= 1;
+                    }
 
                     if ( token == '1' )
+                    {
                         temp += 1;
+                    }
 
                     if ( shift == BitsInByte )
                     {
@@ -110,17 +115,22 @@ namespace Stegan
 
             // To store count of codes inside one byte, 0 value indicates that there are 256 codes
             if ( codes.Count == 256 )
+            {
                 codesStream.Insert( 4, 0 );
+            }
             else
-                codesStream.Insert( 4, (byte)codes.Count );
+            {
+                codesStream.Insert( 4, (byte) codes.Count );
+            }
 
             return codesStream;
         }
 
-        /********************************************************************************************************/
-        /********************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private Dictionary<byte, List<char>> codes;
         readonly int BitsInByte = 8;
     }
 }
+
