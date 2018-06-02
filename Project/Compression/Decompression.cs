@@ -7,12 +7,12 @@ namespace Stegan
 {
     class Decompression
     {
-        /**********************************************************************************/
-        /* DECOMPRESS DATA  ***************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        public List<byte> Decompress( List<byte> source )
+        public List< byte > Decompress( List< byte > source )
         {
-            Dictionary<byte, List<char>> codes = GetCodesFromSource( source  );
+            Dictionary<byte, List< char >> codes = GetCodesFromSource( source  );
             originalSize = BitConverter.ToInt32( source.ToArray(), dataIndex );
             dataIndex += 4;
 
@@ -20,27 +20,27 @@ namespace Stegan
             return Decode( source, root );
         }
 
-        /**********************************************************************************/
-        /* GET CODES FROM SOURCE **********************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        private Dictionary<byte, List<char>> GetCodesFromSource( List<byte> data )
+        private Dictionary< byte, List< char >> GetCodesFromSource( List<byte> data )
         {
             // Get size of codes stream and count of codes and move dataIndex
             int codesSize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
-            int codesCount = ( (int)data[4] == 0 ) ? 256 : (int)data[4];
+            int codesCount = ( (int) data[4] == 0 ) ? 256 : (int) data[4];
             dataIndex = 5;
 
-            Dictionary<byte, List<char>> codes = new Dictionary<byte, List<char>>();
+            Dictionary< byte, List< char >> codes = new Dictionary< byte, List< char >>();
 
             // Stream index indicates the beginning of bits sequence that represent codes
             int streamIndex = dataIndex + codesCount * 2;
             int bitIndex = 1;
-            List<char> code = new List<char>();
+            List< char > code = new List<char>();
 
             for ( int i = 0; i < codesCount; i++ )
             {
                 GetCodeFromStream( code, data, data[dataIndex + 1], ref streamIndex, ref bitIndex );
-                codes.Add( data[dataIndex], new List<char>( code ));
+                codes.Add( data[dataIndex], new List< char >( code ));
                 code.Clear();
                 dataIndex += 2;
             }
@@ -50,8 +50,8 @@ namespace Stegan
             return codes;
         }
 
-        /**********************************************************************************/
-        /* GET CODE FROM STREAM ***********************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void GetCodeFromStream( List<char> code, List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
         {
@@ -70,13 +70,12 @@ namespace Stegan
             }
         }
 
-        /*********************************************************************************/
-        /* DECODE ************************************************************************/
-        // Decompress data - change codes into bytes 
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        private List<byte> Decode( List<byte> source, Node root )
+        private List< byte > Decode( List< byte > source, Node root )
         {                        
-            List<byte> decompressedData = new List<byte>();
+            List< byte > decompressedData = new List<byte>();
             Node node = null;
 
             // Get byte from data to be decompressed
@@ -104,7 +103,9 @@ namespace Stegan
                         decompressedData.Add( node.ByteValue );
                         // Case where some last bits were used as an alignment
                         if ( decompressedData.Count == originalSize )
+                        {
                             return decompressedData;
+                        }
                         node = null;
                     }
                 }
@@ -122,3 +123,4 @@ namespace Stegan
         readonly byte[] mask = new byte[9] { 0x00, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
     }
 }
+
