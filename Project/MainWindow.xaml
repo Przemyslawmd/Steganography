@@ -44,7 +44,7 @@
         </DockPanel>
 
         <Grid>
-            <Border Height="300" Width="300" BorderBrush="#00802B" Background="#CCFFDD" BorderThickness="3" >
+            <Border Name="imageBorder" Height="300" Width="300" BorderBrush="#00802B" Background="#CCFFDD" BorderThickness="3" >
                 <Image Name="imageControl" />
             </Border>
         </Grid>

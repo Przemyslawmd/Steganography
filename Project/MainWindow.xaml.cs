@@ -1,21 +1,9 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Drawing;
 using System.Windows;
 using Microsoft.Win32;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Steganography
 {
@@ -45,7 +33,18 @@ namespace Steganography
             bitmap.BeginInit();
             bitmap.UriSource = new Uri( open.FileName );
             bitmap.EndInit();
+
+            if ( bitmap.Width > imageBorder.Width || bitmap.Height > imageBorder.Height )
+            {
+                imageControl.Stretch = Stretch.Uniform;
+            }
+            else
+            {
+                imageControl.Stretch = Stretch.None;
+            }
+
             imageControl.Source = bitmap;
         }
     }
 }
+
