@@ -1,4 +1,5 @@
-﻿<Window x:Class="Steganography.MainWindow"
+﻿
+    <Window x:Class="Steganography.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,7 +12,7 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
-                    <MenuItem  Name="LoadGraphic"  Click="OpenGraphicFile" Header="Load Graphic File" />
+                    <MenuItem  Name="LoadGraphic"  Click="ActionOpenGraphic" Header="Load Graphic File" />
                     <Separator />
                     <MenuItem Header="Load File to Be Covered" />
                     <Separator />
@@ -19,7 +20,7 @@
                     <Separator />
                     <MenuItem Header="Save Uncovered Data as File" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Remove Graphic File" IsEnabled="False" />
+                    <MenuItem Name="MenuRemoveGraphic" Click="ActionRemoveGraphic" Header="Remove Graphic File" IsEnabled="False" />
                     <Separator />
                     <MenuItem Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
                     <Separator />
@@ -40,14 +41,29 @@
                 <MenuItem Header="About">
                 </MenuItem>
             </Menu>
-            <TextBox AcceptsReturn="True" />
         </DockPanel>
 
-        <Grid>
-            <Border Name="imageBorder" Height="300" Width="300" BorderBrush="#00802B" Background="#CCFFDD" BorderThickness="3" >
+        <Grid Margin="40, 40, 30, 40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Name="imageBorder" Grid.RowSpan="2" Grid.Column="0" Width="auto" BorderBrush="#737373" Background="#cccccc" BorderThickness="2" >
                 <Image Name="imageControl" />
             </Border>
+            <Border Grid.Row="0" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 10" >
+                <TextBox AcceptsReturn="True" Padding="5, 5, 5, 5" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 0" >
+                <TextBox />
+            </Border>
+
         </Grid>
-    
     </Grid>
 </Window>
+    

@@ -19,7 +19,7 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void OpenGraphicFile(object sender, RoutedEventArgs e)
+        private void ActionOpenGraphic(object sender, RoutedEventArgs e)
         {
             OpenFileDialog open = new OpenFileDialog();
             open.Title = LoadGraphic.Header.ToString();
@@ -36,7 +36,7 @@ namespace Steganography
             bitmapImage.UriSource = new Uri( open.FileName );
             bitmapImage.EndInit();
 
-            if ( bitmapImage.Width > imageBorder.Width || bitmapImage.Height > imageBorder.Height )
+            if ( bitmapImage.Width > imageBorder.ActualWidth || bitmapImage.Height > imageBorder.ActualHeight )
             {
                 imageControl.Stretch = Stretch.Uniform;
             }
@@ -46,6 +46,7 @@ namespace Steganography
             }
 
             imageControl.Source = bitmapImage;
+            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic );
             MenuSaveGraphic.IsEnabled = true;
         }
 
@@ -83,6 +84,26 @@ namespace Steganography
             encoder.Save( outStream );
             Bitmap bitmap = new Bitmap( outStream );
             bitmap.Save( saveDialog.FileName );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ActionRemoveGraphic( object sender, RoutedEventArgs e )
+        {
+            imageControl.Source = null;
+            ChangeControlState( false, MenuSaveGraphic, MenuRemoveGraphic );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ChangeControlState( bool state, params System.Windows.Controls.MenuItem[] menus )
+        {
+            foreach ( System.Windows.Controls.MenuItem menu in menus )
+            {
+                menu.IsEnabled = state;
+            }
         }
     }
 }
