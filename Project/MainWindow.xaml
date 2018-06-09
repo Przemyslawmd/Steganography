@@ -12,9 +12,9 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
-                    <MenuItem  Name="LoadGraphic"  Click="ActionOpenGraphic" Header="Load Graphic File" />
+                    <MenuItem  Name="MenuLoadGraphic"  Click="ActionOpenGraphic" Header="Load Graphic File" />
                     <Separator />
-                    <MenuItem Header="Load File to Be Covered" />
+                    <MenuItem Name="MenuLoadFile" Click="ActionLoadFile" Header="Load File to Be Covered" />
                     <Separator />
                     <MenuItem Name="MenuSaveGraphic" Click="ActionSaveGraphic" Header="Save Graphic File" IsEnabled="False" />
                     <Separator />
@@ -22,7 +22,7 @@
                     <Separator />
                     <MenuItem Name="MenuRemoveGraphic" Click="ActionRemoveGraphic" Header="Remove Graphic File" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
+                    <MenuItem Name="MenuRemoveData" Click="ActionRemoveData" Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
                     <Separator />
                     <MenuItem Header="Remove Text in Control" />
                     <Separator />
@@ -30,7 +30,7 @@
                 <MenuItem Header="Action">
                     <MenuItem Header="Cover Text" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Cover Data from File" IsEnabled="False" />
+                    <MenuItem Name="MenuCoverData" Header="Cover Data from File" IsEnabled="False" />
                     <Separator />
                     <MenuItem Header="Uncover Text" IsEnabled="False" />
                     <Separator />
@@ -54,13 +54,13 @@
             </Grid.ColumnDefinitions>
 
             <Border Name="imageBorder" Grid.RowSpan="2" Grid.Column="0" Width="auto" BorderBrush="#737373" Background="#cccccc" BorderThickness="2" >
-                <Image Name="imageControl" />
+                <Image Name="ControlImage" />
             </Border>
             <Border Grid.Row="0" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 10" >
                 <TextBox AcceptsReturn="True" Padding="5, 5, 5, 5" />
             </Border>
             <Border Grid.Row="1" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 0" >
-                <TextBox />
+                <TextBox Name="ControlData" Padding="5, 5, 5, 5" TextWrapping="Wrap" />
             </Border>
 
         </Grid>
