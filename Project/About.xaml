@@ -1,0 +1,36 @@
+﻿
+    <Window x:Class="Steganography.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Steganography"
+        mc:Ignorable="d"
+        Title="About" Height="200" Width="450" MaxHeight="200" MaxWidth="450" >
+    <Grid Margin="15, 30, 20, 15">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" Content="Version"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="1.4"/>
+        
+        <Label Grid.Column="0" Grid.Row="1" Content="Author"/>
+        <Label Grid.Column="1" Grid.Row="1" Content="Przemyslaw Madej, Warsaw 2018"/>
+        
+        <Label Grid.Column="0" Grid.Row="2" Content="Email"/>
+        <Label Grid.Column="1" Grid.Row="2" Content="przemyslawmd@gmail.com"/>
+        
+        <Label Grid.Column="0" Grid.Row="3" Content="Home page" />
+        <Label Grid.Column="1" Grid.Row="3" Content="www.przemeknet.pl/Steganography" />
+
+    </Grid>
+</Window>

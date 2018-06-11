@@ -10,7 +10,7 @@
 
     <Grid>
         <DockPanel>
-            <Menu DockPanel.Dock="Top">
+            <Menu Name="MenuMain" DockPanel.Dock="Top" >
                 <MenuItem Header="File">
                     <MenuItem  Name="MenuLoadGraphic"  Click="ActionOpenGraphic" Header="Load Graphic File" />
                     <Separator />
@@ -38,7 +38,7 @@
                 </MenuItem>
                 <MenuItem Header="Settings">
                 </MenuItem>
-                <MenuItem Header="About">
+                <MenuItem Name="MenuAbout" Click="ActionAbout" Header="About">
                 </MenuItem>
             </Menu>
         </DockPanel>

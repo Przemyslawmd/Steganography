@@ -130,6 +130,25 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
+        private void ActionAbout( object sender, RoutedEventArgs e )
+        {
+            Window about = new About();
+            MenuMain.IsEnabled = false;
+            about.Closed += WindowAboutClosed;
+            about.Show();
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        public void WindowAboutClosed( object sender, System.EventArgs e )
+        {
+            MenuMain.IsEnabled = true;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         private void ChangeControlState( bool state, params System.Windows.Controls.MenuItem[] menus )
         {
             foreach ( System.Windows.Controls.MenuItem menu in menus )
