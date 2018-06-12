@@ -28,11 +28,11 @@
                     <Separator />
                 </MenuItem>
                 <MenuItem Header="Action">
-                    <MenuItem Header="Cover Text" IsEnabled="False" />
+                    <MenuItem Name="MenuCoverText" Click="ActionCoverText" Header="Cover Text" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Name="MenuCoverData" Header="Cover Data from File" IsEnabled="False" />
+                    <MenuItem Name="MenuCoverFile" Click="ActionCoverFile" Header="Cover Data from File" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Uncover Text" IsEnabled="False" />
+                    <MenuItem Name="MenuUncoverText" Click="ActionUncoverText" Header="Uncover Text" IsEnabled="False" />
                     <Separator />
                     <MenuItem Header="Uncover Data" IsEnabled="False" />
                 </MenuItem>
@@ -57,7 +57,7 @@
                 <Image Name="ControlImage" />
             </Border>
             <Border Grid.Row="0" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 10" >
-                <TextBox AcceptsReturn="True" Padding="5, 5, 5, 5" />
+                <TextBox Name="ControlText" AcceptsReturn="True" Padding="5, 5, 5, 5" />
             </Border>
             <Border Grid.Row="1" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 0" >
                 <TextBox Name="ControlData" Padding="5, 5, 5, 5" TextWrapping="Wrap" />

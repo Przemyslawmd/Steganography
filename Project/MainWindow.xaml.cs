@@ -15,12 +15,13 @@ namespace Steganography
         public MainWindow()
         {
             InitializeComponent();
+            messages = new Messages();
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void ActionOpenGraphic(object sender, RoutedEventArgs e)
+        private void ActionOpenGraphic( object sender, RoutedEventArgs e )
         {
             OpenFileDialog open = new OpenFileDialog();
             open.Title = MenuLoadGraphic.Header.ToString();
@@ -46,7 +47,7 @@ namespace Steganography
             }
 
             ControlImage.Source = bitmapImage;
-            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic );
+            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, MenuUncoverText );
             MenuSaveGraphic.IsEnabled = true;
         }
 
@@ -74,10 +75,7 @@ namespace Steganography
                 encoder = new BmpBitmapEncoder();
             }
 
-            encoder.Frames.Add( BitmapFrame.Create( (BitmapSource) ControlImage.Source ));
-            MemoryStream outStream = new MemoryStream();
-            encoder.Save( outStream );
-            Bitmap bitmap = new Bitmap( outStream );
+            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, encoder );
             bitmap.Save( saveDialog.FileName );
         }
 
@@ -114,7 +112,7 @@ namespace Steganography
 
             if ( ControlImage.Source != null )
             {
-                ChangeControlState( true, MenuCoverData );
+                ChangeControlState( true, MenuCoverFile );
             }
         }
 
@@ -143,6 +141,70 @@ namespace Steganography
         {
             Window settings = new WindowSettings();
             ShowMinorWindow( settings );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ActionCoverText( object sender, RoutedEventArgs e )
+        {
+            if ( ControlText.Text.Equals( "" ) )
+            {
+                MessageBox.Show( "There is no typed text to hide" );
+                return;
+            }
+
+            List< byte > data = new List<byte>( System.Text.Encoding.Unicode.GetBytes( ControlText.Text ) );
+            CoverData( data );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ActionUncoverText( object sender, RoutedEventArgs e )
+        {
+            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
+            List< byte > data = Controller.UncoverData( bitmap, ref code );
+
+            if ( data == null )
+            {
+                MessageBox.Show( messages.GetMessageText( code ) );
+                return;
+            }
+
+            ControlText.Text = System.Text.Encoding.Unicode.GetString( data.ToArray() );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ActionCoverFile( object sender, RoutedEventArgs e )
+        {
+            if ( dataBuffer == null || dataBuffer.Count == 0 )
+            {
+                MessageBox.Show( "There is no loaded file to cover" );
+                return;
+            }
+
+            CoverData( dataBuffer );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void CoverData( List< byte > data )
+        {
+            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
+
+            if ( Controller.CoverData( data, bitmap, ref code ) )
+            {
+                ControlImage.Source = GetBitmapSourceFromBitmap( bitmap );
+                MessageBox.Show( "Data was covered in a graphic file successfully" );
+            }
+            else
+            {
+                MessageBox.Show( messages.GetMessageText( code ) );
+            }
         }
 
         /**************************************************************************************/
@@ -178,6 +240,35 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
+        private Bitmap GetBitmapFromImageSource( ImageSource source, BitmapEncoder encoder )
+        {
+            encoder.Frames.Add( BitmapFrame.Create( (BitmapSource) source ) );
+            MemoryStream outStream = new MemoryStream();
+            encoder.Save( outStream );
+            return new Bitmap( outStream );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private BitmapImage GetBitmapSourceFromBitmap( Bitmap bitmap )
+        {
+            MemoryStream memory = new MemoryStream();
+            bitmap.Save( memory, System.Drawing.Imaging.ImageFormat.Bmp );
+            memory.Position = 0;
+            BitmapImage bitmapimage = new BitmapImage();
+            bitmapimage.BeginInit();
+            bitmapimage.StreamSource = memory;
+            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapimage.EndInit();
+            return bitmapimage;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private Messages messages;
+        private Messages.MessageCode code;
         private List< byte > dataBuffer;
     }
 }

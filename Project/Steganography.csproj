@@ -55,7 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseCover.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Covering.cs" />
+    <Compile Include="Messages.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Uncovering.cs" />
     <Compile Include="WindowSettings.xaml.cs">
       <DependentUpon>WindowSettings.xaml</DependentUpon>
     </Compile>

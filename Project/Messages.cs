@@ -1,9 +1,8 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Stegan
+namespace Steganography
 {
     class Messages
     {
