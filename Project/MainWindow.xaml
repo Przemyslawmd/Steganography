@@ -36,7 +36,7 @@
                     <Separator />
                     <MenuItem Header="Uncover Data" IsEnabled="False" />
                 </MenuItem>
-                <MenuItem Header="Settings">
+                <MenuItem Name="MenuSettings" Click="ActionSettings" Header="Settings">
                 </MenuItem>
                 <MenuItem Name="MenuAbout" Click="ActionAbout" Header="About">
                 </MenuItem>

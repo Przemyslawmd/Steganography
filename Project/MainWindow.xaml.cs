@@ -133,15 +133,33 @@ namespace Steganography
         private void ActionAbout( object sender, RoutedEventArgs e )
         {
             Window about = new About();
-            MenuMain.IsEnabled = false;
-            about.Closed += WindowAboutClosed;
-            about.Show();
+            ShowMinorWindow( about );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public void WindowAboutClosed( object sender, System.EventArgs e )
+        private void ActionSettings( object sender, RoutedEventArgs e )
+        {
+            Window settings = new WindowSettings();
+            ShowMinorWindow( settings );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ShowMinorWindow( Window window )
+        {
+            Window settings = new WindowSettings();
+            MenuMain.IsEnabled = false;
+            window.Closed += MinorWindowClosed;
+            window.Show();
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        public void MinorWindowClosed( object sender, System.EventArgs e )
         {
             MenuMain.IsEnabled = true;
         }
