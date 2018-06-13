@@ -1,5 +1,5 @@
 ﻿
-namespace Stegan
+namespace SteganographyCompression
 {
     class NodeCompress : Node
     {

@@ -1,6 +1,6 @@
 ﻿
-namespace Stegan
-{
+namespace SteganographyCompression
+{ 
     class Node
     {
         public Node( Node left, Node right )

@@ -1,4 +1,5 @@
 ﻿
+using SteganographyCompression;
 using SteganographyEncryption;
 using System;
 using System.Collections.Generic;
