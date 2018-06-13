@@ -7,7 +7,7 @@ namespace SteganographyEncryption
 {
     class Decryption : BaseCryptography
     {
-        public List<byte> Decrypt( List<byte> data, String password )
+        public List< byte > Decrypt( List< byte > data, String password )
         {
             byte[][] key = Key.CreateKeys( password );
             byte[,] state = new byte[4, 4];
@@ -16,11 +16,13 @@ namespace SteganographyEncryption
             data.RemoveAt( data.Count - 1 );
 
             if ( data.Count % 16 != 0 )
+            {
                 throw new ExceptionEncryption( Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT );
+            }
 
             data.Reverse();
-            Stack<byte> stack = new Stack<byte>( data );
-            List<byte> decryptedData = new List<byte>();
+            Stack< byte > stack = new Stack< byte >( data );
+            List< byte > decryptedData = new List< byte >();
 
             for ( int i = 0; i < data.Count; i += 16 )
             {
@@ -33,8 +35,8 @@ namespace SteganographyEncryption
             return decryptedData;
         }
 
-        /***********************************************************************************************/
-        /* DECRYPT ONE BLOCK DATA **********************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void DecryptBlockData( byte[,] state, byte[][] key )
         {
@@ -48,14 +50,13 @@ namespace SteganographyEncryption
                 InvMixColumns( state );                
             }
 
-            // Last round without InvMixColumns 
             InvShiftRows( state );
             InvSubBytes( state );
             AddRoundKey( state, key[0] );
         }
 
-        /***************************************************************************************************************/
-        /* INVERSE SHIFT ROWS ******************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void InvShiftRows( byte[,] state )
         {
@@ -83,13 +84,16 @@ namespace SteganographyEncryption
             state[3, 3] = temp;
         }
 
-        /************************************************************************************************/
-        /* INVERSE SUBBYTES TRANSORMATION ***************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void InvSubBytes( byte[,] state )
         {
             GetGeneralSbox( GetInvSbox, state );            
         }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void InvMixColumns( byte[,] state )
         {

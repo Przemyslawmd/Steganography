@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Security.Cryptography;
 
 namespace SteganographyEncryption
@@ -14,20 +15,22 @@ namespace SteganographyEncryption
             return ExpandKey( basicKey );
         }
 
-        /**************************************************************************************************/
-        /**************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
         
         private static byte[][] ExpandKey( byte[] initialKey )
         {            
             Word[] words = new Word[NumOfWords];            
-            Word tempWord;                                   
-            
+            Word tempWord;
+
             // At the beginning keys are calculated as parts of four-bytes words
-                        
+
             // Key for the first round
             for ( int word = 0; word < 4; word++ )
-                words[word] = new Word( initialKey[word * 4], initialKey[word * 4 + 1], 
+            {
+                words[word] = new Word( initialKey[word * 4], initialKey[word * 4 + 1],
                                         initialKey[word * 4 + 2], initialKey[word * 4 + 3] );
+            }
 
             // Keys for the rest rounds
             for ( int word = 4; word < NumOfWords; word++ )
@@ -40,19 +43,25 @@ namespace SteganographyEncryption
                     words[word] = words[word - 4].XorOuter( tempWord );
                 }
                 else
-                    words[word] = words[word - 4].XorOuter( words[word - 1] );                
+                {
+                    words[word] = words[word - 4].XorOuter( words[word - 1] );
+                }
             }
             
             // Create two-dimensional jagged array and move there keys
             byte[][] roundKeys = new byte[NumOfRounds][];
 
             for ( int i = 0; i < NumOfRounds; i++ )
-                roundKeys[i] = new byte[16]; 
+            {
+                roundKeys[i] = new byte[16];
+            }
 
             for ( int word = 0, j = 0; word < NumOfWords; word++ )
             {
                 if ( word % 4 == 0 )
+                {
                     j = 0;
+                }
 
                 roundKeys[word / 4][j++] = words[word].value1;
                 roundKeys[word / 4][j++] = words[word].value2;
@@ -63,8 +72,8 @@ namespace SteganographyEncryption
             return roundKeys;
         }
 
-        /***************************************************************************************************/
-        /***************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private static void CalculateTemporaryWord( int i, Word word )
         {
@@ -73,18 +82,16 @@ namespace SteganographyEncryption
             word.XorInner( new Word( rcon[i - 1], 0, 0, 0 ) );
         }              
 
-        /*****************************************************************************************************/
-        /*****************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         static byte[] rcon = new byte[10]
         {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
         };
 
-        // Number of rounds with initial round
         static readonly int NumOfRounds = 11;
-        // Number of words of keys for all rounds 
-        static readonly int NumOfWords = 44;
+        static readonly int NumOfWords = 44;            // Number of key words for all rounds
     }
 }
 

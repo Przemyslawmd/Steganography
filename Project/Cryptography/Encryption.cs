@@ -8,15 +8,15 @@ namespace SteganographyEncryption
 {
     class Encryption : BaseCryptography
     {
-        public List<byte> Encrypt( List<byte> dataToEncrypt, String password )
+        public List< byte > Encrypt( List< byte > dataToEncrypt, String password )
         {
             byte[,] state = new byte[4, 4];
             byte[][] key = Key.CreateKeys( password );
             int alignment = AlignData( dataToEncrypt );
 
             dataToEncrypt.Reverse();
-            Stack<byte> stack = new Stack<byte>( dataToEncrypt );
-            List<byte> dataEncrypted = new List<byte>();
+            Stack< byte > stack = new Stack< byte >( dataToEncrypt );
+            List< byte > dataEncrypted = new List< byte >();
 
             for ( int i = 0; i < dataToEncrypt.Count; i += 16 )
             {
@@ -25,12 +25,12 @@ namespace SteganographyEncryption
                 StateIntoOutput( dataEncrypted, state );
             }
 
-            dataEncrypted.Add( (byte)alignment );
+            dataEncrypted.Add( (byte) alignment );
             return dataEncrypted;
         }             
         
-        /***********************************************************************************************/
-        /* ENCRYPT ONE BLOCK DATA **********************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void EncryptBlockData( byte[,] state, byte[][] key )
         {
@@ -44,29 +44,30 @@ namespace SteganographyEncryption
                 AddRoundKey( state, key[round] );
             } 
             
-            // Last round without MixColumns 
             SubBytes( state );
             ShiftRows( state );            
             AddRoundKey( state, key[NumOfRounds - 1] );
         }
 
-        /**********************************************************************************************/
-        /* ALIGN DATA *********************************************************************************/
-        // Add additional bytes because data to be encrypted must be divided by block size (16) 
+        /**************************************************************************************/
+        /**************************************************************************************/
+        // Add additional bytes because data to be encrypted has to be divided by block size (16) 
 
-        private int AlignData( List<byte> source )
+        private int AlignData( List< byte > source )
         {
             int alignment = 16 - ( source.Count % 16 );
 
             for ( int i = 0; i < alignment - 1; i++ )
+            {
                 source.Add( 0x00 );
+            }
 
-            source.Add( (byte)alignment );
+            source.Add( (byte) alignment );
             return alignment;
         }
 
-        /************************************************************************************************/
-        /* SHIFT ROWS IN MATRIX STATE *******************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void ShiftRows( byte[,] state )
         {            
@@ -94,16 +95,16 @@ namespace SteganographyEncryption
             state[3, 0] = temp;
         }
 
-        /************************************************************************************************/
-        /* SUBBYTES TRANSORMATION ***********************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void SubBytes( byte[,] state )
         {
             GetGeneralSbox( GetSbox, state );            
         }
 
-        /*************************************************************************************************/
-        /* MIX COLUMNS ***********************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void MixColumns( byte[,] state )
         {

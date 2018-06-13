@@ -42,18 +42,19 @@ namespace SteganographyEncryption
 
         public void XorInner( Word word )
         {
-            value1 = (byte)( value1 ^ word.value1 );
-            value1 = (byte)( value1 ^ word.value2 );
-            value1 = (byte)( value1 ^ word.value3 );
-            value1 = (byte)( value1 ^ word.value4 );
+            value1 = (byte) ( value1 ^ word.value1 );
+            value1 = (byte) ( value1 ^ word.value2 );
+            value1 = (byte) ( value1 ^ word.value3 );
+            value1 = (byte) ( value1 ^ word.value4 );
         }
+
 
         public Word XorOuter( Word word )
         {
-            return new Word((byte)( this.value1 ^ word.value1 ), 
-                            (byte)( this.value2 ^ word.value2 ), 
-                            (byte)( this.value3 ^ word.value3 ), 
-                            (byte)( this.value4 ^ word.value4 ));
+            return new Word((byte) ( this.value1 ^ word.value1 ), 
+                            (byte) ( this.value2 ^ word.value2 ), 
+                            (byte) ( this.value3 ^ word.value3 ), 
+                            (byte) ( this.value4 ^ word.value4 ));
         }
 
         public byte value1;
@@ -62,3 +63,4 @@ namespace SteganographyEncryption
         public byte value4;
     }
 }
+
