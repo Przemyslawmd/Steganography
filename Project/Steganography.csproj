@@ -56,9 +56,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseCover.cs" />
+    <Compile Include="Compression.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Covering.cs" />
+    <Compile Include="Decompression.cs" />
+    <Compile Include="HuffmanCodes.cs" />
+    <Compile Include="HuffmanTree.cs" />
     <Compile Include="Messages.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeCompress.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Uncovering.cs" />
     <Compile Include="WindowSettings.xaml.cs">

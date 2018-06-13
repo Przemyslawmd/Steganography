@@ -31,7 +31,7 @@ namespace Steganography
                     return false;
                 }
             }
-
+            */
             if ( Settings.Compression )
             {
                 try
@@ -44,8 +44,7 @@ namespace Steganography
                     return false;
                 }
             }
-            */
-
+            
             // This condition must be checked after potential compression
             // Value '8' means number of bites in a byte
             // First row of bitmap is intented to include metadata
@@ -70,8 +69,10 @@ namespace Steganography
             try
             {
                 data = new Uncovering().UncoverData( bitmap, ref flagCompress );
-                //if ( flagCompress )
-                //    data = new Decompression().Decompress( data );
+                if ( flagCompress )
+                {
+                    data = new Decompression().Decompress( data );
+                }
             }
             catch ( Exception )
             {
