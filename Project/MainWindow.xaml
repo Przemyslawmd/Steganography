@@ -18,7 +18,7 @@
                     <Separator />
                     <MenuItem Name="MenuSaveGraphic" Click="ActionSaveGraphic" Header="Save Graphic File" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Save Uncovered Data as File" IsEnabled="False" />
+                    <MenuItem Name="MenuSaveFile" Click="ActionSaveUncoveredData" Header="Save Uncovered Data as File" IsEnabled="False" />
                     <Separator />
                     <MenuItem Name="MenuRemoveGraphic" Click="ActionRemoveGraphic" Header="Remove Graphic File" IsEnabled="False" />
                     <Separator />
@@ -34,7 +34,7 @@
                     <Separator />
                     <MenuItem Name="MenuUncoverText" Click="ActionUncoverText" Header="Uncover Text" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Uncover Data" IsEnabled="False" />
+                    <MenuItem Name="MenuUncoverFile" Click="ActionUncoverFile" Header="Uncover Data" IsEnabled="False" />
                 </MenuItem>
                 <MenuItem Name="MenuSettings" Click="ActionSettings" Header="Settings">
                 </MenuItem>

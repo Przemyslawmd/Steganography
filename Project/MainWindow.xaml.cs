@@ -47,7 +47,7 @@ namespace Steganography
             }
 
             ControlImage.Source = bitmapImage;
-            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, MenuUncoverText );
+            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, MenuUncoverText, MenuUncoverFile, MenuSaveFile );
             MenuSaveGraphic.IsEnabled = true;
         }
 
@@ -192,6 +192,23 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
+        private void ActionUncoverFile( object sender, RoutedEventArgs e )
+        {
+            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder());
+            dataBuffer = Controller.UncoverData( bitmap, ref code );
+
+            if ( dataBuffer == null )
+            {
+                MessageBox.Show( messages.GetMessageText( code ) );
+                return;
+            }
+
+            ControlData.Text = "Number of uncovered bytes: " + dataBuffer.Count.ToString();
+        }
+        
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         private void CoverData( List< byte > data )
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
@@ -207,6 +224,26 @@ namespace Steganography
             }
         }
 
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void ActionSaveUncoveredData( object sender, EventArgs e )
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save Uncovered Data as File";
+            saveFileDialog.ShowDialog();
+
+            if ( saveFileDialog.FileName.Equals( "" ) )
+            {
+                return;
+            }
+
+            FileInfo fileInfo = new FileInfo( saveFileDialog.FileName );
+            FileStream fileStream = fileInfo.Open( FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
+            fileStream.Write( dataBuffer.ToArray(), 0, dataBuffer.Count );
+            fileStream.Close();
+        }
+        
         /**************************************************************************************/
         /**************************************************************************************/
 
