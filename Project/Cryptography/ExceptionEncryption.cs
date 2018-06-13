@@ -1,8 +1,8 @@
 ﻿
 using System;
-using Stegan;
+using Steganography;
 
-namespace Cryptography
+namespace SteganographyEncryption
 {
     class ExceptionEncryption : SystemException
     {

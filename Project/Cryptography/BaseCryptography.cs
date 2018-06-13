@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Cryptography
+namespace SteganographyEncryption
 {
     class BaseCryptography
     {

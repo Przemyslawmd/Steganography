@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
-namespace Cryptography
+namespace SteganographyEncryption
 {
     class Encryption : BaseCryptography
     {
