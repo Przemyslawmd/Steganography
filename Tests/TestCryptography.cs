@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Cryptography;
+using SteganographyEncryption;
 using System.IO;
 using System;
 using System.Collections.Generic;

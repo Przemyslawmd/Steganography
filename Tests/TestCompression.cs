@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using Stegan;
+using Steganography;
+using SteganographyCompression;
 
 namespace Tests
 {

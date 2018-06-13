@@ -60,9 +60,9 @@
     <Compile Include="TestCovering.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Project\Steganografia.csproj">
-      <Project>{b630b755-7c59-4bba-a0b7-0f6c3f43aec6}</Project>
-      <Name>Steganografia</Name>
+    <ProjectReference Include="..\Project\Steganography.csproj">
+      <Project>{53e2ad3e-ea73-4c03-ab38-dadb9c3e115a}</Project>
+      <Name>Steganography</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,10 @@
-﻿using System;
+﻿
+using Steganography;
+using SteganographyCompression;
+using SteganographyEncryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Drawing;
-using Stegan;
-using Cryptography;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
