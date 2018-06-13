@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 
-namespace Stegan
+namespace Steganography
 {     
     class Covering : BaseCover
     {        

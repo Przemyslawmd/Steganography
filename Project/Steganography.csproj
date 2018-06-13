@@ -55,7 +55,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BaseCover.cs" />
     <Compile Include="BaseCryptography.cs" />
     <Compile Include="Compression\Compression.cs" />
     <Compile Include="Compression\Decompression.cs" />
@@ -64,14 +63,21 @@
     <Compile Include="Compression\Node.cs" />
     <Compile Include="Compression\NodeCompress.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="Covering.cs" />
+    <Compile Include="Covering\BaseCover.cs" />
+    <Compile Include="Covering\Covering.cs" />
+    <Compile Include="Covering\Uncovering.cs" />
+    <Compile Include="Cryptography\BaseCryptography.cs" />
+    <Compile Include="Cryptography\Decryption.cs" />
+    <Compile Include="Cryptography\Encryption.cs" />
+    <Compile Include="Cryptography\ExceptionEncryption.cs" />
+    <Compile Include="Cryptography\Key.cs" />
+    <Compile Include="Cryptography\Word.cs" />
     <Compile Include="Decryption.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="ExceptionEncryption.cs" />
     <Compile Include="Key.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Uncovering.cs" />
     <Compile Include="WindowSettings.xaml.cs">
       <DependentUpon>WindowSettings.xaml</DependentUpon>
     </Compile>

@@ -1,5 +1,5 @@
 ﻿
-namespace Stegan
+namespace Steganography
 {
     abstract class BaseCover
     {
