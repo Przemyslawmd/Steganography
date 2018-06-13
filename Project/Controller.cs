@@ -1,7 +1,7 @@
 ﻿
+using SteganographyEncryption;
 using System;
 using System.Collections.Generic;
-//using Cryptography;
 using System.Drawing;
 
 namespace Steganography
@@ -10,7 +10,6 @@ namespace Steganography
     {
         public static bool CoverData( List< byte > data, Bitmap bitmap, ref Messages.MessageCode code )
         {
-            /*
             if ( Settings.Encryption )
             {
                 string password = Settings.Password;
@@ -31,7 +30,7 @@ namespace Steganography
                     return false;
                 }
             }
-            */
+            
             if ( Settings.Compression )
             {
                 try
@@ -80,7 +79,6 @@ namespace Steganography
                 return null;
             }
 
-            /*
             if ( Settings.Encryption )
             {
                 string password = Settings.Password;
@@ -106,7 +104,6 @@ namespace Steganography
                     return null;
                 }
             }
-            */
 
             return data;
         }
