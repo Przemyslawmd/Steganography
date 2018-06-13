@@ -1,17 +1,14 @@
 ﻿
+using SteganographyEncryption;
 using System;
 using System.Collections.Generic;
-using Cryptography;
 using System.Drawing;
 
-namespace Stegan
+namespace Steganography
 {
     class Controller
     {
-        /**********************************************************************************************/
-        /** COVER DATA ********************************************************************************/
-
-        public static bool CoverData( List<byte> data, Bitmap bitmap, ref Messages.MessageCode code )
+        public static bool CoverData( List< byte > data, Bitmap bitmap, ref Messages.MessageCode code )
         {
             if ( Settings.Encryption )
             {
@@ -33,7 +30,7 @@ namespace Stegan
                     return false;
                 }
             }
-
+            
             if ( Settings.Compression )
             {
                 try
@@ -46,7 +43,7 @@ namespace Stegan
                     return false;
                 }
             }
-
+            
             // This condition must be checked after potential compression
             // Value '8' means number of bites in a byte
             // First row of bitmap is intented to include metadata
@@ -60,10 +57,10 @@ namespace Stegan
             return true;
         }
 
-        /**********************************************************************************************/
-        /* UNCOVER DATA *******************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
-        public static List<byte> UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
+        public static List< byte > UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
         {
             Boolean flagCompress = false;
             List<byte> data = new List<byte>();
@@ -72,7 +69,9 @@ namespace Stegan
             {
                 data = new Uncovering().UncoverData( bitmap, ref flagCompress );
                 if ( flagCompress )
+                {
                     data = new Decompression().Decompress( data );
+                }
             }
             catch ( Exception )
             {

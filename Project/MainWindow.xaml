@@ -1,0 +1,69 @@
+﻿
+    <Window x:Class="Steganography.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Steganography"
+        mc:Ignorable="d"
+        Title="" Height="600" Width="850" >
+
+    <Grid>
+        <DockPanel>
+            <Menu Name="MenuMain" DockPanel.Dock="Top" >
+                <MenuItem Header="File">
+                    <MenuItem  Name="MenuLoadGraphic"  Click="ActionOpenGraphic" Header="Load Graphic File" />
+                    <Separator />
+                    <MenuItem Name="MenuLoadFile" Click="ActionLoadFile" Header="Load File to Be Covered" />
+                    <Separator />
+                    <MenuItem Name="MenuSaveGraphic" Click="ActionSaveGraphic" Header="Save Graphic File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuSaveFile" Click="ActionSaveUncoveredData" Header="Save Uncovered Data as File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuRemoveGraphic" Click="ActionRemoveGraphic" Header="Remove Graphic File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuRemoveData" Click="ActionRemoveData" Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Remove Text in Control" />
+                    <Separator />
+                </MenuItem>
+                <MenuItem Header="Action">
+                    <MenuItem Name="MenuCoverText" Click="ActionCoverText" Header="Cover Text" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuCoverFile" Click="ActionCoverFile" Header="Cover Data from File" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuUncoverText" Click="ActionUncoverText" Header="Uncover Text" IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Name="MenuUncoverFile" Click="ActionUncoverFile" Header="Uncover Data" IsEnabled="False" />
+                </MenuItem>
+                <MenuItem Name="MenuSettings" Click="ActionSettings" Header="Settings">
+                </MenuItem>
+                <MenuItem Name="MenuAbout" Click="ActionAbout" Header="About">
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <Grid Margin="40, 40, 30, 40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Name="imageBorder" Grid.RowSpan="2" Grid.Column="0" Width="auto" BorderBrush="#737373" Background="#cccccc" BorderThickness="2" >
+                <Image Name="ControlImage" />
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 10" >
+                <TextBox Name="ControlText" AcceptsReturn="True" Padding="5, 5, 5, 5" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1"  BorderBrush="#737373" Background="White" BorderThickness="1" Margin="20, 0, 10, 0" >
+                <TextBox Name="ControlData" Padding="5, 5, 5, 5" TextWrapping="Wrap" />
+            </Border>
+
+        </Grid>
+    </Grid>
+</Window>
+    
