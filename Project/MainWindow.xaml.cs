@@ -47,7 +47,9 @@ namespace Steganography
             }
 
             ControlImage.Source = bitmapImage;
-            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, MenuUncoverText, MenuUncoverFile, MenuSaveFile );
+            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, 
+                                      MenuUncoverText, MenuUncoverFile, MenuSaveFile );
+            ChangeControlState( false, MenuLoadGraphic );
             MenuSaveGraphic.IsEnabled = true;
         }
 
@@ -85,7 +87,9 @@ namespace Steganography
         private void ActionRemoveGraphic( object sender, RoutedEventArgs e )
         {
             ControlImage.Source = null;
-            ChangeControlState( false, MenuSaveGraphic, MenuRemoveGraphic );
+            ChangeControlState( false, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, 
+                                       MenuCoverFile, MenuUncoverText, MenuUncoverFile );
+            ChangeControlState( true, MenuLoadGraphic );
         }
 
         /**************************************************************************************/
@@ -123,6 +127,8 @@ namespace Steganography
         {
             dataBuffer.Clear();
             ControlData.Text = "";
+            ChangeControlState( true, MenuLoadFile );
+            ChangeControlState( false, MenuRemoveData, MenuSaveFile, MenuCoverFile );
         }
 
         /**************************************************************************************/

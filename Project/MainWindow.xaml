@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Steganography"
         mc:Ignorable="d"
-        Title="" Height="600" Width="850" >
+        Title="" Height="700" Width="1100" >
 
     <Grid>
         <DockPanel>
