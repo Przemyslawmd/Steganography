@@ -19,30 +19,31 @@ namespace Tests
         {          
             projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             bitmapPath = Path.Combine( projectPath, "Resources\\graphicToTest.jpg" );
-            filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );                      
+            filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
+            referenceLongData = new List< byte >( File.ReadAllBytes( filePath ) );
+            referenceShortData = new List< byte >( Encoding.Unicode.GetBytes( "This text is to be hidden" ) );
         }
 
-        /***********************************************************************************************/
-        /* PREPARE DATA ********************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         private void PrepareData()
         {          
             emptyBitmap = new Bitmap( 50, 50 );
             colorBitmap = new Bitmap( bitmapPath );
-            shortData = "This text is to be hidden";
-            fullData = File.ReadAllBytes( filePath );
-        }        
-         
-        /***********************************************************************************************/
-        /* TEST COVERING SHORT DATA IN EMPTY BITMAP BY CHECKING PIXEL VALUES ***************************/
+            longData = new List< byte >( referenceLongData );
+            shortData = new List< byte >( referenceShortData );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         [TestMethod]
         public void TestCoveringInEmptyBitmapByCheckingPixels()
         {            
             PrepareData();
-            byte[] data = new byte[shortData.Length * sizeof( char )];
-            System.Buffer.BlockCopy( shortData.ToCharArray(), 0, data, 0, data.Length );          
 
-            new Covering().CoverData( emptyBitmap, new List<byte>( data ), false );
+            new Covering().CoverData( emptyBitmap, shortData, false );
             
             // Test size of data in first six pixels
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 0 ).R % 2, 0 );
@@ -51,7 +52,7 @@ namespace Tests
             Assert.AreEqual( emptyBitmap.GetPixel( 5, 0 ).G % 2, 1 );
             Assert.AreEqual( emptyBitmap.GetPixel( 5, 0 ).B % 2, 0 );
 
-            // Test compression flag in pixel number six
+            // Test compression flag in a seventh pixel
             Assert.AreEqual( emptyBitmap.GetPixel( 6, 0 ).R % 2, 0 );
 
             // Test hidden data
@@ -63,111 +64,103 @@ namespace Tests
             Assert.AreEqual( emptyBitmap.GetPixel( 3, 3 ).G % 2, 0 );            
         }
 
-        /*****************************************************************************************************/
-        /* TEST COVERING SHORT DATA IN EMPTY BITMAP **********************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         [TestMethod]
         public void TestCoveringInEmptyBitmap()
         {
             PrepareData();
-            List<byte> data = new List<byte>( Encoding.Unicode.GetBytes( shortData ) );
+            bool compression = false;
 
-            new Covering().CoverData( emptyBitmap, data, false );
-            Boolean compression = false;
-            data = new Uncovering().UncoverData( emptyBitmap, ref compression );
-            String uncoveredText = System.Text.Encoding.Unicode.GetString( data.ToArray() );
+            new Covering().CoverData( emptyBitmap, shortData, false );
+            List< byte > data = new Uncovering().UncoverData( emptyBitmap, ref compression );
 
-            Assert.AreNotEqual( uncoveredText, "This text is to be hidden_" );
-            Assert.AreEqual( uncoveredText, shortData );            
+            CollectionAssert.AreEqual( data, referenceShortData );            
         }
 
-        /*******************************************************************************************************/
-        /* TEST COVERING ***************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         [TestMethod]
         public void TestCoveringInColorBitmap()
         {
             PrepareData();
-            bool compression = false;                        
-            new Covering().CoverData( colorBitmap, new List<byte>( fullData ), compression );
-            byte[] unCoveredData = new Uncovering().UncoverData( colorBitmap, ref compression ).ToArray();
+            bool compression = false;
+
+            new Covering().CoverData( colorBitmap, longData, compression );
+            List< byte > unCoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
                         
-            CollectionAssert.AreEqual( unCoveredData, fullData );
+            CollectionAssert.AreEqual( unCoveredData, referenceLongData );
         }
 
-        /*******************************************************************************************************/
-        /* TEST COVERING WITH COMPRESSION **********************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         [TestMethod]
         public void TestCoveringInColorBitmapWithCompression()
         {
-            // Needed as a reference parameter, in this test value is not important 
-            bool compression = false;
+            PrepareData();
+            bool compression = true;
 
-            PrepareData();            
-            List<byte> dataCopy = new List<byte>( fullData );
+            List< byte > compressedData = new Compression().Compress( longData );
+            new Covering().CoverData( colorBitmap, compressedData, compression );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            List< byte > decompressedData = new Decompression().Decompress( uncoveredData );
 
-            List<byte> compressedData = new Compression().Compress( dataCopy );
-            new Covering().CoverData( colorBitmap, new List<byte>( compressedData ), compression );
-            List<byte> uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
-            List<byte> decompressedData = new Decompression().Decompress( uncoveredData );
-
-            CollectionAssert.AreEqual( decompressedData, fullData );
+            CollectionAssert.AreEqual( decompressedData, referenceLongData );
         }
 
-        /********************************************************************************************************/
-        /* TEST COVERING WITH ENCRYPTION ************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         [TestMethod]
         public void TestCoveringInColorBitmapWithEncryption()
         {
-            bool compression = false;
-            String password = "de3@JH^@";
-
             PrepareData();
-            List<byte> dataCopy = new List<byte>( fullData );
+            bool compression = false;
 
-            List<byte> encryptedData = new Encryption().Encrypt( dataCopy, password );
+            List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             new Covering().CoverData( colorBitmap, encryptedData, false );
-            List<byte> uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
-            List<byte> decryptedData = new Decryption().Decrypt( uncoveredData, password );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            List< byte > decryptedData = new Decryption().Decrypt( uncoveredData, password );
 
-            CollectionAssert.AreEqual( decryptedData, fullData );
+            CollectionAssert.AreEqual( decryptedData, referenceLongData );
         }
 
-        /********************************************************************************************************/
-        /* TEST COVERING WITH COMPRESSION AND ENCRYPTION ********************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         [TestMethod]
         public void TestCoveringInColorBitmapWithCompressionAndEncryption()
         {
-            bool compression = true;
-            String password = "de3@JH^@";
-
             PrepareData();
-            //byte[] dataCopy = new byte[fullData.Length];
-            //Array.Copy( fullData, dataCopy, fullData.Length );
-            List<byte> dataCopy = new List<byte>( fullData );
+            bool compression = true;
 
-            List<byte> encryptedData = new Encryption().Encrypt( dataCopy, password );
-            List<byte> compressedData = new Compression().Compress( encryptedData );
+            List< byte > encryptedData = new Encryption().Encrypt( longData, password );
+            List< byte > compressedData = new Compression().Compress( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
-            List<byte> uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
-            List<byte> decompressedData = new Decompression().Decompress( uncoveredData ); 
-            List<byte> decryptedData = new Decryption().Decrypt( decompressedData, password );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression );
+            List< byte > decompressedData = new Decompression().Decompress( uncoveredData ); 
+            List< byte > decryptedData = new Decryption().Decrypt( decompressedData, password );
 
-            CollectionAssert.AreEqual( decryptedData, fullData );
+            CollectionAssert.AreEqual( decryptedData, referenceLongData );
         }
 
-        /********************************************************************************************************/
-        /********************************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         static String projectPath;
         static String bitmapPath;
         static String filePath;
+        static List< byte > referenceShortData;
+        static List< byte > referenceLongData;
+        static string password = "de3@JH^@";
 
         Bitmap emptyBitmap;
         Bitmap colorBitmap;
-        String shortData;
-        byte[] fullData;
+        List< byte > shortData;
+        List< byte > longData;
     }
 }
+
