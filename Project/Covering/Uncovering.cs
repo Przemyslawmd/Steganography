@@ -7,7 +7,7 @@ namespace Steganography
 {
     class Uncovering : BaseCover
     {        
-        public List< byte > UncoverData( Bitmap Image, ref bool CompressFlag )
+        public List< byte > UncoverData( Bitmap Image, out bool CompressFlag )
         {
             Color color;
             

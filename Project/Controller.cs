@@ -21,34 +21,25 @@ namespace Steganography
                     return false;                    
                 }
 
-                try
-                {
-                    data = new Encryption().Encrypt( data, password );
-                }
-                catch ( Exception )
-                {
-                    code = Messages.MessageCode.ERROR_ENCRYPTION;
-                    return false;
-                }
+                data = new Encryption().Encrypt( data, password );
             }
             
             if ( Settings.Compression )
             {
-                try
-                {
-                    data = new Compression().Compress( data );
-                }
-                catch ( Exception )
-                {
-                    code = Messages.MessageCode.ERROR_COMPRESSION;
-                    return false;
-                }
+                data = new Compression().Compress( data );
             }
             
-            // This condition must be checked after potential compression
-            // Value '8' means number of bites in a byte
-            // First row of bitmap is intented to include metadata
-            if ( ( data.Count * 8 ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
+            if ( bitmap.Width < 7 )
+            {
+                code = Messages.MessageCode.TOO_LESS_WIDTH;
+                return false;
+            }
+
+            int BitsInByte = 8;
+
+            // Condition without a first row of bitmap because it's intented for metadata
+
+            if ( ( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
             {
                 code = Messages.MessageCode.TOO_MANY_DATA;
                 return false; 
@@ -63,21 +54,12 @@ namespace Steganography
 
         public static List< byte > UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
         {
-            Boolean flagCompress = false;
-            List<byte> data = new List<byte>();
+            bool compression;
+            List< byte > data = new Uncovering().UncoverData( bitmap, out compression );
 
-            try
+            if ( compression )
             {
-                data = new Uncovering().UncoverData( bitmap, ref flagCompress );
-                if ( flagCompress )
-                {
-                    data = new Decompression().Decompress( data );
-                }
-            }
-            catch ( Exception )
-            {
-                code = Messages.MessageCode.ERROR_DECOMPRESSION;
-                return null;
+                data = new Decompression().Decompress( data );
             }
 
             if ( Settings.Encryption )
