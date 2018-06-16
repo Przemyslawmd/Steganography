@@ -24,7 +24,7 @@
                     <Separator />
                     <MenuItem Name="MenuRemoveData" Click="ActionRemoveData" Header="Remove Uncovered / to Be Covered Data" IsEnabled="False" />
                     <Separator />
-                    <MenuItem Header="Remove Text in Control" />
+                    <MenuItem Click="ActionRemoveText" Header="Remove Text in Control" />
                     <Separator />
                 </MenuItem>
                 <MenuItem Header="Action">
