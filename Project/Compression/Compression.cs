@@ -8,10 +8,7 @@ namespace SteganographyCompression
 {
     class Compression
     {
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        public List<byte> Compress( List<byte> source )
+        public List< byte > Compress( List<byte> source )
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );

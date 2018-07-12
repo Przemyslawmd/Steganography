@@ -7,9 +7,6 @@ namespace SteganographyCompression
 {
     class Decompression
     {
-        /**************************************************************************************/
-        /**************************************************************************************/
-
         public List< byte > Decompress( List< byte > source )
         {
             Dictionary<byte, List< char >> codes = GetCodesFromSource( source  );

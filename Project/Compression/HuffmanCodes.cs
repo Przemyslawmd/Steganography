@@ -7,7 +7,7 @@ namespace SteganographyCompression
 {
     class HuffmanCodes
     {
-        public Dictionary<byte, List<char>> CreateCodesDictionary( NodeCompress root )
+        public Dictionary<byte, List< char >> CreateCodesDictionary( NodeCompress root )
         {
             codes = new Dictionary< byte, List< char >>();
             code = new List< char >();
