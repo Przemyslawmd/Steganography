@@ -64,16 +64,15 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List<NodeCompress> CreateNodes( List< byte > sourceData )
+        private List< NodeCompress > CreateNodes( List< byte > sourceData )
         {
             List< NodeCompress > nodes = new List< NodeCompress >();
             nodes.Add( new NodeCompress( 1, sourceData[0] ));
-            Boolean isFound = false;
+            bool isFound = false;
             int index;
 
             foreach ( byte symbol in sourceData.Skip( 1 ))
             {
-                index = 0;
                 foreach ( NodeCompress node in nodes )
                 {
                     if ( symbol == node.ByteValue )
@@ -85,11 +84,11 @@ namespace SteganographyCompression
 
                     if ( symbol < node.ByteValue )
                     {
-                        nodes.Insert( index, new NodeCompress( 1, symbol ));
+                        index = nodes.IndexOf( node );
+                        nodes.Insert( index, new NodeCompress( 1, symbol ) );
                         isFound = true;
                         break;
                     }
-                    index++;
                 }
 
                 if ( isFound == false )
