@@ -11,19 +11,12 @@ namespace Steganography
             Color color;
             bitIterator = new BitIterator( 0 );
 
-            // Get a size of covered data
             for ( int x = 0; x < DataSizePixel; x++ )
             {
                 color = Image.GetPixel( x, 0 );
-
-                bytesCount |= ( color.R & MaskOne );
-                bytesCount <<= 1;
-
-                bytesCount |= ( color.G & MaskOne );
-                bytesCount <<= 1;
-
-                bytesCount |= ( color.B & MaskOne );
-                bytesCount <<= 1;
+                calculateBytesCount( color.R );
+                calculateBytesCount( color.G );
+                calculateBytesCount( color.B );
             }
 
             bytesCount >>= 1;
@@ -53,6 +46,7 @@ namespace Steganography
                     }
                 }
             }
+
             return buffer;
         }        
         
@@ -84,6 +78,15 @@ namespace Steganography
             }
 
             return UncoverState.Uncompleted;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void calculateBytesCount( byte componentRGB )
+        {
+            bytesCount |= ( componentRGB & MaskOne );
+            bytesCount <<= 1;
         }
 
         /**************************************************************************************/
