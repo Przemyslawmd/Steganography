@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Drawing;
 using System.Collections.Generic;
 
@@ -67,7 +66,7 @@ namespace Steganography
                 byteValue |= MaskOne;
             }
 
-            if ( ++bitIterator.Index == ( LastBit + 1 ))
+            if ( ++bitIterator.Index > bitIterator.LastIndex )
             {
                 buffer.Add( byteValue );
 
@@ -92,7 +91,7 @@ namespace Steganography
 
         private BitIterator bitIterator;
 
-        private enum UncoverState {  Completed, Uncompleted };
+        private enum UncoverState { Completed, Uncompleted };
     }
 }
 
