@@ -26,7 +26,7 @@ namespace Steganography
                                                                     "size of data to be decrypted must be divided by 16." );
             messages.Add( MessageCode.ERROR_DECOMPRESSION, "An error while data decompression." );
             messages.Add( MessageCode.TOO_MANY_DATA, "Too many data to be hidden into a loaded graphic." );
-            messages.Add( MessageCode.TOO_LESS_WIDTH, "Width of bitmap must contains at least seven pixels");
+            messages.Add( MessageCode.TOO_LESS_WIDTH, "Width of graphic must contains at least seven pixels.");
         }
 
         public String GetMessageText( MessageCode code )
@@ -34,6 +34,7 @@ namespace Steganography
             return messages[code];
         }
 
-        Dictionary<MessageCode, String> messages;
+        Dictionary< MessageCode, String > messages;
     }
 }
+
