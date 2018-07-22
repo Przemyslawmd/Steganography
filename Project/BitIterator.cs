@@ -24,7 +24,7 @@ namespace Steganography
         }
 
 
-        private readonly int LastIndex = 7;
+        public readonly int LastIndex = 7;
     }
 }
 
