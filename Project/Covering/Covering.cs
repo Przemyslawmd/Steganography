@@ -11,13 +11,13 @@ namespace Steganography
         {
             Color color;
             int red, green, blue;
-            byteCount = dataToCover.Count;
+            bytesCount = dataToCover.Count;
             dataToCover.Reverse();
             dataToBeCovered = new Stack< byte >( dataToCover );
 
             // Save data size to be covered                                                    
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
-            bitNumber = 17;
+            bitIterator = new BitIterator( 17 );
 
             for ( int x = 0; x < DataSizePixel; x++ )
             {	
@@ -32,19 +32,21 @@ namespace Steganography
             color = Image.GetPixel( CompressPixel, 0 );
             red = ( isCompress ) ? ( color.R | MaskOne ) : ( color.R & MaskZero );
             Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
-            
+
             // Cover data starting from a second row of a bitmap
             // Variable bitNumber has initial value less than zero to pop a byte from a stack
-            bitNumber = -1;
+            bitIterator.Index = -1;
 	
             for ( int y = 1; y < Image.Height; y++ )
             {
                 for ( int x = 0; x < Image.Width; x++ )
                 {
-                    color = Image.GetPixel(x, y);                             
-                                        
+                    color = Image.GetPixel( x, y );
+
                     if ( CheckBitNumber() == false )
+                    {
                         return;
+                    }
 
                     red = ChangeColorCoveringData( color.R );           
                                
@@ -73,16 +75,16 @@ namespace Steganography
 
         private bool CheckBitNumber()
         {
-            if ( bitNumber < 0 )
+            if ( bitIterator.Index < 0 )
             {
                 // All bytes have been covered
-                if ( dataToBeCovered.Count == 0)
+                if ( dataToBeCovered.Count == 0 )
                 {
                     return false;
                 }
 
                 byteValue = dataToBeCovered.Pop();
-                bitNumber = LastBit;
+                bitIterator.SetLastIndex();
             }
             return true;
         }
@@ -92,7 +94,7 @@ namespace Steganography
 
         private int ChangeColorCoveringSize( byte componentRGB )
         {
-            if ((( byteCount >> bitNumber-- ) % 2 ) == 0 )
+            if ((( bytesCount >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
@@ -105,7 +107,7 @@ namespace Steganography
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
-            if ((( byteValue >> bitNumber-- ) % 2 ) == 0 )
+            if ((( byteValue >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
@@ -119,6 +121,8 @@ namespace Steganography
         private Stack< byte > dataToBeCovered;
 
         private const byte MaskZero = 0xFE;
+
+        private BitIterator bitIterator;
     }
 }
 

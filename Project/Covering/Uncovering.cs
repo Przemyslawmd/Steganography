@@ -10,28 +10,28 @@ namespace Steganography
         public List< byte > UncoverData( Bitmap Image, out bool CompressFlag )
         {
             Color color;
-            
+            bitIterator = new BitIterator( 0 );
+
             // Get a size of covered data
             for ( int x = 0; x < DataSizePixel; x++ )
             {
                 color = Image.GetPixel( x, 0 );
 
-                byteCount |= ( color.R & MaskOne );
-                byteCount <<= 1;
+                bytesCount |= ( color.R & MaskOne );
+                bytesCount <<= 1;
 
-                byteCount |= ( color.G & MaskOne );
-                byteCount <<= 1;
+                bytesCount |= ( color.G & MaskOne );
+                bytesCount <<= 1;
 
-                byteCount |= ( color.B & MaskOne );
-                byteCount <<= 1;
+                bytesCount |= ( color.B & MaskOne );
+                bytesCount <<= 1;
             }
 
-            byteCount >>= 1;
+            bytesCount >>= 1;
 
-            List< byte > buffer = new List< byte >( byteCount );
+            List< byte > buffer = new List< byte >( bytesCount );
             CompressFlag = (( Image.GetPixel( CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
 
-            // Uncover data
             for ( int y = 1; y < Image.Height; y++ )
             {
                 for ( int x = 0; x < Image.Width; x++ )
@@ -66,30 +66,33 @@ namespace Steganography
             {
                 byteValue |= MaskOne;
             }
-            bitNumber++;
 
-            if ( bitNumber == ( LastBit + 1 ))
+            if ( ++bitIterator.Index == ( LastBit + 1 ))
             {
                 buffer.Add( byteValue );
 
-                if ( buffer.Count == byteCount )
+                if ( buffer.Count == bytesCount )
                 {
                     return UncoverState.Completed;
                 }
 
                 byteValue = 0;
-                bitNumber = 0;
+                bitIterator.Index = 0;
             }
             else
             {
                 byteValue <<= 1;
             }
+
             return UncoverState.Uncompleted;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
+        private BitIterator bitIterator;
+
         private enum UncoverState {  Completed, Uncompleted };
     }
 }
+
