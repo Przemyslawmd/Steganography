@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Steganography
 {     
-    class Covering : BaseCover
+    class Covering
     {        
         public void CoverData( Bitmap Image, List< byte > dataToCover, Boolean isCompress ) 
         {
@@ -14,12 +14,13 @@ namespace Steganography
             bytesCount = dataToCover.Count;
             dataToCover.Reverse();
             dataToBeCovered = new Stack< byte >( dataToCover );
+            constValues = new CoveringConst();
 
             // Save data size to be covered                                                    
             // Number of bytes to be covered is stored in six pixels ( 18 bits )                                   
             bitIterator = new BitIterator( 17 );
 
-            for ( int x = 0; x < DataSizePixel; x++ )
+            for ( int x = 0; x < constValues.DataSizePixel; x++ )
             {	
                 color = Image.GetPixel( x, 0 );
                 red = ChangeColorCoveringSize( color.R );
@@ -27,11 +28,11 @@ namespace Steganography
                 blue = ChangeColorCoveringSize( color.B );        
                 Image.SetPixel( x, 0, Color.FromArgb( red, green, blue ) );
             }            
-            
+
             // Save information whether data is compressed                         
-            color = Image.GetPixel( CompressPixel, 0 );
-            red = ( isCompress ) ? ( color.R | MaskOne ) : ( color.R & MaskZero );
-            Image.SetPixel( CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
+            color = Image.GetPixel( constValues.CompressPixel, 0 );
+            red = ( isCompress ) ? ( color.R | constValues.MaskOne ) : ( color.R & MaskZero );
+            Image.SetPixel( constValues.CompressPixel, 0, Color.FromArgb( red, color.G, color.B ));
 
             // Cover data starting from a second row of a bitmap
             // Variable bitNumber has initial value less than zero to pop a byte from a stack
@@ -99,7 +100,7 @@ namespace Steganography
                 return componentRGB & MaskZero;
             }
             
-            return componentRGB | MaskOne;
+            return componentRGB | constValues.MaskOne;
         }
 
         /**************************************************************************************/
@@ -112,7 +113,7 @@ namespace Steganography
                 return componentRGB & MaskZero;
             }
             
-            return componentRGB | MaskOne;
+            return componentRGB | constValues.MaskOne;
         }
 
         /**************************************************************************************/
@@ -122,7 +123,10 @@ namespace Steganography
 
         private const byte MaskZero = 0xFE;
 
+        private CoveringConst constValues;
         private BitIterator bitIterator;
+        private int bytesCount;
+        private byte byteValue;
     }
 }
 
