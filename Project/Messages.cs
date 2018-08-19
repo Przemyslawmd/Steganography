@@ -8,6 +8,7 @@ namespace Steganography
     {
         public enum MessageCode
         {
+            OK,
             NO_PASSWORD,
             ERROR_DECRYPTION,
             ERROR_DECRYPTION_ALIGNMENT,

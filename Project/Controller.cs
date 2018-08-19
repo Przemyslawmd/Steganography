@@ -9,7 +9,7 @@ namespace Steganography
 {
     class Controller
     {
-        public static bool CoverData( List< byte > data, Bitmap bitmap, ref Messages.MessageCode code )
+        public static Messages.MessageCode CoverData( List< byte > data, Bitmap bitmap )
         {
             if ( Settings.Encryption )
             {
@@ -17,8 +17,7 @@ namespace Steganography
 
                 if ( password.Equals( "" ) )
                 {
-                    code = Messages.MessageCode.NO_PASSWORD;
-                    return false;                    
+                    return Messages.MessageCode.NO_PASSWORD;
                 }
 
                 data = new Encryption().Encrypt( data, password );
@@ -31,8 +30,7 @@ namespace Steganography
             
             if ( bitmap.Width < 7 )
             {
-                code = Messages.MessageCode.TOO_LESS_WIDTH;
-                return false;
+                return Messages.MessageCode.TOO_LESS_WIDTH;
             }
 
             int BitsInByte = 8;
@@ -41,12 +39,11 @@ namespace Steganography
 
             if ( ( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
             {
-                code = Messages.MessageCode.TOO_MANY_DATA;
-                return false; 
+                return Messages.MessageCode.TOO_MANY_DATA;
             }
            
             new Covering().CoverData( bitmap, data, Settings.Compression );
-            return true;
+            return Messages.MessageCode.OK;
         }
 
         /**************************************************************************************/

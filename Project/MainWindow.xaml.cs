@@ -227,7 +227,8 @@ namespace Steganography
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
 
-            if ( Controller.CoverData( data, bitmap, ref code ) )
+            code = Controller.CoverData( data, bitmap );
+            if ( code == Messages.MessageCode.OK )
             {
                 ControlImage.Source = GetBitmapSourceFromBitmap( bitmap );
                 MessageBox.Show( "Data was covered in a graphic file successfully" );
