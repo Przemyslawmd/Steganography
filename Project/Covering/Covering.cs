@@ -44,22 +44,22 @@ namespace Steganography
                 {
                     color = Image.GetPixel( x, y );
 
-                    if ( CheckBitNumber() == false )
+                    if ( AllBytesCompleted() )
                     {
                         return;
                     }
 
                     red = ChangeColorCoveringData( color.R );           
                                
-                    if ( CheckBitNumber() == false )
+                    if ( AllBytesCompleted() )
                     {
-                        Image.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ) );
+                        Image.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ));
                         return;
                     }
 
                     green = ChangeColorCoveringData( color.G );         
                                       
-                    if ( CheckBitNumber() == false )
+                    if ( AllBytesCompleted() )
                     {
                         Image.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
@@ -74,20 +74,19 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool CheckBitNumber()
+        private bool AllBytesCompleted()
         {
             if ( bitIterator.Index < 0 )
             {
-                // All bytes have been covered
                 if ( dataToBeCovered.Count == 0 )
                 {
-                    return false;
+                    return true;
                 }
 
-                byteValue = dataToBeCovered.Pop();
+                currentProcessedByte = dataToBeCovered.Pop();
                 bitIterator.SetLastIndex();
             }
-            return true;
+            return false;
         }
 
         /**************************************************************************************/
@@ -108,7 +107,7 @@ namespace Steganography
 
         private int ChangeColorCoveringData( byte componentRGB )
         {
-            if ((( byteValue >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
+            if ((( currentProcessedByte >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
@@ -126,7 +125,7 @@ namespace Steganography
         private CoveringConst constValues;
         private BitIterator bitIterator;
         private int bytesCount;
-        private byte byteValue;
+        private byte currentProcessedByte;
     }
 }
 
