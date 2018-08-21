@@ -11,7 +11,6 @@ namespace Steganography
         {
             Color color;
             int red, green, blue;
-            bytesCount = dataToCover.Count;
             dataToCover.Reverse();
             dataToBeCovered = new Stack< byte >( dataToCover );
             constValues = new CoveringConst();
@@ -23,9 +22,9 @@ namespace Steganography
             for ( int x = 0; x < constValues.DataSizePixel; x++ )
             {	
                 color = Image.GetPixel( x, 0 );
-                red = ChangeColorCoveringSize( color.R );
-                green = ChangeColorCoveringSize( color.G );
-                blue = ChangeColorCoveringSize( color.B );        
+                red = AdjustRGBComponent( color.R, dataToCover.Count );
+                green = AdjustRGBComponent( color.G, dataToCover.Count );
+                blue = AdjustRGBComponent( color.B, dataToCover.Count );        
                 Image.SetPixel( x, 0, Color.FromArgb( red, green, blue ) );
             }            
 
@@ -49,7 +48,7 @@ namespace Steganography
                         return;
                     }
 
-                    red = ChangeColorCoveringData( color.R );           
+                    red = AdjustRGBComponent( color.R, currentProcessedByte );           
                                
                     if ( AllBytesCompleted() )
                     {
@@ -57,7 +56,7 @@ namespace Steganography
                         return;
                     }
 
-                    green = ChangeColorCoveringData( color.G );         
+                    green = AdjustRGBComponent( color.G, currentProcessedByte );         
                                       
                     if ( AllBytesCompleted() )
                     {
@@ -65,7 +64,7 @@ namespace Steganography
                         return;
                     }
 
-                    blue = ChangeColorCoveringData( color.B );                    
+                    blue = AdjustRGBComponent( color.B, currentProcessedByte );                    
                     Image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
             }            
@@ -92,22 +91,9 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private int ChangeColorCoveringSize( byte componentRGB )
+        private int AdjustRGBComponent( byte componentRGB, int value )
         {
-            if ((( bytesCount >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
-            {
-                return componentRGB & MaskZero;
-            }
-            
-            return componentRGB | constValues.MaskOne;
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        private int ChangeColorCoveringData( byte componentRGB )
-        {
-            if ((( currentProcessedByte >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
+            if ((( value >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
@@ -124,7 +110,6 @@ namespace Steganography
 
         private CoveringConst constValues;
         private BitIterator bitIterator;
-        private int bytesCount;
         private byte currentProcessedByte;
     }
 }
