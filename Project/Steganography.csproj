@@ -58,6 +58,7 @@
     <Compile Include="BitIterator.cs" />
     <Compile Include="Compression\Compression.cs" />
     <Compile Include="Compression\Decompression.cs" />
+    <Compile Include="Compression\HuffmanCode.cs" />
     <Compile Include="Compression\HuffmanCodeGenerator.cs" />
     <Compile Include="Compression\HuffmanTree.cs" />
     <Compile Include="Compression\Node.cs" />

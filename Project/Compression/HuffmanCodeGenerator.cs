@@ -9,40 +9,40 @@ namespace SteganographyCompression
     {
         public Dictionary<byte, List< char >> CreateCodesDictionary( NodeCompress root )
         {
-            codes = new Dictionary< byte, List< char >>();
-            code = new List< char >();
-            GenerateCodes( root, '1' );
+            codes = new List< HuffmanCode >();
+            code = new HuffmanCode();
+            GenerateCodes( root, true );
             return codes;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, char token )
+        private void GenerateCodes( Node node, bool bitValue )
         {
-            code.Add( token );
+            code.AddBitToCode( bitValue );
 
             if ( node.Left != null )
             {
-                GenerateCodes( node.Left, '0' );
+                GenerateCodes( node.Left, false );
             }
             if ( node.Right != null )
             {
-                GenerateCodes( node.Right, '1' );
+                GenerateCodes( node.Right, true );
             }
             else
             {
-                codes.Add( node.ByteValue, new List< char >( code ) );
+                codes.Add( new HuffmanCode( node.ByteValue, code.value, code.codeLength ));
             }
 
-            code.RemoveAt( code.Count - 1 );
+            code.RemoveLastBit();
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< char > code;
-        private Dictionary< byte, List< char >> codes;
+        private List< HuffmanCode > codes;
+        private HuffmanCode code;
     }
 }
 
