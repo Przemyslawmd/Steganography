@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SteganographyCompression
 {
-    class HuffmanCodes
+    class HuffmanCodeGenerator
     {
         public Dictionary<byte, List< char >> CreateCodesDictionary( NodeCompress root )
         {

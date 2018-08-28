@@ -86,7 +86,7 @@ namespace Tests
         public void TestCompressionGeneratingCodes()
         {
             NodeCompress root = nodes[0];
-            Dictionary< byte, List< char >> codes = new HuffmanCodes().CreateCodesDictionary( root );
+            Dictionary< byte, List< char >> codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
             List< char > code;
 
             codes.TryGetValue( 0x12, out code );
