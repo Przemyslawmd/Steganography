@@ -7,12 +7,12 @@ namespace SteganographyCompression
 {
     class HuffmanCodeGenerator
     {
-        public List< HuffmanCode > CreateCodesDictionary( NodeCompress root )
+        public Dictionary< byte, HuffmanCode > CreateCodesDictionary( NodeCompress root )
         {
-            codeDictionary = new List< HuffmanCode >();
+            codesDictionary = new Dictionary< byte, HuffmanCode >();
             code = new HuffmanCode();
             GenerateCodes( root, true );
-            return codeDictionary;
+            return codesDictionary;
         }
 
         /**************************************************************************************/
@@ -32,7 +32,7 @@ namespace SteganographyCompression
             }
             else
             {
-                codeDictionary.Add( new HuffmanCode( node.ByteValue, code.tokens, code.length ));
+                codesDictionary.Add( node.ByteValue, new HuffmanCode( code ));
             }
 
             DecrementCode();
@@ -74,7 +74,7 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< HuffmanCode > codeDictionary;
+        private Dictionary< byte, HuffmanCode > codesDictionary;
         private HuffmanCode code;
         private readonly int BitsInByte = 8;
     }

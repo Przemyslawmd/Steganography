@@ -9,17 +9,13 @@ namespace SteganographyCompression
         public HuffmanCode()
         {
             tokens = new Stack< byte >();
-            length = 0;
         }
 
-        public HuffmanCode( byte symbol, Stack< byte > code, byte length )
+        public HuffmanCode( HuffmanCode code )
         {
-            this.symbol = symbol;
-            this.tokens = new Stack< byte >( code );
-            this.length = length;
+            tokens = new Stack< byte >( code.tokens );
+            length = code.length;
         }
-
-        public byte symbol { get; }
 
         public Stack< byte > tokens { get; }
 

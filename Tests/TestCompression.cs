@@ -109,40 +109,27 @@ namespace Tests
             TestCompressionBuildingTree();
 
             NodeCompress root = nodes[0];
-            List< HuffmanCode > codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
-
+            Dictionary< byte, HuffmanCode > codesDictionary = new HuffmanCodeGenerator().CreateCodesDictionary( root );
             HuffmanCode code;
-            code = FindCodeBySymbol( codes, 0x12 );
+
+            codesDictionary.TryGetValue( 0x12, out code );
             CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0x80 } ));
             Assert.AreEqual( code.length, 3 );
 
-            code = FindCodeBySymbol( codes, 0x13 );
+            codesDictionary.TryGetValue( 0x13, out code );
             CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xA0 } ));
             Assert.AreEqual( code.length, 3 );
 
-            code = FindCodeBySymbol( codes, 0x11 );
+            codesDictionary.TryGetValue( 0x11, out code );
             CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xD0 } ));
             Assert.AreEqual( code.length, 4 );
 
-            code = FindCodeBySymbol( codes, 0x10 );
+            codesDictionary.TryGetValue( 0x10, out code );
             CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xC0 } ));
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
-
-        private HuffmanCode FindCodeBySymbol( List< HuffmanCode > codes, byte symbol )
-        {
-            foreach ( HuffmanCode code in codes )
-            {
-                if ( code.symbol == symbol )
-                {
-                    return code;
-                }
-            }
-
-            return null;
-        }
 
         static List< NodeCompress > nodes;
     }

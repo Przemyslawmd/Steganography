@@ -29,7 +29,7 @@ namespace SteganographyCompression
         {
             int bitShift = 0;
             byte temp = 0;
-            List<byte> compressedData = new List< byte >();
+            List< byte > compressedData = new List< byte >();
             
             foreach ( byte value in source )
             {
@@ -126,7 +126,7 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< HuffmanCode > codes_;
+        private Dictionary< byte, HuffmanCode > codes_;
         private Dictionary<byte, List<char>> codes;
         readonly int BitsInByte = 8;
     }
