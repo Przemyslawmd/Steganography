@@ -7,20 +7,20 @@ namespace SteganographyCompression
 {
     class HuffmanCodeGenerator
     {
-        public Dictionary<byte, List< char >> CreateCodesDictionary( NodeCompress root )
+        public List< HuffmanCode > CreateCodesDictionary( NodeCompress root )
         {
-            codes = new List< HuffmanCode >();
+            codeDictionary = new List< HuffmanCode >();
             code = new HuffmanCode();
             GenerateCodes( root, true );
-            return codes;
+            return codeDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, bool bitValue )
+        private void GenerateCodes( Node node, bool token )
         {
-            code.AddBitToCode( bitValue );
+            IncrementCode( token );
 
             if ( node.Left != null )
             {
@@ -32,17 +32,51 @@ namespace SteganographyCompression
             }
             else
             {
-                codes.Add( new HuffmanCode( node.ByteValue, code.value, code.codeLength ));
+                codeDictionary.Add( new HuffmanCode( node.ByteValue, code.tokens, code.length ));
             }
 
-            code.RemoveLastBit();
+            DecrementCode();
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< HuffmanCode > codes;
+        private void IncrementCode( bool token )
+        {
+            byte codePart = ( code.tokens.Count == 0 ) ? (byte) 0 : code.tokens.Pop();
+
+            if ( token )
+            {
+                codePart |= (byte) ( 1 << ( 7 - ( code.length % BitsInByte )));
+            }
+            else
+            {
+                codePart &= (byte) ~( 1 << ( 7 - ( code.length % BitsInByte )));
+            }
+
+            code.tokens.Push( codePart );
+            code.length++;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void DecrementCode()
+        {
+            if ( code.length % BitsInByte == 1 )
+            {
+                code.tokens.Pop();
+            }
+
+            code.length--;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private List< HuffmanCode > codeDictionary;
         private HuffmanCode code;
+        private readonly int BitsInByte = 8;
     }
 }
 

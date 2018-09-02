@@ -1,38 +1,29 @@
 ﻿
+using System;
+using System.Collections.Generic;
+
 namespace SteganographyCompression
 {
     class HuffmanCode
     {
-        public HuffmanCode() { }
-
-        public HuffmanCode( byte value, int code, byte codeLength )
+        public HuffmanCode()
         {
-            this.value = value;
-            this.code = code;
-            this.codeLength = codeLength;
+            tokens = new Stack< byte >();
+            length = 0;
         }
 
-        public byte value { get; set; }
-
-        public int code { get; set; }
-
-        public byte codeLength { get; set; }
-
-        public void AddBitToCode( bool bitValue )
+        public HuffmanCode( byte symbol, Stack< byte > code, byte length )
         {
-            if ( codeLength != 0 )
-            {
-                code <<= 1;
-            }
-
-            code |= ( bitValue ) ? 1 : 0; 
-            codeLength++;
+            this.symbol = symbol;
+            this.tokens = new Stack< byte >( code );
+            this.length = length;
         }
 
-        public void RemoveLastBit()
-        {
-            code >>= 1;
-            codeLength--;
-        }
+        public byte symbol { get; }
+
+        public Stack< byte > tokens { get; }
+
+        public byte length { get; set; }
     }
 }
+

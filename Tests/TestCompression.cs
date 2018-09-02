@@ -82,6 +82,7 @@ namespace Tests
         /**************************************************************************************/
         // Dependend on the TestCompressionBuildingTree
 
+        /*
         [TestMethod]
         public void TestCompressionGeneratingCodes()
         {
@@ -100,9 +101,48 @@ namespace Tests
             codes.TryGetValue( 0x10, out code );
             CollectionAssert.AreEqual( code, new List< char > { '1', '1', '0', '0' } );
         }
+        */
         
+        [TestMethod]
+        public void TestCompressionGeneratingCodes()
+        {
+            TestCompressionBuildingTree();
+
+            NodeCompress root = nodes[0];
+            List< HuffmanCode > codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
+
+            HuffmanCode code;
+            code = FindCodeBySymbol( codes, 0x12 );
+            CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0x80 } ));
+            Assert.AreEqual( code.length, 3 );
+
+            code = FindCodeBySymbol( codes, 0x13 );
+            CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xA0 } ));
+            Assert.AreEqual( code.length, 3 );
+
+            code = FindCodeBySymbol( codes, 0x11 );
+            CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xD0 } ));
+            Assert.AreEqual( code.length, 4 );
+
+            code = FindCodeBySymbol( codes, 0x10 );
+            CollectionAssert.AreEqual( code.tokens, new Stack< byte >( new byte[] { 0xC0 } ));
+        }
+
         /**************************************************************************************/
         /**************************************************************************************/
+
+        private HuffmanCode FindCodeBySymbol( List< HuffmanCode > codes, byte symbol )
+        {
+            foreach ( HuffmanCode code in codes )
+            {
+                if ( code.symbol == symbol )
+                {
+                    return code;
+                }
+            }
+
+            return null;
+        }
 
         static List< NodeCompress > nodes;
     }

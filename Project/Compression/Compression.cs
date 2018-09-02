@@ -12,7 +12,7 @@ namespace SteganographyCompression
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
-            codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
+            codes_ = new HuffmanCodeGenerator().CreateCodesDictionary( root );
             List< byte > compressedData = StartCompress( source );
 
             // data to be returned contains codes at the beginning
@@ -126,6 +126,7 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
+        private List< HuffmanCode > codes_;
         private Dictionary<byte, List<char>> codes;
         readonly int BitsInByte = 8;
     }
