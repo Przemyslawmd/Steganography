@@ -34,7 +34,7 @@ namespace Tests
         {
             List< byte > dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
-            Dictionary< byte, List< char >> codes = new HuffmanCodes().CreateCodesDictionary( root );
+            Dictionary< byte, HuffmanCode > codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
             objectCompression.SetField( "codes", codes );
