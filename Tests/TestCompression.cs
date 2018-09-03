@@ -30,6 +30,28 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
+        public void TestCompressionShortTextWithoutDictionaryCodes()
+        {
+            List< byte > dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
+            NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
+            Dictionary< byte, List< char >> codes = new HuffmanCodes().CreateCodesDictionary( root );
+
+            PrivateObject objectCompression = new PrivateObject( new Compression() );
+            objectCompression.SetField( "codes", codes );
+
+            List< byte > dataCompressed = (List< byte >) objectCompression.Invoke( "StartCompress", dataToCompress );
+
+            List< byte > expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED,
+                                                          0xDC, 0x5C, 0xD9, 0x65, 0xAB,
+                                                          0xEB, 0xBB, 0xCB, 0xD8 };
+
+            CollectionAssert.AreEqual( dataCompressed, expectedData );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        [TestMethod]
         public void TestCompressionCreatingNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
