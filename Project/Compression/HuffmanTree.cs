@@ -18,19 +18,19 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public Node BuildTreeDecompression( Dictionary< byte, List< char >> codes )
+        public Node BuildTreeDecompression( Dictionary< byte, List< bool >> codes )
         {
             Node root = new Node( 0 );
             Node node;
 
-            foreach ( KeyValuePair< byte, List< char >> code in codes )
+            foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
                 node = root;
 
                 // Traverse chars in code in exception of first and last char - each code begins with char '1'
-                foreach ( char token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ) )
+                foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ) )
                 {
-                    if ( token == '0' )
+                    if ( token == false )
                     {
                         if ( node.Left == null )
                         {
@@ -49,7 +49,7 @@ namespace SteganographyCompression
                 }
 
                 // Check last char in code - add leaf
-                if ( code.Value.Last() == '0' )
+                if ( code.Value.Last() == false )
                 {
                     node.Left = new Node( code.Key );
                 }

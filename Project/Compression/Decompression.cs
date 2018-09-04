@@ -9,60 +9,57 @@ namespace SteganographyCompression
     {
         public List< byte > Decompress( List< byte > source )
         {
-            Dictionary<byte, List< char >> codes = GetCodesFromSource( source  );
+            Dictionary< byte, List< bool >> codesDictionary = GetCodesFromSource( source  );
             originalSize = BitConverter.ToInt32( source.ToArray(), dataIndex );
             dataIndex += 4;
 
-            Node root = new HuffmanTree().BuildTreeDecompression( codes );
+            Node root = new HuffmanTree().BuildTreeDecompression( codesDictionary );
             return Decode( source, root );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Dictionary< byte, List< char >> GetCodesFromSource( List<byte> data )
+        private Dictionary< byte, List< bool >> GetCodesFromSource( List<byte> data )
         {
             // Get size of codes stream and count of codes and move dataIndex
-            int codesSize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
-            int codesCount = ( (int) data[4] == 0 ) ? 256 : (int) data[4];
+            int codesDictionarySize = BitConverter.ToInt32( data.GetRange(0, 4).ToArray(), 0 );
+            int codesCount = ( data[4] == 0 ) ? 256 : data[4];
             dataIndex = 5;
 
-            Dictionary< byte, List< char >> codes = new Dictionary< byte, List< char >>();
+            Dictionary< byte, List< bool >> codesDictionary = new Dictionary< byte, List< bool >>();
 
             // Stream index indicates the beginning of bits sequence that represent codes
-            int streamIndex = dataIndex + codesCount * 2;
+            int codesIndex = dataIndex + codesCount * 2;
             int bitIndex = 1;
-            List< char > code = new List<char>();
+            List< bool > code = new List< bool >();
 
             for ( int i = 0; i < codesCount; i++ )
             {
-                GetCodeFromStream( code, data, data[dataIndex + 1], ref streamIndex, ref bitIndex );
-                codes.Add( data[dataIndex], new List< char >( code ));
+                GetCodeFromStream( code, data, data[dataIndex + 1], ref codesIndex, ref bitIndex );
+                codesDictionary.Add( data[dataIndex], new List< bool >( code ));
                 code.Clear();
                 dataIndex += 2;
             }
 
             // Move data index at the place where codes end
-            dataIndex = codesSize;
-            return codes;
+            dataIndex = codesDictionarySize;
+            return codesDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GetCodeFromStream( List<char> code, List<byte> data, int codeLenght, ref int streamIndex, ref int bitIndex )
+        private void GetCodeFromStream( List< bool > code, List< byte > stream, int codeLenght, ref int codesIndex, ref int bitIndex )
         {
             for ( int i = 0; i < codeLenght; i++ )
             {
-                if (( data[streamIndex] & mask[bitIndex] ) != 0 )
-                    code.Add( '1' );
-                else
-                    code.Add( '0' );
+                code.Add((( stream[codesIndex] >> ( 8 - bitIndex )) % 2 ) != 0 );
 
                 if ( ++bitIndex > 8 )
                 {
                     bitIndex = 1;
-                    streamIndex++;
+                    codesIndex++;
                 }
             }
         }
@@ -72,16 +69,14 @@ namespace SteganographyCompression
 
         private List< byte > Decode( List< byte > source, Node root )
         {                        
-            List< byte > decompressedData = new List<byte>();
+            List< byte > decompressedData = new List< byte >();
             Node node = null;
 
-            // Get byte from data to be decompressed
-            foreach ( byte symbol in source.Skip( dataIndex ))
+            foreach ( byte byteValue in source.Skip( dataIndex ))
             {
-                // Check each bite in a byte and traverse tree
-                for ( int j = 1; j <= 8; j++ )
+                for ( int bitNumber = 1; bitNumber <= 8; bitNumber++ )
                 {
-                    if (( mask[j] & symbol ) == 0 )
+                    if (( byteValue >> ( 8 - bitNumber )) % 2 == 0 )
                     {
                         node = node.Left;                                                                 
                     }         
@@ -98,7 +93,8 @@ namespace SteganographyCompression
                     if ( node.isLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
-                        // Case where some last bits were used as an alignment
+                        
+                        // Case where some last left bits were used as an alignment
                         if ( decompressedData.Count == originalSize )
                         {
                             return decompressedData;
@@ -116,8 +112,6 @@ namespace SteganographyCompression
 
         int originalSize;                   // Size of data before compression
         private int dataIndex;              // It is global index in a source data to be decompressed
-
-        readonly byte[] mask = new byte[9] { 0x00, 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
     }
 }
 
