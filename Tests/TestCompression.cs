@@ -34,7 +34,7 @@ namespace Tests
         {
             List< byte > dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
-            Dictionary< byte, List< char >> codes = new HuffmanCodes().CreateCodesDictionary( root );
+            Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
             objectCompression.SetField( "codes", codes );
@@ -102,25 +102,36 @@ namespace Tests
 
         /**************************************************************************************/
         /**************************************************************************************/
-        // Dependend on the TestCompressionBuildingTree
 
         [TestMethod]
         public void TestCompressionGeneratingCodes()
         {
-            NodeCompress root = nodes[0];
-            Dictionary< byte, List< char >> codes = new HuffmanCodes().CreateCodesDictionary( root );
-            List< char > code;
+            PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            codes.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< char > { '1', '0', '0' } );
-            codes.TryGetValue( 0x13, out code );
-            CollectionAssert.AreEqual( code, new List< char > { '1', '0', '1' } );
-            codes.TryGetValue( 0x14, out code );
-            CollectionAssert.AreNotEqual( code, new List< char > { '1', '0', '0' } );
-            codes.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< char > { '1', '1', '0', '1' } );
-            codes.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< char > { '1', '1', '0', '0' } );
+            // Create a list of NodeCompress objects sorted by count
+            nodes = new List< NodeCompress >();
+            nodes.Add( new NodeCompress( 1, 0x10 ) );
+            nodes.Add( new NodeCompress( 1, 0x11 ) );
+            nodes.Add( new NodeCompress( 2, 0x12 ) );
+            nodes.Add( new NodeCompress( 2, 0x13 ) );
+            nodes.Add( new NodeCompress( 3, 0x14 ) );
+
+            obj.Invoke( "BuildTree", nodes );
+
+            NodeCompress root = nodes[0];
+            Dictionary< byte, List< bool >> codesDictionary = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            List< bool > code;
+
+            codesDictionary.TryGetValue( 0x12, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false, false } );
+            codesDictionary.TryGetValue( 0x13, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false, true } );
+            codesDictionary.TryGetValue( 0x14, out code );
+            CollectionAssert.AreNotEqual( code, new List< bool > { true, false, false } );
+            codesDictionary.TryGetValue( 0x11, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, true } );
+            codesDictionary.TryGetValue( 0x10, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, false } );
         }
         
         /**************************************************************************************/

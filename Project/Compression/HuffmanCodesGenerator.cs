@@ -5,34 +5,34 @@ using System.Collections.Generic;
 
 namespace SteganographyCompression
 {
-    class HuffmanCodes
+    class HuffmanCodesGenerator
     {
-        public Dictionary<byte, List< char >> CreateCodesDictionary( NodeCompress root )
+        public Dictionary< byte, List< bool >> CreateCodesDictionary( NodeCompress root )
         {
-            codes = new Dictionary< byte, List< char >>();
-            code = new List< char >();
-            GenerateCodes( root, '1' );
-            return codes;
+            codesDictionary = new Dictionary< byte, List< bool >>();
+            code = new List< bool >();
+            GenerateCodes( root, true );
+            return codesDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, char token )
+        private void GenerateCodes( Node node, bool token )
         {
             code.Add( token );
 
             if ( node.Left != null )
             {
-                GenerateCodes( node.Left, '0' );
+                GenerateCodes( node.Left, false );
             }
             if ( node.Right != null )
             {
-                GenerateCodes( node.Right, '1' );
+                GenerateCodes( node.Right, true );
             }
             else
             {
-                codes.Add( node.ByteValue, new List< char >( code ) );
+                codesDictionary.Add( node.ByteValue, new List< bool >( code ) );
             }
 
             code.RemoveAt( code.Count - 1 );
@@ -41,8 +41,8 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< char > code;
-        private Dictionary< byte, List< char >> codes;
+        private List< bool > code;
+        private Dictionary< byte, List< bool >> codesDictionary;
     }
 }
 

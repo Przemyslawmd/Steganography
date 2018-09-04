@@ -12,7 +12,7 @@ namespace SteganographyCompression
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
-            codes = new HuffmanCodes().CreateCodesDictionary( root );
+            codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< byte > compressedData = StartCompress( source );
 
             // data to be returned contains codes at the beginning
@@ -33,7 +33,7 @@ namespace SteganographyCompression
             
             foreach ( byte value in source )
             {
-                foreach ( char token in codes[value] )
+                foreach ( bool token in codes[value] )
                 {
                     if ( bitShift == BitsInByte )
                     {
@@ -43,7 +43,7 @@ namespace SteganographyCompression
                     }
                     
                     temp <<= 1;
-                    if ( token == '1' )
+                    if ( token )
                     {
                         temp += 1;
                     }
@@ -67,7 +67,7 @@ namespace SteganographyCompression
         {
             List<byte> codesStream = new List<byte>();
 
-            foreach ( KeyValuePair< byte, List< char >> code in codes )
+            foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
                 codesStream.Add( code.Key );
                 codesStream.Add( (byte)code.Value.Count );
@@ -76,16 +76,16 @@ namespace SteganographyCompression
             byte temp = 0;
             int shift = 0;
 
-            foreach ( KeyValuePair<byte, List<char>> code in codes )
+            foreach ( KeyValuePair<byte, List< bool >> code in codes )
             {
-                foreach ( char token in code.Value )
+                foreach ( bool token in code.Value )
                 {
                     if ( ++shift > 1 )
                     {
                         temp <<= 1;
                     }
 
-                    if ( token == '1' )
+                    if ( token )
                     {
                         temp += 1;
                     }
@@ -126,7 +126,7 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Dictionary<byte, List<char>> codes;
+        private Dictionary< byte, List< bool >> codes;
         readonly int BitsInByte = 8;
     }
 }
