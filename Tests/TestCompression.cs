@@ -37,7 +37,7 @@ namespace Tests
             Dictionary< byte, HuffmanCode > codes = new HuffmanCodeGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
-            objectCompression.SetField( "codes", codes );
+            objectCompression.SetField( "codesDictionary", codes );
 
             List< byte > dataCompressed = (List< byte >) objectCompression.Invoke( "StartCompress", dataToCompress );
 

@@ -17,7 +17,7 @@ namespace SteganographyCompression
             length = code.length;
         }
 
-        public Stack< byte > tokens { get; }
+        public Stack< byte > tokens { get; set; }
 
         public byte length { get; set; }
     }

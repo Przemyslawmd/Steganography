@@ -12,7 +12,7 @@ namespace SteganographyCompression
         {
             int originalSize = source.Count;
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
-            codes_ = new HuffmanCodeGenerator().CreateCodesDictionary( root );
+            codesDictionary = new HuffmanCodeGenerator().CreateCodesDictionary( root );
             List< byte > compressedData = StartCompress( source );
 
             // data to be returned contains codes at the beginning
@@ -27,42 +27,68 @@ namespace SteganographyCompression
 
         private List< byte > StartCompress( List< byte > source )
         {
-            int bitShift = 0;
-            byte temp = 0;
+            int bitIndex = 0;
+            byte tempByte = 0;
             List< byte > compressedData = new List< byte >();
-            
+            HuffmanCode code;
+            Stack< byte > tokens;
+            byte codePart = 0;
+
             foreach ( byte value in source )
             {
-                foreach ( char token in codes[value] )
+                code = codesDictionary[value];
+                tokens = ReverseTokensStack( new Stack< byte >( code.tokens ));
+
+                for ( int tokenNumber = 1; tokenNumber <= code.length; tokenNumber++ )
                 {
-                    if ( bitShift == BitsInByte )
+                    if ( tokenNumber % BitsInByte == 1 )
                     {
-                        compressedData.Add( temp );
-                        temp = 0;
-                        bitShift = 0;
+                        codePart = tokens.Pop();
+                    }
+
+                    if ( bitIndex == BitsInByte )
+                    {
+                        compressedData.Add( tempByte );
+                        tempByte = 0;
+                        bitIndex = 0;
                     }
                     
-                    temp <<= 1;
-                    if ( token == '1' )
+                    tempByte <<= 1;
+                    if (( codePart & ( 1 << ( 8 - ( tokenNumber % BitsInByte )))) != 0 )
                     {
-                        temp += 1;
+                        tempByte += 1;
                     }
-                    bitShift++;
+                    bitIndex++;
                 }
             }     
             
             // Some data remains, there is a need to add an alignment
-            if ( bitShift != 0 )           
+            if ( bitIndex != 0 )           
             {
-                temp <<= ( BitsInByte - bitShift );
-                compressedData.Add( temp );
+                tempByte <<= ( BitsInByte - bitIndex );
+                compressedData.Add( tempByte );
             }
             return compressedData;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
-                    
+
+        private Stack< byte > ReverseTokensStack( Stack< byte > tokensStack )
+        {
+            Stack< byte > reversedTokensStack = new Stack< byte >();
+
+            while ( tokensStack.Count > 0 )
+            {
+                reversedTokensStack.Push( tokensStack.Pop() );
+            }
+
+            return reversedTokensStack;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         private List<byte> CreateCodesData()
         {
             List<byte> codesStream = new List<byte>();
@@ -126,7 +152,7 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Dictionary< byte, HuffmanCode > codes_;
+        private Dictionary< byte, HuffmanCode > codesDictionary;
         private Dictionary<byte, List<char>> codes;
         readonly int BitsInByte = 8;
     }
