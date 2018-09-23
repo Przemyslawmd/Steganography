@@ -74,7 +74,7 @@ namespace Tests
             bool compression;
 
             new Covering().CoverData( emptyBitmap, shortData, false );
-            List< byte > data = new Uncovering().UncoverData( emptyBitmap, out compression );
+            List< byte > data = new Uncovering().UncoverData( emptyBitmap, out compression, ref code );
 
             CollectionAssert.AreEqual( data, referenceShortData );            
         }
@@ -89,7 +89,7 @@ namespace Tests
             bool compression = false;
 
             new Covering().CoverData( colorBitmap, longData, compression );
-            List< byte > unCoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
+            List< byte > unCoveredData = new Uncovering().UncoverData( colorBitmap, out compression, ref code );
                         
             CollectionAssert.AreEqual( unCoveredData, referenceLongData );
         }
@@ -105,7 +105,7 @@ namespace Tests
 
             List< byte > compressedData = new Compression().Compress( longData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
-            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression, ref code );
             List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
 
             CollectionAssert.AreEqual( decompressedData, referenceLongData );
@@ -122,7 +122,7 @@ namespace Tests
 
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             new Covering().CoverData( colorBitmap, encryptedData, false );
-            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression, ref code );
             List< byte > decryptedData = new Decryption().Decrypt( uncoveredData, password );
 
             CollectionAssert.AreEqual( decryptedData, referenceLongData );
@@ -140,7 +140,7 @@ namespace Tests
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             List< byte > compressedData = new Compression().Compress( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
-            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
+            List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression, ref code );
             List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
             List< byte > decryptedData = new Decryption().Decrypt( decompressedData, password );
 

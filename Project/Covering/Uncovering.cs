@@ -6,24 +6,56 @@ namespace Steganography
 {
     class Uncovering
     {        
-        public List< byte > UncoverData( Bitmap Image, out bool CompressFlag )
+        public List< byte > UncoverData( Bitmap Image, out bool CompressFlag, ref Messages.MessageCode code )
         {
             Color color;
             bitIterator = new BitIterator( 0 );
             constValues = new CoveringConst();
 
+            List< byte > buffer = new List< byte >( 2 );
+            countDataToProcessed = 2;
             for ( int x = 0; x < constValues.DataSizePixel; x++ )
             {
-                color = Image.GetPixel( x, constValues.SecondPictureRow );
+                color = Image.GetPixel( x, constValues.FirstRow );
+
+                if ( UncoverDataFromPixel( color.R, buffer ) == UncoverState.Completed )
+                {
+                        break;
+                }
+
+                if ( UncoverDataFromPixel( color.G, buffer ) == UncoverState.Completed )
+                {
+                        break;
+                }
+
+                if ( UncoverDataFromPixel( color.B, buffer ) == UncoverState.Completed )
+                {
+                        break;
+                }
+            }
+
+            if ( buffer[0] != constValues.CoverMark[1] && buffer[1] != constValues.CoverMark[0] )
+            {
+                CompressFlag = false;
+                code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
+                return null;
+            }
+
+            byteValue = 0;
+            bitIterator = new BitIterator( 0 );
+            countDataToProcessed = 0;
+            for ( int x = 0; x < constValues.DataSizePixel; x++ )
+            {
+                color = Image.GetPixel( x, constValues.SecondRow );
                 calculateBytesCount( color.R );
                 calculateBytesCount( color.G );
                 calculateBytesCount( color.B );
             }
 
-            bytesCount >>= 1;
+            countDataToProcessed >>= 1;
 
-            List< byte > buffer = new List< byte >( bytesCount );
-            CompressFlag = (( Image.GetPixel( constValues.CompressPixel, constValues.SecondPictureRow ).R % 2 ) == 1 ) ? true : false;
+            buffer = new List< byte >( countDataToProcessed );
+            CompressFlag = (( Image.GetPixel( constValues.CompressPixel, constValues.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
             for ( int y = 2; y < Image.Height; y++ )
             {
@@ -65,7 +97,7 @@ namespace Steganography
             {
                 buffer.Add( byteValue );
 
-                if ( buffer.Count == bytesCount )
+                if ( buffer.Count == countDataToProcessed )
                 {
                     return UncoverState.Completed;
                 }
@@ -86,8 +118,8 @@ namespace Steganography
 
         private void calculateBytesCount( byte componentRGB )
         {
-            bytesCount |= ( componentRGB & constValues.MaskOne );
-            bytesCount <<= 1;
+            countDataToProcessed |= ( componentRGB & constValues.MaskOne );
+            countDataToProcessed <<= 1;
         }
 
         /**************************************************************************************/
@@ -95,7 +127,7 @@ namespace Steganography
 
         private CoveringConst constValues;
         private BitIterator bitIterator;
-        private int bytesCount;
+        private int countDataToProcessed;
         private byte byteValue;
 
         private enum UncoverState { Completed, Uncompleted };
