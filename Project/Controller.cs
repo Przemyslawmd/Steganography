@@ -56,7 +56,11 @@ namespace Steganography
 
             if ( compression )
             {
-                data = new Decompression().Decompress( data );
+                data = new Decompression().Decompress( data, ref code );
+                if ( data == null )
+                {
+                    return null;
+                }
             }
 
             if ( Settings.Encryption )

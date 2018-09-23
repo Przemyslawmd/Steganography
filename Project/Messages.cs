@@ -15,6 +15,7 @@ namespace Steganography
             ERROR_DECOMPRESSION,
             TOO_MANY_DATA,
             TOO_LESS_WIDTH,
+            IMPROPER_DATA_IN_PICTURE
         };
 
         public Messages()
@@ -28,6 +29,7 @@ namespace Steganography
             messages.Add( MessageCode.ERROR_DECOMPRESSION, "An error while data decompression." );
             messages.Add( MessageCode.TOO_MANY_DATA, "Too many data to be hidden into a loaded graphic." );
             messages.Add( MessageCode.TOO_LESS_WIDTH, "Width of graphic must contains at least seven pixels.");
+            messages.Add( MessageCode.IMPROPER_DATA_IN_PICTURE, "No hidden data in a picture");
         }
 
         public String GetMessageText( MessageCode code )

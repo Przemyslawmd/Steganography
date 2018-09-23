@@ -1,16 +1,26 @@
 ﻿
 using System.Collections.Generic;
+using Steganography;
 
 namespace SteganographyCompression
 {
     class Decompression
     {
-        public List< byte > Decompress( List< byte > source )
+        public List< byte > Decompress( List< byte > source, ref Messages.MessageCode code )
         {
             IEnumerator< byte > iter = source.GetEnumerator();
-            Dictionary< byte, List< bool >> codesDictionary = GetCodesDictionaryFromStream( iter );
-            int dataSizeBeforeCompression = GetIntegerFromStream( iter );
+            Dictionary< byte, List< bool >> codesDictionary;
+            try
+            {
+                codesDictionary = GetCodesDictionaryFromStream( iter );
+            }
+            catch ( System.ArgumentException )
+            {
+                code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
+                return null;
+            }
 
+            int dataSizeBeforeCompression = GetIntegerFromStream( iter );
             Node root = new HuffmanTree().BuildTreeDecompression( codesDictionary );
             return Decode( iter, root, dataSizeBeforeCompression );
         }

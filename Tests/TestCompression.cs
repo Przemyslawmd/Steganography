@@ -22,7 +22,7 @@ namespace Tests
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
             
-            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed );
+            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref code );
             CollectionAssert.AreEqual( dataToCompress, dataDecompressed );
         }
 
@@ -138,5 +138,6 @@ namespace Tests
         /**************************************************************************************/
 
         static List< NodeCompress > nodes;
+        static Messages.MessageCode code = Messages.MessageCode.OK;
     }
 }

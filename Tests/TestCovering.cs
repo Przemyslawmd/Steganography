@@ -106,7 +106,7 @@ namespace Tests
             List< byte > compressedData = new Compression().Compress( longData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
-            List< byte > decompressedData = new Decompression().Decompress( uncoveredData );
+            List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
 
             CollectionAssert.AreEqual( decompressedData, referenceLongData );
         }
@@ -141,7 +141,7 @@ namespace Tests
             List< byte > compressedData = new Compression().Compress( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, out compression );
-            List< byte > decompressedData = new Decompression().Decompress( uncoveredData ); 
+            List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
             List< byte > decryptedData = new Decryption().Decrypt( decompressedData, password );
 
             CollectionAssert.AreEqual( decryptedData, referenceLongData );
@@ -156,6 +156,7 @@ namespace Tests
         static List< byte > referenceShortData;
         static List< byte > referenceLongData;
         static string password = "de3@JH^@";
+        static Messages.MessageCode code = Messages.MessageCode.OK;
 
         Bitmap emptyBitmap;
         Bitmap colorBitmap;
