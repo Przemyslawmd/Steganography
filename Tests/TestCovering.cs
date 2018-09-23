@@ -46,22 +46,22 @@ namespace Tests
             new Covering().CoverData( emptyBitmap, shortData, false );
             
             // Test size of data in first six pixels
-            Assert.AreEqual( emptyBitmap.GetPixel( 0, 0 ).R % 2, 0 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 0, 0 ).G % 2, 0 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 4, 0 ).G % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 5, 0 ).G % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 5, 0 ).B % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).R % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).G % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 4, 1 ).G % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 5, 1 ).G % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 5, 1 ).B % 2, 0 );
 
             // Test compression flag in a seventh pixel
-            Assert.AreEqual( emptyBitmap.GetPixel( 6, 0 ).R % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 6, 1 ).R % 2, 0 );
 
             // Test hidden data
-            Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).B % 2, 0 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 1, 1 ).R % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 9, 2 ).R % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 9, 2 ).B % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 2, 3 ).B % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 3, 3 ).G % 2, 0 );            
+            Assert.AreEqual( emptyBitmap.GetPixel( 0, 2 ).B % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 1, 2 ).R % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 9, 3 ).R % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 9, 3 ).B % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 2, 4 ).B % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 3, 4 ).G % 2, 0 );
         }
 
         /**************************************************************************************/

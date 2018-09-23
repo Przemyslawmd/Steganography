@@ -14,7 +14,7 @@ namespace Steganography
 
             for ( int x = 0; x < constValues.DataSizePixel; x++ )
             {
-                color = Image.GetPixel( x, 0 );
+                color = Image.GetPixel( x, constValues.SecondPictureRow );
                 calculateBytesCount( color.R );
                 calculateBytesCount( color.G );
                 calculateBytesCount( color.B );
@@ -23,9 +23,9 @@ namespace Steganography
             bytesCount >>= 1;
 
             List< byte > buffer = new List< byte >( bytesCount );
-            CompressFlag = (( Image.GetPixel( constValues.CompressPixel, 0 ).R % 2 ) == 1 ) ? true : false;                      
+            CompressFlag = (( Image.GetPixel( constValues.CompressPixel, constValues.SecondPictureRow ).R % 2 ) == 1 ) ? true : false;
 
-            for ( int y = 1; y < Image.Height; y++ )
+            for ( int y = 2; y < Image.Height; y++ )
             {
                 for ( int x = 0; x < Image.Width; x++ )
                 {
