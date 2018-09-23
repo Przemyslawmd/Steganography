@@ -12,27 +12,8 @@ namespace Steganography
             bitIterator = new BitIterator( 0 );
             constValues = new CoveringConst();
 
-            List< byte > buffer = new List< byte >( 2 );
             countDataToProcessed = 2;
-            for ( int x = 0; x < constValues.DataSizePixel; x++ )
-            {
-                color = Image.GetPixel( x, constValues.FirstRow );
-
-                if ( UncoverDataFromPixel( color.R, buffer ) == UncoverState.Completed )
-                {
-                        break;
-                }
-
-                if ( UncoverDataFromPixel( color.G, buffer ) == UncoverState.Completed )
-                {
-                        break;
-                }
-
-                if ( UncoverDataFromPixel( color.B, buffer ) == UncoverState.Completed )
-                {
-                        break;
-                }
-            }
+            List< byte > buffer = IteratePictureAndUncoverData( Image, 0, constValues.DataSizePixel, 0, 1 );
 
             if ( buffer[0] != constValues.CoverMark[1] && buffer[1] != constValues.CoverMark[0] )
             {
@@ -53,15 +34,24 @@ namespace Steganography
             }
 
             countDataToProcessed >>= 1;
-
-            buffer = new List< byte >( countDataToProcessed );
             CompressFlag = (( Image.GetPixel( constValues.CompressPixel, constValues.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
-            for ( int y = 2; y < Image.Height; y++ )
+            return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private List< byte > IteratePictureAndUncoverData( Bitmap image, int startX, int stopX, int startY, int stopY )
+        {
+            List< byte > buffer = new List< byte >( countDataToProcessed );
+            Color color;
+
+            for ( int y = startY; y < stopY; y++ )
             {
-                for ( int x = 0; x < Image.Width; x++ )
+                for ( int x = startX; x < stopX; x++ )
                 {
-                    color = Image.GetPixel( x, y );
+                    color = image.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, buffer ) == UncoverState.Completed )
                     {
@@ -81,8 +71,8 @@ namespace Steganography
             }
 
             return buffer;
-        }        
-        
+        }
+
         /**************************************************************************************/
         /**************************************************************************************/
 
