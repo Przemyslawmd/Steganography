@@ -19,9 +19,14 @@ namespace Steganography
             IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, 0, 1 );
 
             // Save data size to be covered                                                    
-            dataToBeCovered = new Stack< byte >( dataToCover );
-            bitIterator = new BitIterator( 17 );
+            /*
+            dataToBeCovered = CreateByteStackFromNumber( dataToCover.Count );
+            bitIterator.Index = -1;
+            IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, constValues.SecondRow, 2 );
+            */
 
+            
+            bitIterator = new BitIterator( 23 );
             for ( int x = 0; x < constValues.DataSizePixel  ; x++ )
             {	
                 color = Image.GetPixel( x, constValues.SecondRow );
@@ -29,12 +34,14 @@ namespace Steganography
                 green = AdjustRGBComponent( color.G, dataToCover.Count );
                 blue = AdjustRGBComponent( color.B, dataToCover.Count );        
                 Image.SetPixel( x, 1, Color.FromArgb( red, green, blue ) );
-            }            
+            } 
+            
 
-            color = Image.GetPixel( constValues.CompressPixel, constValues.SecondRow );
+            color = Image.GetPixel( constValues.NumberCompressPixel, constValues.SecondRow );
             red = ( isCompress ) ? ( color.R | constValues.MaskOne ) : ( color.R & MaskZero );
-            Image.SetPixel( constValues.CompressPixel, constValues.SecondRow, Color.FromArgb( red, color.G, color.B ));
+            Image.SetPixel( constValues.NumberCompressPixel, constValues.SecondRow, Color.FromArgb( red, color.G, color.B ));
 
+            dataToBeCovered = new Stack< byte >( dataToCover );
             bitIterator.Index = -1;
             IteratePictureAndCoverData( Image, 0, Image.Width, 2, Image.Height );
         }
@@ -111,6 +118,19 @@ namespace Steganography
             return componentRGB | constValues.MaskOne;
         }
 
+        
+        private Stack< byte > CreateByteStackFromNumber( int number )  
+        {
+            Stack< byte > stack = new Stack< byte >();
+
+            for ( int i = 0; i < 4; i++ )
+            {
+                stack.Push( (byte) ( number >> ( i * 8 )));
+            }
+
+            return stack;
+        }
+        
         /**************************************************************************************/
         /**************************************************************************************/
 

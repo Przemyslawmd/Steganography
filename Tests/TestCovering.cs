@@ -22,6 +22,7 @@ namespace Tests
             filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
             referenceLongData = new List< byte >( File.ReadAllBytes( filePath ) );
             referenceShortData = new List< byte >( Encoding.Unicode.GetBytes( "This text is to be hidden" ) );
+            int a = 4;
         }
 
         /**************************************************************************************/
@@ -45,15 +46,15 @@ namespace Tests
 
             new Covering().CoverData( emptyBitmap, shortData, false );
             
-            // Test size of data in first six pixels
+            // Test size of data covever in first eight pixels
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).R % 2, 0 );
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).G % 2, 0 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 4, 1 ).G % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 5, 1 ).G % 2, 1 );
-            Assert.AreEqual( emptyBitmap.GetPixel( 5, 1 ).B % 2, 0 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 6, 1 ).G % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 7, 1 ).G % 2, 1 );
+            Assert.AreEqual( emptyBitmap.GetPixel( 7, 1 ).B % 2, 0 );
 
-            // Test compression flag in a seventh pixel
-            Assert.AreEqual( emptyBitmap.GetPixel( 6, 1 ).R % 2, 0 );
+            // Test compression flag in a nineth pixel
+            Assert.AreEqual( emptyBitmap.GetPixel( 8, 1 ).R % 2, 0 );
 
             // Test hidden data
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 2 ).B % 2, 0 );

@@ -10,12 +10,12 @@ namespace Steganography
         {
             Color color;
             bitIterator = new BitIterator( 0 );
-            constValues = new CoveringConst();
+            constData = new CoveringConst();
 
             countDataToProcessed = 2;
-            List< byte > buffer = IteratePictureAndUncoverData( Image, 0, constValues.DataSizePixel, 0, 1 );
+            List< byte > buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 0, 1 );
 
-            if ( buffer[0] != constValues.CoverMark[1] && buffer[1] != constValues.CoverMark[0] )
+            if ( buffer[0] != constData.CoverMark[1] && buffer[1] != constData.CoverMark[0] )
             {
                 CompressFlag = false;
                 code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
@@ -25,16 +25,16 @@ namespace Steganography
             byteValue = 0;
             bitIterator = new BitIterator( 0 );
             countDataToProcessed = 0;
-            for ( int x = 0; x < constValues.DataSizePixel; x++ )
+            for ( int x = 0; x < constData.DataSizePixel; x++ )
             {
-                color = Image.GetPixel( x, constValues.SecondRow );
+                color = Image.GetPixel( x, constData.SecondRow );
                 calculateBytesCount( color.R );
                 calculateBytesCount( color.G );
                 calculateBytesCount( color.B );
             }
 
             countDataToProcessed >>= 1;
-            CompressFlag = (( Image.GetPixel( constValues.CompressPixel, constValues.SecondRow ).R % 2 ) == 1 ) ? true : false;
+            CompressFlag = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
         }
@@ -80,7 +80,7 @@ namespace Steganography
         {
             if (( componentRGB % 2 ) == 1 )
             {
-                byteValue |= constValues.MaskOne;
+                byteValue |= constData.MaskOne;
             }
 
             if ( ++bitIterator.Index > bitIterator.LastIndex )
@@ -108,14 +108,14 @@ namespace Steganography
 
         private void calculateBytesCount( byte componentRGB )
         {
-            countDataToProcessed |= ( componentRGB & constValues.MaskOne );
+            countDataToProcessed |= ( componentRGB & constData.MaskOne );
             countDataToProcessed <<= 1;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private CoveringConst constValues;
+        private CoveringConst constData;
         private BitIterator bitIterator;
         private int countDataToProcessed;
         private byte byteValue;
