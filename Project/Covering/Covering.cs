@@ -7,41 +7,26 @@ namespace Steganography
 {     
     class Covering
     {        
-        public void CoverData( Bitmap Image, List< byte > dataToCover, Boolean isCompress ) 
+        public void CoverData( Bitmap Image, List< byte > inputStream, Boolean isCompress ) 
         {
-            Color color;
-            int red, green, blue;
-            dataToCover.Reverse();
+            inputStream.Reverse();
             constValues = new CoveringConst();
 
             bitIterator = new BitIterator( -1 );
-            dataToBeCovered = new Stack< byte >(  constValues.CoverMark );
+            bytesToCover = new Stack< byte >(  constValues.CoverMark );
             IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, 0, 1 );
 
-            // Save data size to be covered                                                    
-            /*
-            dataToBeCovered = CreateByteStackFromNumber( dataToCover.Count );
+            bytesToCover = CreateByteStackFromNumber( inputStream.Count );
+            // Three bytes are intented foran  input stream size, therefore last byte is unnecessary
+            bytesToCover.Pop();
             bitIterator.Index = -1;
             IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, constValues.SecondRow, 2 );
-            */
 
-            
-            bitIterator = new BitIterator( 23 );
-            for ( int x = 0; x < constValues.DataSizePixel  ; x++ )
-            {	
-                color = Image.GetPixel( x, constValues.SecondRow );
-                red = AdjustRGBComponent( color.R, dataToCover.Count );
-                green = AdjustRGBComponent( color.G, dataToCover.Count );
-                blue = AdjustRGBComponent( color.B, dataToCover.Count );        
-                Image.SetPixel( x, 1, Color.FromArgb( red, green, blue ) );
-            } 
-            
-
-            color = Image.GetPixel( constValues.NumberCompressPixel, constValues.SecondRow );
-            red = ( isCompress ) ? ( color.R | constValues.MaskOne ) : ( color.R & MaskZero );
+            Color color = Image.GetPixel( constValues.NumberCompressPixel, constValues.SecondRow );
+            int red = ( isCompress ) ? ( color.R | constValues.MaskOne ) : ( color.R & MaskZero );
             Image.SetPixel( constValues.NumberCompressPixel, constValues.SecondRow, Color.FromArgb( red, color.G, color.B ));
 
-            dataToBeCovered = new Stack< byte >( dataToCover );
+            bytesToCover = new Stack< byte >( inputStream );
             bitIterator.Index = -1;
             IteratePictureAndCoverData( Image, 0, Image.Width, 2, Image.Height );
         }
@@ -94,12 +79,12 @@ namespace Steganography
         {
             if ( bitIterator.Index < 0 )
             {
-                if ( dataToBeCovered.Count == 0 )
+                if ( bytesToCover.Count == 0 )
                 {
                     return true;
                 }
 
-                currentProcessedByte = dataToBeCovered.Pop();
+                currentProcessedByte = bytesToCover.Pop();
                 bitIterator.SetLastIndex();
             }
             return false;
@@ -134,7 +119,7 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Stack< byte > dataToBeCovered;
+        private Stack< byte > bytesToCover;
         private const byte MaskZero = 0xFE;
         private CoveringConst constValues;
         private BitIterator bitIterator;
