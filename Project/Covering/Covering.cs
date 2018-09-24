@@ -10,24 +10,24 @@ namespace Steganography
         public void CoverData( Bitmap Image, List< byte > inputStream, Boolean isCompress ) 
         {
             inputStream.Reverse();
-            constValues = new CoveringConst();
+            constData = new CoveringConst();
+            bitIterator = new BitIterator();
 
-            bitIterator = new BitIterator( -1 );
-            bytesToCover = new Stack< byte >(  constValues.CoverMark );
-            IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, 0, 1 );
+            bytesToCover = new Stack< byte >(  constData.CoverMark );
+            IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, 0, 1 );
 
             bytesToCover = CreateByteStackFromNumber( inputStream.Count );
             // Three bytes are intented foran  input stream size, therefore last byte is unnecessary
             bytesToCover.Pop();
-            bitIterator.Index = -1;
-            IteratePictureAndCoverData( Image, 0, constValues.DataSizePixel, constValues.SecondRow, 2 );
+            bitIterator.Reset();
+            IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, constData.SecondRow, 2 );
 
-            Color color = Image.GetPixel( constValues.NumberCompressPixel, constValues.SecondRow );
-            int red = ( isCompress ) ? ( color.R | constValues.MaskOne ) : ( color.R & MaskZero );
-            Image.SetPixel( constValues.NumberCompressPixel, constValues.SecondRow, Color.FromArgb( red, color.G, color.B ));
+            Color color = Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow );
+            int red = ( isCompress ) ? ( color.R | constData.MaskOne ) : ( color.R & MaskZero );
+            Image.SetPixel( constData.NumberCompressPixel, constData.SecondRow, Color.FromArgb( red, color.G, color.B ));
 
             bytesToCover = new Stack< byte >( inputStream );
-            bitIterator.Index = -1;
+            bitIterator.Reset();
             IteratePictureAndCoverData( Image, 0, Image.Width, 2, Image.Height );
         }
         
@@ -100,9 +100,11 @@ namespace Steganography
                 return componentRGB & MaskZero;
             }
             
-            return componentRGB | constValues.MaskOne;
+            return componentRGB | constData.MaskOne;
         }
 
+        /**************************************************************************************/
+        /**************************************************************************************/
         
         private Stack< byte > CreateByteStackFromNumber( int number )  
         {
@@ -121,7 +123,7 @@ namespace Steganography
 
         private Stack< byte > bytesToCover;
         private const byte MaskZero = 0xFE;
-        private CoveringConst constValues;
+        private CoveringConst constData;
         private BitIterator bitIterator;
         private byte currentProcessedByte;
     }
