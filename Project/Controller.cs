@@ -51,8 +51,8 @@ namespace Steganography
 
         public static List< byte > UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
         {
-            bool compression;
-            List< byte > data = new Uncovering().UncoverData( bitmap, out compression, ref code );
+            bool compression = false;
+            List< byte > data = new Uncovering().UncoverData( bitmap, ref compression, ref code );
 
             if ( data == null )
             {

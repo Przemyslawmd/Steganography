@@ -6,7 +6,7 @@ namespace Steganography
 {
     class Uncovering
     {        
-        public List< byte > UncoverData( Bitmap Image, out bool CompressFlag, ref Messages.MessageCode code )
+        public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Messages.MessageCode code )
         {
             Color color;
             bitIterator = new BitIterator( 0 );
@@ -17,7 +17,6 @@ namespace Steganography
 
             if ( buffer[0] != constData.CoverMark[1] && buffer[1] != constData.CoverMark[0] )
             {
-                CompressFlag = false;
                 code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
                 return null;
             }
@@ -25,6 +24,7 @@ namespace Steganography
             byteValue = 0;
             bitIterator = new BitIterator( 0 );
             countDataToProcessed = 0;
+
             for ( int x = 0; x < constData.DataSizePixel; x++ )
             {
                 color = Image.GetPixel( x, constData.SecondRow );
@@ -34,7 +34,7 @@ namespace Steganography
             }
 
             countDataToProcessed >>= 1;
-            CompressFlag = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
+            compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
         }
