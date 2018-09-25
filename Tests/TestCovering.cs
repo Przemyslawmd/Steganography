@@ -22,7 +22,6 @@ namespace Tests
             filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
             referenceLongData = new List< byte >( File.ReadAllBytes( filePath ) );
             referenceShortData = new List< byte >( Encoding.Unicode.GetBytes( "This text is to be hidden" ) );
-            int a = 4;
         }
 
         /**************************************************************************************/

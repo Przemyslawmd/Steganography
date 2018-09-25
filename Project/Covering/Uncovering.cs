@@ -8,7 +8,6 @@ namespace Steganography
     {        
         public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Messages.MessageCode code )
         {
-            Color color;
             bitIterator = new BitIterator( 0 );
             constData = new CoveringConst();
 
