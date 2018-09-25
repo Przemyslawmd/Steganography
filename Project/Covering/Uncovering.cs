@@ -25,15 +25,9 @@ namespace Steganography
             bitIterator = new BitIterator( 0 );
             countDataToProcessed = 0;
 
-            for ( int x = 0; x < constData.DataSizePixel; x++ )
-            {
-                color = Image.GetPixel( x, constData.SecondRow );
-                calculateBytesCount( color.R );
-                calculateBytesCount( color.G );
-                calculateBytesCount( color.B );
-            }
+            buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );
+            countDataToProcessed = CreateIntegerFromByteList( buffer );
 
-            countDataToProcessed >>= 1;
             compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
@@ -105,13 +99,19 @@ namespace Steganography
 
         /**************************************************************************************/
         /**************************************************************************************/
-
-        private void calculateBytesCount( byte componentRGB )
+        
+        private int CreateIntegerFromByteList( List< byte > byteList )  
         {
-            countDataToProcessed |= ( componentRGB & constData.MaskOne );
-            countDataToProcessed <<= 1;
+            int number = 0;
+            
+            foreach ( byte byteValue in byteList )
+            {
+                number <<= 8;
+                number += byteValue;
+            }
+            return number;
         }
-
+        
         /**************************************************************************************/
         /**************************************************************************************/
 
