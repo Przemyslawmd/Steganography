@@ -5,34 +5,22 @@ namespace Steganography
     {
         public BitIterator()
         {
-            Index = InitialIndex;
-        }
-
-        public BitIterator( int index )
-        {
-            Index = index;
+            Index = 0;
         }
 
         public int Index { get; set; }
 
-
-        public void SetLastIndex()
+        public int DecrementAndGetIndex()
         {
-            Index = LastIndex;
-        }
-
-
-        public int GetAndDecrementIndex()
-        {
-            return Index--;
+            Index = ( Index == 0 ) ? LastIndex : Index - 1;
+            return Index;
         }
 
         public void Reset()
         {
-            Index = InitialIndex;
+            Index = 0;
         }
 
-        private readonly int InitialIndex = -1;
         public readonly int LastIndex = 7;
     }
 }

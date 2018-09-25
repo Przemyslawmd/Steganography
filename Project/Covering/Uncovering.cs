@@ -8,7 +8,7 @@ namespace Steganography
     {        
         public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Messages.MessageCode code )
         {
-            bitIterator = new BitIterator( 0 );
+            bitIterator = new BitIterator();
             constData = new CoveringConst();
 
             countDataToProcessed = 2;
@@ -21,7 +21,7 @@ namespace Steganography
             }
 
             byteValue = 0;
-            bitIterator = new BitIterator( 0 );
+            bitIterator.Reset();
             countDataToProcessed = 0;
 
             buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );

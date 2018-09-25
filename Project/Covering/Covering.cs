@@ -77,7 +77,7 @@ namespace Steganography
 
         private bool AllBytesCompleted()
         {
-            if ( bitIterator.Index < 0 )
+            if ( bitIterator.Index == 0 )
             {
                 if ( bytesToCover.Count == 0 )
                 {
@@ -85,7 +85,6 @@ namespace Steganography
                 }
 
                 currentProcessedByte = bytesToCover.Pop();
-                bitIterator.SetLastIndex();
             }
             return false;
         }
@@ -95,7 +94,7 @@ namespace Steganography
 
         private int AdjustRGBComponent( byte componentRGB, int value )
         {
-            if ((( value >> bitIterator.GetAndDecrementIndex() ) % 2 ) == 0 )
+            if ((( value >> bitIterator.DecrementAndGetIndex() ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
