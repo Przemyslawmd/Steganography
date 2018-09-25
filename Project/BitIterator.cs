@@ -8,7 +8,7 @@ namespace Steganography
             Index = 0;
         }
 
-        public int Index { get; set; }
+        public int Index { get; private set; }
 
         public int DecrementAndGetIndex()
         {
@@ -16,12 +16,17 @@ namespace Steganography
             return Index;
         }
 
+        public void IncrementIndex()
+        {
+            Index = ( Index == LastIndex ) ? 0 : Index + 1;
+        }
+
         public void Reset()
         {
             Index = 0;
         }
 
-        public readonly int LastIndex = 7;
+        private readonly int LastIndex = 7;
     }
 }
 

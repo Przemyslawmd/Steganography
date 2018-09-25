@@ -76,7 +76,9 @@ namespace Steganography
                 byteValue |= constData.MaskOne;
             }
 
-            if ( ++bitIterator.Index > bitIterator.LastIndex )
+            bitIterator.IncrementIndex();
+
+            if ( bitIterator.Index == 0 )
             {
                 buffer.Add( byteValue );
 
@@ -86,7 +88,6 @@ namespace Steganography
                 }
 
                 byteValue = 0;
-                bitIterator.Index = 0;
             }
             else
             {
