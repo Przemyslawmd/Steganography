@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BitIterator.cs" />
+    <Compile Include="Utils\BitIterator.cs" />
     <Compile Include="Compression\Compression.cs" />
     <Compile Include="Compression\Decompression.cs" />
     <Compile Include="Compression\HuffmanCodesGenerator.cs" />
