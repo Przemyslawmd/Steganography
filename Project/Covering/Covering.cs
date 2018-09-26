@@ -16,8 +16,7 @@ namespace Steganography
             bytesToCover = new Stack< byte >(  constData.CoverMark );
             IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, 0, 1 );
 
-            bytesToCover = CreateByteStackFromNumber( inputStream.Count );
-            // Three bytes are intented foran  input stream size, therefore last byte is unnecessary
+            bytesToCover = new Containers().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
             IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, constData.SecondRow, 2 );
@@ -102,21 +101,6 @@ namespace Steganography
             return componentRGB | constData.MaskOne;
         }
 
-        /**************************************************************************************/
-        /**************************************************************************************/
-        
-        private Stack< byte > CreateByteStackFromNumber( int number )  
-        {
-            Stack< byte > stack = new Stack< byte >();
-
-            for ( int i = 0; i < 4; i++ )
-            {
-                stack.Push( (byte) ( number >> ( i * 8 )));
-            }
-
-            return stack;
-        }
-        
         /**************************************************************************************/
         /**************************************************************************************/
 

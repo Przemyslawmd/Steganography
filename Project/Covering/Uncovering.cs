@@ -25,7 +25,7 @@ namespace Steganography
             countDataToProcessed = 0;
 
             buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );
-            countDataToProcessed = CreateIntegerFromByteList( buffer );
+            countDataToProcessed = new Containers().CreateIntegerFromByteList( buffer );
 
             compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
@@ -97,21 +97,6 @@ namespace Steganography
             return UncoverState.Uncompleted;
         }
 
-        /**************************************************************************************/
-        /**************************************************************************************/
-        
-        private int CreateIntegerFromByteList( List< byte > byteList )  
-        {
-            int number = 0;
-            
-            foreach ( byte byteValue in byteList )
-            {
-                number <<= 8;
-                number += byteValue;
-            }
-            return number;
-        }
-        
         /**************************************************************************************/
         /**************************************************************************************/
 
