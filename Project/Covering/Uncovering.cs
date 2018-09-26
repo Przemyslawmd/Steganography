@@ -11,10 +11,7 @@ namespace Steganography
             bitIterator = new BitIterator();
             constData = new CoveringConst();
 
-            countDataToProcessed = 2;
-            List< byte > buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 0, 1 );
-
-            if ( buffer[0] != constData.CoverMark[1] && buffer[1] != constData.CoverMark[0] )
+            if ( CheckCoveringMark( Image ) == false )
             {
                 code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
                 return null;
@@ -24,7 +21,7 @@ namespace Steganography
             bitIterator.Reset();
             countDataToProcessed = 0;
 
-            buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );
+            List< byte >buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );
             countDataToProcessed = new Containers().CreateIntegerFromByteList( buffer );
 
             compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
@@ -95,6 +92,17 @@ namespace Steganography
             }
 
             return UncoverState.Uncompleted;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private bool CheckCoveringMark( Bitmap bitmap )
+        {
+            countDataToProcessed = 2;
+            List< byte > buffer = IteratePictureAndUncoverData( bitmap, 0, constData.DataSizePixel, 0, 1 );
+
+            return buffer[0] == constData.CoverMark[1] && buffer[1] == constData.CoverMark[0];
         }
 
         /**************************************************************************************/
