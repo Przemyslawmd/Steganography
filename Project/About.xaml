@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Version"/>
-        <Label Grid.Column="1" Grid.Row="0" Content="1.4"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="1.5"/>
         
         <Label Grid.Column="0" Grid.Row="1" Content="Author"/>
         <Label Grid.Column="1" Grid.Row="1" Content="Przemyslaw Madej, Warsaw 2018"/>
