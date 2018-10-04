@@ -26,6 +26,11 @@ namespace Steganography
             Index = 0;
         }
 
+        public bool IsInitialIndex()
+        {
+            return Index == 0;
+        }
+
         private readonly int LastIndex = 7;
     }
 }

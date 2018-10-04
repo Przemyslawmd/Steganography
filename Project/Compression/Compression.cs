@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using Steganography;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
@@ -27,34 +28,34 @@ namespace SteganographyCompression
 
         private List< byte > StartCompress( List< byte > source )
         {
-            int bitShift = 0;
             byte temp = 0;
-            List<byte> compressedData = new List< byte >();
-            
+            bitIterator = new BitIterator();
+            List< byte > compressedData = new List< byte >();
+
             foreach ( byte value in source )
             {
                 foreach ( bool token in codes[value] )
                 {
-                    if ( bitShift == BitsInByte )
-                    {
-                        compressedData.Add( temp );
-                        temp = 0;
-                        bitShift = 0;
-                    }
-                    
                     temp <<= 1;
                     if ( token )
                     {
                         temp += 1;
                     }
-                    bitShift++;
+
+                    bitIterator.IncrementIndex();
+
+                    if ( bitIterator.IsInitialIndex() )
+                    {
+                        compressedData.Add( temp );
+                        temp = 0;
+                    }
                 }
             }     
             
-            // Some data remains, there is a need to add an alignment
-            if ( bitShift != 0 )           
+            // Some data remains, add an alignment
+            if ( bitIterator.IsInitialIndex() == false )
             {
-                temp <<= ( BitsInByte - bitShift );
+                temp <<= ( BitsInByte - bitIterator.Index );
                 compressedData.Add( temp );
             }
             return compressedData;
@@ -127,7 +128,9 @@ namespace SteganographyCompression
         /**************************************************************************************/
 
         private Dictionary< byte, List< bool >> codes;
-        readonly int BitsInByte = 8;
+        private BitIterator bitIterator;
+        private readonly int BitsInByte = 8;
+
     }
 }
 
