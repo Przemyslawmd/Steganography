@@ -64,24 +64,24 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
                     
-        private List<byte> CreateCodesData()
+        private List< byte > CreateCodesData()
         {
-            List<byte> codesStream = new List<byte>();
+            List< byte > codesStream = new List< byte >();
 
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
                 codesStream.Add( code.Key );
-                codesStream.Add( (byte)code.Value.Count );
+                codesStream.Add( (byte) code.Value.Count );
             }
 
             byte temp = 0;
-            int shift = 0;
+            bitIterator = new BitIterator();
 
             foreach ( KeyValuePair<byte, List< bool >> code in codes )
             {
                 foreach ( bool token in code.Value )
                 {
-                    if ( ++shift > 1 )
+                    if ( bitIterator.Index > 0 )
                     {
                         temp <<= 1;
                     }
@@ -91,18 +91,19 @@ namespace SteganographyCompression
                         temp += 1;
                     }
 
-                    if ( shift == BitsInByte )
+                    bitIterator.IncrementIndex();
+
+                    if ( bitIterator.IsInitialIndex() )
                     {
                         codesStream.Add( temp );
-                        shift = 0;
                         temp = 0;
                     }
                 }
             }
 
-            if ( shift != 0 )
+            if ( bitIterator.IsInitialIndex() == false )
             {
-                temp <<= ( BitsInByte - shift );
+                temp <<= ( BitsInByte - bitIterator.Index );
                 codesStream.Add( temp );
             }
 
@@ -110,16 +111,8 @@ namespace SteganographyCompression
             int codesStreamSize = codesStream.Count + 5;
 
             codesStream.InsertRange( 0, BitConverter.GetBytes( codesStreamSize ));
-
-            // To store count of codes inside one byte, 0 value indicates that there are 256 codes
-            if ( codes.Count == 256 )
-            {
-                codesStream.Insert( 4, 0 );
-            }
-            else
-            {
-                codesStream.Insert( 4, (byte) codes.Count );
-            }
+            int codesCount = ( codes.Count == 256 ) ? 0 : codes.Count;
+            codesStream.Insert( 4, (byte) codesCount );
 
             return codesStream;
         }
