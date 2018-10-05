@@ -9,6 +9,8 @@ namespace SteganographyCompression
         public List< byte > Decompress( List< byte > source, ref Messages.MessageCode code )
         {
             IEnumerator< byte > iter = source.GetEnumerator();
+            int dataSizeBeforeCompression = GetIntegerFromStream( iter );
+
             Dictionary< byte, List< bool >> codesDictionary;
             try
             {
@@ -20,7 +22,6 @@ namespace SteganographyCompression
                 return null;
             }
 
-            int dataSizeBeforeCompression = GetIntegerFromStream( iter );
             Node root = new HuffmanTree().BuildTreeDecompression( codesDictionary );
             return Decode( iter, root, dataSizeBeforeCompression );
         }
