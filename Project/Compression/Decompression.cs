@@ -46,11 +46,11 @@ namespace SteganographyCompression
 
             Dictionary< byte, List< bool >> codesDictionary = new Dictionary< byte, List< bool >>();
             List< bool > code = new List< bool >();
-            int bitIndex = 1;
+            bitIterator = new BitIterator();
 
             foreach ( KeyValuePair< byte, byte > codeSymbol in codesList )
             {
-                GetCodeFromStream( iter, code, codeSymbol.Value, ref bitIndex );
+                GetCodeFromStream( iter, code, codeSymbol.Value );
                 codesDictionary.Add( codeSymbol.Key, new List< bool >( code ) );
                 code.Clear();
             }
@@ -61,21 +61,17 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GetCodeFromStream( IEnumerator< byte > iter, List< bool > code, int codeLenght, ref int bitIndex )
+        private void GetCodeFromStream( IEnumerator< byte > iter, List< bool > code, int codeLenght )
         {
             for ( int i = 0; i < codeLenght; i++ )
             {
-                if ( bitIndex == 1 )
+                if ( bitIterator.IsInitialIndex() )
                 {
                     iter.MoveNext();
                 }
 
-                code.Add((( iter.Current >> ( 8 - bitIndex )) % 2 ) != 0 );
-
-                if ( ++bitIndex > 8 )
-                {
-                    bitIndex = 1;
-                }
+                code.Add((( iter.Current >> ( 7 - bitIterator.Index )) % 2 ) != 0 );
+                bitIterator.IncrementIndex();
             }
         }
 
@@ -138,6 +134,11 @@ namespace SteganographyCompression
 
             return decompressedData;
         }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        BitIterator bitIterator;
     }
 }
 
