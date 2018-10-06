@@ -5,14 +5,11 @@ namespace SteganographyEncryption
 {
     class BaseCryptography
     {
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        protected void InputIntoState( Stack<byte> stack, byte[,] state )
+        protected void InputIntoState( Stack< byte > stack, byte[,] state )
         {
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < stateArraySize; i++ )
             {
-                for ( int j = 0; j < 4; j++ )
+                for ( int j = 0; j < stateArraySize; j++ )
                 {
                     state[j, i] = stack.Pop();
                 }
@@ -22,11 +19,11 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        protected void StateIntoOutput( List<byte> output, byte[,] state )
+        protected void StateIntoOutput( List< byte > output, byte[,] state )
         {
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < stateArraySize; i++ )
             {
-                for ( int j = 0; j < 4; j++ )
+                for ( int j = 0; j < stateArraySize; j++ )
                 {
                     output.Add( state[j, i] );
                 }
@@ -38,11 +35,11 @@ namespace SteganographyEncryption
 
         protected void AddRoundKey( byte[,] state, byte[] key )
         {            
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < stateArraySize; i++ )
             {
-                for ( int j = 0; j < 4; j++ )
+                for ( int j = 0; j < stateArraySize; j++ )
                 {
-                    state[i, j] ^= key[i + j * 4];
+                    state[i, j] ^= key[i + j * stateArraySize];
                 }
             }           
         }
@@ -52,28 +49,30 @@ namespace SteganographyEncryption
 
         protected static void GetGeneralSbox( DelegateBox delegateBox, byte[,] state )
         {
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < stateArraySize; i++ )
             {
-                for ( int j = 0; j < 4; j++ )
+                for ( int j = 0; j < stateArraySize; j++ )
                 {
                     state[i, j] = delegateBox.Invoke( state[i, j] );
                 }
             }            
         }
 
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         public static byte GetSbox( byte value )
         {
-            return sbox[value >> 4, value & 0xF];
+            return sbox[value >> stateArraySize, value & 0xF];
         }
 
-
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         public static byte GetInvSbox( byte value )
         {
-            return invsbox[value >> 4, value & 0xF];
+            return invsbox[value >> stateArraySize, value & 0xF];
         }
-
 
         /**************************************************************************************/
         /**************************************************************************************/
@@ -84,14 +83,14 @@ namespace SteganographyEncryption
                         
             while ( b > 0 )
             {
-                if ( (b & 0x01) != 0x00 )
+                if (( b & 0x01 ) != 0x00 )
                 {
                     result ^= a;
                 }
 
-                if ( (a & 0x80) != 0x00 )
+                if (( a & 0x80 ) != 0x00 )
                 {
-                    a = (byte) (a << 1 ^ 0x11b);
+                    a = (byte) ( a << 1 ^ 0x11b );
                 }
                 else
                 {
@@ -148,7 +147,9 @@ namespace SteganographyEncryption
             { 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d }
        };
                 
-        protected const int NumOfRounds = 11;
+        protected readonly int NumOfRounds = 11;
+        protected static int stateArraySize = 4;
         protected delegate byte DelegateBox( byte value );
     }
 }
+
