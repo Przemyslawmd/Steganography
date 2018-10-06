@@ -106,12 +106,9 @@ namespace SteganographyCompression
                 codesStream.Add( temp );
             }
 
-            // Size is being increased with 5 bytes because of two statements below
-            int codesStreamSize = codesStream.Count + 5;
-
-            codesStream.InsertRange( 0, BitConverter.GetBytes( codesStreamSize ));
             int codesCount = ( codes.Count == 256 ) ? 0 : codes.Count;
-            codesStream.Insert( 4, (byte) codesCount );
+            codesStream.Insert( 0, (byte) codesCount );
+            codesStream.InsertRange( 0, BitConverter.GetBytes( codesStream.Count ));
 
             return codesStream;
         }
@@ -122,7 +119,6 @@ namespace SteganographyCompression
         private Dictionary< byte, List< bool >> codes;
         private BitIterator bitIterator;
         private readonly int BitsInByte = 8;
-
     }
 }
 
