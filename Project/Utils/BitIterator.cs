@@ -10,10 +10,9 @@ namespace Steganography
 
         public int Index { get; private set; }
 
-        public int DecrementAndGetIndex()
+        public void DecrementIndex()
         {
             Index = ( Index == 0 ) ? LastIndex : Index - 1;
-            return Index;
         }
 
         public void IncrementIndex()

@@ -93,7 +93,8 @@ namespace Steganography
 
         private int AdjustRGBComponent( byte componentRGB, int value )
         {
-            if ((( value >> bitIterator.DecrementAndGetIndex() ) % 2 ) == 0 )
+            bitIterator.DecrementIndex();
+            if ((( value >> bitIterator.Index ) % 2 ) == 0 )
             {
                 return componentRGB & MaskZero;
             }
