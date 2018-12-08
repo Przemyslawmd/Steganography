@@ -18,3 +18,4 @@ namespace SteganographyCompression
         public NodeCompress Parent { private get; set; }
     }   
 }
+

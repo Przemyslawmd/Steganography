@@ -9,17 +9,17 @@ namespace SteganographyCompression
 {
     class Compression
     {
-        public List< byte > Compress( List<byte> source )
+        public List< byte > Compress( List< byte > source )
         {
-            List< byte > finalStream = new List< byte >( BitConverter.GetBytes( source.Count ));
+            List< byte > resultStream = new List< byte >( BitConverter.GetBytes( source.Count ));
 
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
             codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< byte > compressedData = StartCompress( source );
 
-            finalStream.AddRange( CreateCodesDictionaryStream() );
-            finalStream.AddRange( compressedData );
-            return finalStream;
+            resultStream.AddRange( CreateCodesDictionaryStream() );
+            resultStream.AddRange( compressedData );
+            return resultStream;
         }
 
         /**************************************************************************************/
