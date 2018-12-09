@@ -103,7 +103,7 @@ namespace Tests
             PrepareData();
             bool compression = true;
 
-            List< byte > compressedData = new Compression().Compress( longData );
+            List< byte > compressedData = new Compression().MakeCompressedStream( longData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
             List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
@@ -138,7 +138,7 @@ namespace Tests
             bool compression = true;
 
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
-            List< byte > compressedData = new Compression().Compress( encryptedData );
+            List< byte > compressedData = new Compression().MakeCompressedStream( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
             List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );

@@ -17,7 +17,7 @@ namespace Tests
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
             List< byte > dataToCompress = new List< byte >( File.ReadAllBytes( filePath ) );
-            List< byte > dataCompressed = new Compression().Compress( dataToCompress );
+            List< byte > dataCompressed = new Compression().MakeCompressedStream( dataToCompress );
 
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
@@ -39,7 +39,7 @@ namespace Tests
             PrivateObject objectCompression = new PrivateObject( new Compression() );
             objectCompression.SetField( "codes", codes );
 
-            List< byte > dataCompressed = (List< byte >) objectCompression.Invoke( "StartCompress", dataToCompress );
+            List< byte > dataCompressed = (List< byte >) objectCompression.Invoke( "Compress", dataToCompress );
 
             List< byte > expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED,
                                                           0xDC, 0x5C, 0xD9, 0x65, 0xAB,

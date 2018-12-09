@@ -12,7 +12,7 @@ namespace SteganographyCompression
             List< NodeCompress > nodes = CreateNodes( sourceData );
             nodes = nodes.OrderBy( x => x.Count ).ToList();
             BuildTree( nodes );
-            return nodes[0];
+            return nodes.ElementAt( 0 );
         }
 
         /**************************************************************************************/
@@ -27,8 +27,7 @@ namespace SteganographyCompression
             {
                 node = root;
 
-                // Traverse chars in code in exception of first and last char - each code begins with char '1'
-                foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ) )
+                foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ))
                 {
                     if ( token == false )
                     {
@@ -48,7 +47,6 @@ namespace SteganographyCompression
                     }
                 }
 
-                // Check last char in code - add leaf
                 if ( code.Value.Last() == false )
                 {
                     node.Left = new Node( code.Key );

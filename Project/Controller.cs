@@ -25,7 +25,7 @@ namespace Steganography
             
             if ( Settings.Compression )
             {
-                data = new Compression().Compress( data );
+                data = new Compression().MakeCompressedStream( data );
             }
             
             if ( bitmap.Width < 7 )
