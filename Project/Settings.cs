@@ -10,3 +10,4 @@ namespace Steganography
         public static string Password { get; set; }
     }
 }
+

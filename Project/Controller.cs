@@ -1,7 +1,6 @@
 ﻿
 using SteganographyCompression;
 using SteganographyEncryption;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,6 +10,16 @@ namespace Steganography
     {
         public static Messages.MessageCode CoverData( List< byte > data, Bitmap bitmap )
         {
+            if ( bitmap.Width < 7 )
+            {
+                return Messages.MessageCode.NOT_ENOUGH_BITMAP_WIDTH;
+            }
+
+            if ( Settings.Compression )
+            {
+                data = new Compression().MakeCompressedStream( data );
+            }
+
             if ( Settings.Encryption )
             {
                 string password = Settings.Password;
@@ -22,21 +31,10 @@ namespace Steganography
 
                 data = new Encryption().Encrypt( data, password );
             }
-            
-            if ( Settings.Compression )
-            {
-                data = new Compression().MakeCompressedStream( data );
-            }
-            
-            if ( bitmap.Width < 7 )
-            {
-                return Messages.MessageCode.TOO_LESS_WIDTH;
-            }
 
             int BitsInByte = 8;
 
             // Condition without a first row of bitmap because it's intented for metadata
-
             if ( ( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
             {
                 return Messages.MessageCode.TOO_MANY_DATA;
@@ -59,15 +57,6 @@ namespace Steganography
                 return null;
             }
 
-            if ( compression )
-            {
-                data = new Decompression().Decompress( data, ref code );
-                if ( data == null )
-                {
-                    return null;
-                }
-            }
-
             if ( Settings.Encryption )
             {
                 string password = Settings.Password;
@@ -87,9 +76,13 @@ namespace Steganography
                     code = exc.code;
                     return null;
                 }
-                catch ( Exception )
+            }
+
+            if ( compression )
+            {
+                data = new Decompression().Decompress( data, ref code );
+                if ( data == null )
                 {
-                    code = Messages.MessageCode.ERROR_DECRYPTION;
                     return null;
                 }
             }
