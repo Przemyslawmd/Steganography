@@ -6,7 +6,7 @@ namespace SteganographyEncryption
 {
     class Key
     {
-        public static byte[][] CreateKeys( String password )
+        public byte[][] CreateKeys( String password )
         {
             const int Iterations = 200;
             byte[] Salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
@@ -18,29 +18,23 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
         
-        private static byte[][] ExpandKey( byte[] initialKey )
-        {            
-            Word[] words = new Word[NumOfWords];            
+        private byte[][] ExpandKey( byte[] initialKey )
+        {
+            int numOfAllWords = WordsInKey * NumOfRounds; 
+            Word[] words = new Word[numOfAllWords];            
             Word tempWord;
 
-            // At the beginning keys are calculated as parts of four-bytes words
-
-            // Key for the first round
-            for ( int word = 0; word < 4; word++ )
-            {
-                words[word] = new Word( initialKey[word * 4], initialKey[word * 4 + 1],
-                                        initialKey[word * 4 + 2], initialKey[word * 4 + 3] );
-            }
-
+            createKeysForFirstRound( words, initialKey );
+            
             // Keys for the rest rounds
-            for ( int word = 4; word < NumOfWords; word++ )
+            for ( int word = 4; word < numOfAllWords; word++ )
             {
                 // An action for each part of expanded key to calculate its first word
                 if ( word % 4 == 0 )
                 {
                     tempWord = new Word( words[word - 1] );
-                    CalculateTemporaryWord( word / 4, tempWord );
-                    words[word] = words[word - 4].XorOuter( tempWord );
+                    CalculateTemporaryWord( word / WordsInKey, tempWord );
+                    words[word] = words[word - WordsInKey].XorOuter( tempWord );
                 }
                 else
                 {
@@ -56,17 +50,17 @@ namespace SteganographyEncryption
                 roundKeys[i] = new byte[16];
             }
 
-            for ( int word = 0, j = 0; word < NumOfWords; word++ )
+            for ( int word = 0, j = 0; word < numOfAllWords; word++ )
             {
-                if ( word % 4 == 0 )
+                if ( word % WordsInKey == 0 )
                 {
                     j = 0;
                 }
 
-                roundKeys[word / 4][j++] = words[word].value1;
-                roundKeys[word / 4][j++] = words[word].value2;
-                roundKeys[word / 4][j++] = words[word].value3;
-                roundKeys[word / 4][j++] = words[word].value4;                
+                roundKeys[word / WordsInKey][j++] = words[word].value1;
+                roundKeys[word / WordsInKey][j++] = words[word].value2;
+                roundKeys[word / WordsInKey][j++] = words[word].value3;
+                roundKeys[word / WordsInKey][j++] = words[word].value4;                
             }
 
             return roundKeys;
@@ -75,7 +69,19 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private static void CalculateTemporaryWord( int i, Word word )
+        private void createKeysForFirstRound( Word[] words, byte[] initialKey )
+        {
+            for ( int word = 0; word < 4; word++ )
+            {
+                words[word] = new Word( initialKey[word * WordsInKey], initialKey[word * WordsInKey + 1],
+                                        initialKey[word * WordsInKey + 2], initialKey[word * WordsInKey + 3] );
+            }
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private void CalculateTemporaryWord( int i, Word word )
         {
             word.Rotate();
             word.SubByte();            
@@ -85,14 +91,14 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        static byte[] rcon = new byte[10]
+        private byte[] rcon = new byte[10]
         {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
         };
 
-        static readonly int NumOfRounds = 11;
-        static readonly int NumOfWords = 44;            // Number of key words for all rounds
+
+        private readonly int NumOfRounds = 11;
+        private readonly int WordsInKey = 4;
     }
 }
-
 

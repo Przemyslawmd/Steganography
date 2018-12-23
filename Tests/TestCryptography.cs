@@ -10,9 +10,6 @@ namespace Tests
     [TestClass]
     public class TestsCryptography
     {
-        /**************************************************************************************/
-        /**************************************************************************************/
-
         [TestMethod]
         public void TestAES()
         {
@@ -36,14 +33,14 @@ namespace Tests
         [TestMethod]
         public void TestAESEncryptBlockData()
         {
-            PrivateType key = new PrivateType( typeof( Key ));
+            PrivateObject key = new PrivateObject( new Key() );
             PrivateObject encryption = new PrivateObject( new Encryption() );
                         
 
-            byte[] initialKey = new byte[16] { 0x54, 0x68, 0x61, 0x74,
-                                               0x73, 0x20, 0x6D, 0x79,
-                                               0x20, 0x4B, 0x75, 0x6E,
-                                               0x67, 0x20, 0x46, 0x75 };
+            byte[] initialKey = new byte[16]         { 0x54, 0x68, 0x61, 0x74,
+                                                       0x73, 0x20, 0x6D, 0x79,
+                                                       0x20, 0x4B, 0x75, 0x6E,
+                                                       0x67, 0x20, 0x46, 0x75 };
 
             byte[,] blockToEncrypt = new byte[4, 4] {{ 0x54, 0x4F, 0x4E, 0x20 },
                                                     {  0x77, 0x6E, 0x69, 0x54 },
@@ -57,7 +54,7 @@ namespace Tests
                                                     {  0x5F, 0xF6, 0xB3, 0x3A }};
 
 
-            byte[][] roundKeys = (byte[][]) key.InvokeStatic( "ExpandKey", initialKey );            
+            byte[][] roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );            
             encryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
             CollectionAssert.AreEqual( blockToEncrypt, blockExpected );
                         
@@ -78,7 +75,7 @@ namespace Tests
                                              { 0x84, 0x09, 0x85, 0x0B },
                                              { 0x1D, 0xFB, 0x97, 0x32 }};
                                     
-            roundKeys = (byte[][]) key.InvokeStatic( "ExpandKey", initialKey );
+            roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
             encryption.Invoke( "EncryptBlockData", blockToEncrypt, roundKeys );
             CollectionAssert.AreEqual( blockToEncrypt, blockExpected );
         }
@@ -89,19 +86,19 @@ namespace Tests
         [TestMethod]
         public void TestAESDecryptBlockData()
         {
-            PrivateType key = new PrivateType( typeof( Key ) );
+            PrivateObject key = new PrivateObject( new Key() );
             PrivateObject decryption = new PrivateObject( new Decryption() );
 
 
-            byte[] initialKey = new byte[16]  { 0x54, 0x68, 0x61, 0x74,
-                                                0x73, 0x20, 0x6D, 0x79,
-                                                0x20, 0x4B, 0x75, 0x6E,
-                                                0x67, 0x20, 0x46, 0x75 };
+            byte[] initialKey = new byte[16]         { 0x54, 0x68, 0x61, 0x74,
+                                                       0x73, 0x20, 0x6D, 0x79,
+                                                       0x20, 0x4B, 0x75, 0x6E,
+                                                       0x67, 0x20, 0x46, 0x75 };
 
-            byte[,] blockExpected = new byte[4, 4] {{ 0x54, 0x4F, 0x4E, 0x20 },
-                                                    { 0x77, 0x6E, 0x69, 0x54 },
-                                                    { 0x6F, 0x65, 0x6E, 0x77 },
-                                                    { 0x20, 0x20, 0x65, 0x6F }};
+            byte[,] blockExpected = new byte[4, 4]  {{ 0x54, 0x4F, 0x4E, 0x20 },
+                                                     { 0x77, 0x6E, 0x69, 0x54 },
+                                                     { 0x6F, 0x65, 0x6E, 0x77 },
+                                                     { 0x20, 0x20, 0x65, 0x6F }};
 
 
             byte[,] blockToDecrypt = new byte[4, 4] {{ 0x29, 0x57, 0x40, 0x1A },
@@ -109,15 +106,15 @@ namespace Tests
                                                      { 0x50, 0x20, 0x99, 0xD7 },
                                                      { 0x5F, 0xF6, 0xB3, 0x3A }};
 
-            byte[][] roundKeys = (byte[][])key.InvokeStatic( "ExpandKey", initialKey );
+            byte[][] roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
             decryption.Invoke( "DecryptBlockData", blockToDecrypt, roundKeys );
             CollectionAssert.AreEqual( blockToDecrypt, blockExpected );
                         
 
-            initialKey = new byte[16] { 0x2B, 0x7E, 0x15, 0x16,
-                                        0x28, 0xAE, 0xD2, 0xA6,
-                                        0xAB, 0xF7, 0x15, 0x88,
-                                        0x09, 0xCF, 0x4F, 0x3C };
+            initialKey = new byte[16]        { 0x2B, 0x7E, 0x15, 0x16,
+                                               0x28, 0xAE, 0xD2, 0xA6,
+                                               0xAB, 0xF7, 0x15, 0x88,
+                                               0x09, 0xCF, 0x4F, 0x3C };
 
             blockExpected = new byte[4, 4]  {{ 0x32, 0x88, 0x31, 0xE0 },
                                              { 0x43, 0x5A, 0x31, 0x37 },
@@ -130,42 +127,48 @@ namespace Tests
                                              { 0x84, 0x09, 0x85, 0x0B },
                                              { 0x1D, 0xFB, 0x97, 0x32 }};
 
-            roundKeys = (byte[][]) key.InvokeStatic( "ExpandKey", initialKey );
+            roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
             decryption.Invoke( "DecryptBlockData", blockToDecrypt, roundKeys );
             CollectionAssert.AreEqual( blockToDecrypt, blockExpected );
         }
         
-        /************************************************************************************************************/
-        /* TEST DATA ALIGNMENT **************************************************************************************/
+        /**************************************************************************************/
+        /**************************************************************************************/
 
         [TestMethod]
         public void TestAESDataAlignment()
         {                                
-            PrivateObject obj = new PrivateObject( new Encryption() );
-            List<byte> data = new List<byte>();
+            PrivateObject encryption = new PrivateObject( new Encryption() );
+            List< byte > data = new List<byte>();
 
             for ( int i = 0; i < 5; i++ )
+            {
                 data.Add( 0x00 );
+            }
 
-            obj.Invoke( "AlignData", data );
+            encryption.Invoke( "AlignData", data );
             Assert.AreEqual( data.Count, 16 );
             Assert.AreEqual( data[data.Count - 1], 11 );
             data.Clear();
 
 
             for ( int i = 0; i < 22; i++ )
+            {
                 data.Add( 0x00 );
+            }
 
-            obj.Invoke( "AlignData", data );
+            encryption.Invoke( "AlignData", data );
             Assert.AreEqual( data.Count, 32 );
             Assert.AreEqual( data[data.Count - 1], 10 );
             data.Clear();
 
 
             for ( int i = 0; i < 16; i++ )
+            {
                 data.Add( 0x00 );
+            }
 
-            obj.Invoke( "AlignData", data );
+            encryption.Invoke( "AlignData", data );
             Assert.AreEqual( data.Count, 32 );
             Assert.AreEqual( data[data.Count - 1], 16 );
         }
@@ -176,7 +179,7 @@ namespace Tests
         [TestMethod]
         public void TestAESKeyExpansion()
         {
-            PrivateType type = new PrivateType( typeof( Key ) );                       
+            PrivateObject key = new PrivateObject( new Key() );
 
             byte[] initialKey = new byte[16] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                                                0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
@@ -194,14 +197,14 @@ namespace Tests
             expectKey[9]  = new byte[] { 0x54, 0x99, 0x32, 0xd1, 0xf0, 0x85, 0x57, 0x68, 0x10, 0x93, 0xed, 0x9C, 0xbe, 0x2c, 0x97, 0x4e };
             expectKey[10] = new byte[] { 0x13, 0x11, 0x1d, 0x7f, 0xe3, 0x94, 0x4a, 0x17, 0xf3, 0x07, 0xa7, 0x8b, 0x4d, 0x2b, 0x30, 0xc5 };
                         
-            byte[][] roundKeys = (byte[][]) type.InvokeStatic( "ExpandKey", initialKey );
+            byte[][] roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
                         
             for ( int i = 0; i < 11; i++ )
             {
                 CollectionAssert.AreEqual( roundKeys[i], expectKey[i] );
             }
 
-            initialKey = new byte[16] { 0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0xaf, 0x7f, 0x67, 0x98 };
+            initialKey = new byte[16]  { 0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0xaf, 0x7f, 0x67, 0x98 };
 
             expectKey[0]  = new byte[] { 0x0f, 0x15, 0x71, 0xc9, 0x47, 0xd9, 0xe8, 0x59, 0x0c, 0xb7, 0xad, 0xd6, 0xaf, 0x7f, 0x67, 0x98 };
             expectKey[1]  = new byte[] { 0xdc, 0x90, 0x37, 0xb0, 0x9b, 0x49, 0xdf, 0xe9, 0x97, 0xfe, 0x72, 0x3f, 0x38, 0x81, 0x15, 0xa7 };
@@ -215,28 +218,28 @@ namespace Tests
             expectKey[9]  = new byte[] { 0xfd, 0x0d, 0x42, 0xcb, 0x0e, 0x16, 0xe0, 0x1c, 0xc5, 0xd5, 0x4a, 0x6e, 0xf9, 0x6b, 0x41, 0x56 };
             expectKey[10] = new byte[] { 0xb4, 0x8e, 0xf3, 0x52, 0xba, 0x98, 0x13, 0x4e, 0x7f, 0x4d, 0x59, 0x20, 0x86, 0x26, 0x18, 0x76 };
             
-            roundKeys = (byte[][])type.InvokeStatic( "ExpandKey", initialKey );
+            roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
 
             for ( int i = 0; i < 11; i++ )
             {
                 CollectionAssert.AreEqual( roundKeys[i], expectKey[i] );
             }
             
-            initialKey = new byte[16] { 0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75};
+            initialKey = new byte[16]  { 0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75};
 
-            expectKey[0] = new byte[] { 0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75 };
-            expectKey[1] = new byte[] { 0xE2, 0x32, 0xFC, 0xF1, 0x91, 0x12, 0x91, 0x88, 0xB1, 0x59, 0xE4, 0xE6, 0xD6, 0x79, 0xA2, 0x93 };
-            expectKey[2] = new byte[] { 0x56, 0x08, 0x20, 0x07, 0xC7, 0x1A, 0xB1, 0x8F, 0x76, 0x43, 0x55, 0x69, 0xA0, 0x3A, 0xF7, 0xFA };
-            expectKey[3] = new byte[] { 0xD2, 0x60, 0x0D, 0xE7, 0x15, 0x7A, 0xBC, 0x68, 0x63, 0x39, 0xE9, 0x01, 0xC3, 0x03, 0x1E, 0xFB };
-            expectKey[4] = new byte[] { 0xA1, 0x12, 0x02, 0xC9, 0xB4, 0x68, 0xBE, 0xA1, 0xD7, 0x51, 0x57, 0xA0, 0x14, 0x52, 0x49, 0x5B };
-            expectKey[5] = new byte[] { 0xB1, 0x29, 0x3B, 0x33, 0x05, 0x41, 0x85, 0x92, 0xD2, 0x10, 0xD2, 0x32, 0xC6, 0x42, 0x9B, 0x69 };
-            expectKey[6] = new byte[] { 0xBD, 0x3D, 0xC2, 0x87, 0xB8, 0x7C, 0x47, 0x15, 0x6A, 0x6C, 0x95, 0x27, 0xAC, 0x2E, 0x0E, 0x4E };
-            expectKey[7] = new byte[] { 0xCC, 0x96, 0xED, 0x16, 0x74, 0xEA, 0xAA, 0x03, 0x1E, 0x86, 0x3F, 0x24, 0xB2, 0xA8, 0x31, 0x6A };
-            expectKey[8] = new byte[] { 0x8E, 0x51, 0xEF, 0x21, 0xFA, 0xBB, 0x45, 0x22, 0xE4, 0x3D, 0x7A, 0x06, 0x56, 0x95, 0x4B, 0x6C };
-            expectKey[9] = new byte[] { 0xBF, 0xE2, 0xBF, 0x90, 0x45, 0x59, 0xFA, 0xB2, 0xA1, 0x64, 0x80, 0xB4, 0xF7, 0xF1, 0xCB, 0xD8 };
+            expectKey[0]  = new byte[] { 0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75 };
+            expectKey[1]  = new byte[] { 0xE2, 0x32, 0xFC, 0xF1, 0x91, 0x12, 0x91, 0x88, 0xB1, 0x59, 0xE4, 0xE6, 0xD6, 0x79, 0xA2, 0x93 };
+            expectKey[2]  = new byte[] { 0x56, 0x08, 0x20, 0x07, 0xC7, 0x1A, 0xB1, 0x8F, 0x76, 0x43, 0x55, 0x69, 0xA0, 0x3A, 0xF7, 0xFA };
+            expectKey[3]  = new byte[] { 0xD2, 0x60, 0x0D, 0xE7, 0x15, 0x7A, 0xBC, 0x68, 0x63, 0x39, 0xE9, 0x01, 0xC3, 0x03, 0x1E, 0xFB };
+            expectKey[4]  = new byte[] { 0xA1, 0x12, 0x02, 0xC9, 0xB4, 0x68, 0xBE, 0xA1, 0xD7, 0x51, 0x57, 0xA0, 0x14, 0x52, 0x49, 0x5B };
+            expectKey[5]  = new byte[] { 0xB1, 0x29, 0x3B, 0x33, 0x05, 0x41, 0x85, 0x92, 0xD2, 0x10, 0xD2, 0x32, 0xC6, 0x42, 0x9B, 0x69 };
+            expectKey[6]  = new byte[] { 0xBD, 0x3D, 0xC2, 0x87, 0xB8, 0x7C, 0x47, 0x15, 0x6A, 0x6C, 0x95, 0x27, 0xAC, 0x2E, 0x0E, 0x4E };
+            expectKey[7]  = new byte[] { 0xCC, 0x96, 0xED, 0x16, 0x74, 0xEA, 0xAA, 0x03, 0x1E, 0x86, 0x3F, 0x24, 0xB2, 0xA8, 0x31, 0x6A };
+            expectKey[8]  = new byte[] { 0x8E, 0x51, 0xEF, 0x21, 0xFA, 0xBB, 0x45, 0x22, 0xE4, 0x3D, 0x7A, 0x06, 0x56, 0x95, 0x4B, 0x6C };
+            expectKey[9]  = new byte[] { 0xBF, 0xE2, 0xBF, 0x90, 0x45, 0x59, 0xFA, 0xB2, 0xA1, 0x64, 0x80, 0xB4, 0xF7, 0xF1, 0xCB, 0xD8 };
             expectKey[10] = new byte[] { 0x28, 0xFD, 0xDE, 0xF8, 0x6D, 0xA4, 0x24, 0x4A, 0xCC, 0xC0, 0xA4, 0xFE, 0x3B, 0x31, 0x6F, 0x26 };
 
-            roundKeys = (byte[][])type.InvokeStatic( "ExpandKey", initialKey );
+            roundKeys = (byte[][]) key.Invoke( "ExpandKey", initialKey );
 
             for ( int i = 0; i < 11; i++ )
             {
@@ -381,10 +384,10 @@ namespace Tests
         [TestMethod]
         public void TestAESInvMixColumns()
         {
-            byte[,] sourceData = new byte[4, 4] {{ 0x04, 0xe0, 0x48, 0x28 },
-                                                 { 0x66, 0xcb, 0xf8, 0x06 },
-                                                 { 0x81, 0x19, 0xd3, 0x26 },
-                                                 { 0xe5, 0x9a, 0x7a, 0x4c }};
+            byte[,] sourceData = new byte[4, 4]   {{ 0x04, 0xe0, 0x48, 0x28 },
+                                                   { 0x66, 0xcb, 0xf8, 0x06 },
+                                                   { 0x81, 0x19, 0xd3, 0x26 },
+                                                   { 0xe5, 0x9a, 0x7a, 0x4c }};
 
             byte[,] expectedData = new byte[4, 4] {{ 0xd4, 0xe0, 0xb8, 0x1e },
                                                    { 0xbf, 0xb4, 0x41, 0x27 },
@@ -404,19 +407,19 @@ namespace Tests
         {
             PrivateObject type = new PrivateObject( new Utils() );
 
-            byte result = (byte) type.Invoke( "Multiply", (byte)0xd4, (byte)0x02 );
+            byte result = (byte) type.Invoke( "Multiply", (byte) 0xd4, (byte) 0x02 );
             byte expected = 0xb3;
             Assert.AreEqual( result, expected );
                         
-            result = (byte) type.Invoke( "Multiply", (byte)0xa3, (byte)0x02 );
+            result = (byte) type.Invoke( "Multiply", (byte) 0xa3, (byte) 0x02 );
             expected = 0x5d;
             Assert.AreEqual( result, expected );
 
-            result = (byte) type.Invoke( "Multiply", (byte)0xbf, (byte)0x03 );
+            result = (byte) type.Invoke( "Multiply", (byte) 0xbf, (byte) 0x03 );
             expected = 0xda;
             Assert.AreEqual( result, expected );
 
-            result = (byte) type.Invoke( "Multiply", (byte)0x57, (byte)0x13 );
+            result = (byte) type.Invoke( "Multiply", (byte) 0x57, (byte) 0x13 );
             expected = 0xFE;
             Assert.AreEqual( result, expected );
         }       

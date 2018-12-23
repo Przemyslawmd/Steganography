@@ -19,7 +19,7 @@ namespace SteganographyEncryption
         public List< byte > Encrypt( List< byte > dataToEncrypt, String password )
         {
             byte[,] state = new byte[4, 4];
-            byte[][] key = Key.CreateKeys( password );
+            byte[][] key = new Key().CreateKeys( password );
             int alignment = AlignData( dataToEncrypt );
 
             dataToEncrypt.Reverse();

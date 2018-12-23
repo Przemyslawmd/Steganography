@@ -17,7 +17,7 @@ namespace SteganographyEncryption
 
         public List< byte > Decrypt( List< byte > data, String password )
         {
-            byte[][] key = Key.CreateKeys( password );
+            byte[][] key = new Key().CreateKeys( password );
             byte[,] state = new byte[4, 4];
 
             int alignment = data[data.Count - 1];
