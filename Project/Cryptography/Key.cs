@@ -10,40 +10,10 @@ namespace SteganographyEncryption
         {
             const int Iterations = 200;
             byte[] Salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
-            byte[] basicKey = new Rfc2898DeriveBytes( password, Salt, Iterations ).GetBytes( 16 );
-
-            return ExpandKey( basicKey );
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-        
-        private byte[][] ExpandKey( byte[] initialKey )
-        {
+            byte[] initialKey = new Rfc2898DeriveBytes( password, Salt, Iterations ).GetBytes( 16 );
             Word[] words = createKeysAsWords( initialKey );
             
-            // Create two-dimensional jagged array and move there keys
-            byte[][] roundKeys = new byte[NumOfRounds][];
-
-            for ( int i = 0; i < NumOfRounds; i++ )
-            {
-                roundKeys[i] = new byte[16];
-            }
-
-            for ( int word = 0, j = 0; word < WordsInKey * NumOfRounds; word++ )
-            {
-                if ( word % WordsInKey == 0 )
-                {
-                    j = 0;
-                }
-
-                roundKeys[word / WordsInKey][j++] = words[word].value1;
-                roundKeys[word / WordsInKey][j++] = words[word].value2;
-                roundKeys[word / WordsInKey][j++] = words[word].value3;
-                roundKeys[word / WordsInKey][j++] = words[word].value4;                
-            }
-
-            return roundKeys;
+            return MovedKeysFromWordIntoByteArray( words );
         }
 
         /**************************************************************************************/
@@ -76,6 +46,34 @@ namespace SteganographyEncryption
             }
 
             return words;
+        }
+        
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private byte[][] MovedKeysFromWordIntoByteArray( Word[] words )
+        {
+            byte[][] keys = new byte[NumOfRounds][];
+
+            for ( int i = 0; i < NumOfRounds; i++ )
+            {
+                keys[i] = new byte[16];
+            }
+
+            for ( int word = 0, j = 0; word < WordsInKey * NumOfRounds; word++ )
+            {
+                if ( word % WordsInKey == 0 )
+                {
+                    j = 0;
+                }
+
+                keys[word / WordsInKey][j++] = words[word].value1;
+                keys[word / WordsInKey][j++] = words[word].value2;
+                keys[word / WordsInKey][j++] = words[word].value3;
+                keys[word / WordsInKey][j++] = words[word].value4;                
+            }
+
+            return keys;
         }
         
         /**************************************************************************************/
