@@ -9,8 +9,8 @@ namespace SteganographyEncryption
         public byte[][] CreateKeys( String password )
         {
             const int Iterations = 200;
-            byte[] Salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
-            byte[] initialKey = new Rfc2898DeriveBytes( password, Salt, Iterations ).GetBytes( 16 );
+            byte[] salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
+            byte[] initialKey = new Rfc2898DeriveBytes( password, salt, Iterations ).GetBytes( 16 );
             Word[] words = createKeysAsWords( initialKey );
             
             return MovedKeysFromWordIntoByteArray( words );
@@ -36,7 +36,7 @@ namespace SteganographyEncryption
                 if ( wordNum % 4 == 0 )
                 {
                     word = new Word( words[wordNum - 1] );
-                    CalculateTemporaryWord( wordNum / WordsInKey, word );
+                    CalculateWord( wordNum / WordsInKey, word );
                     words[wordNum] = words[wordNum - WordsInKey].XorOuter( word );
                 }
                 else
@@ -79,7 +79,7 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void CalculateTemporaryWord( int i, Word word )
+        private void CalculateWord( int i, Word word )
         {
             word.Rotate();
             word.SubByte();            
