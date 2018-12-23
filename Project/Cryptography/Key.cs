@@ -11,13 +11,22 @@ namespace SteganographyEncryption
             const int Iterations = 200;
             byte[] salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
             byte[] initialKey = new Rfc2898DeriveBytes( password, salt, Iterations ).GetBytes( 16 );
-            Word[] words = createKeysAsWords( initialKey );
             
+            return ExpandKey( initialKey );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+        
+        private byte[][] ExpandKey( byte[] initialKey )
+        {
+            Word[] words = createKeysAsWords( initialKey );
             return MovedKeysFromWordIntoByteArray( words );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
+
 
         private Word[] createKeysAsWords( byte[] initialKey )
         {
@@ -67,10 +76,10 @@ namespace SteganographyEncryption
                     j = 0;
                 }
 
-                keys[word / WordsInKey][j++] = words[word].value1;
-                keys[word / WordsInKey][j++] = words[word].value2;
-                keys[word / WordsInKey][j++] = words[word].value3;
-                keys[word / WordsInKey][j++] = words[word].value4;                
+                keys[word / WordsInKey][j++] = words[word].value_1;
+                keys[word / WordsInKey][j++] = words[word].value_2;
+                keys[word / WordsInKey][j++] = words[word].value_3;
+                keys[word / WordsInKey][j++] = words[word].value_4;                
             }
 
             return keys;

@@ -3,64 +3,65 @@ namespace SteganographyEncryption
 {
     class Word
     {
-        public Word( byte value1, byte value2, byte value3, byte value4 )
+        public Word( byte value_1, byte value_2, byte value_3, byte value_4 )
         {
-            this.value1 = value1;
-            this.value2 = value2;
-            this.value3 = value3;
-            this.value4 = value4;
+            this.value_1 = value_1;
+            this.value_2 = value_2;
+            this.value_3 = value_3;
+            this.value_4 = value_4;
         }
 
 
         public Word( Word word )
         {
-            value1 = word.value1;
-            value2 = word.value2;
-            value3 = word.value3;
-            value4 = word.value4;
+            value_1 = word.value_1;
+            value_2 = word.value_2;
+            value_3 = word.value_3;
+            value_4 = word.value_4;
         }
 
 
         public void Rotate()
         {
-            byte temp = value1;
-            value1 = value2;
-            value2 = value3;
-            value3 = value4;
-            value4 = temp;
+            byte temp = value_1;
+            value_1 = value_2;
+            value_2 = value_3;
+            value_3 = value_4;
+            value_4 = temp;
         }
 
 
         public void SubByte()
         {
-            value1 = BaseCryptography.GetSbox( value1 );
-            value2 = BaseCryptography.GetSbox( value2 );
-            value3 = BaseCryptography.GetSbox( value3 );
-            value4 = BaseCryptography.GetSbox( value4 );
+            value_1 = BaseCryptography.GetSbox( value_1 );
+            value_2 = BaseCryptography.GetSbox( value_2 );
+            value_3 = BaseCryptography.GetSbox( value_3 );
+            value_4 = BaseCryptography.GetSbox( value_4 );
         }
 
 
         public void XorInner( Word word )
         {
-            value1 = (byte) ( value1 ^ word.value1 );
-            value1 = (byte) ( value1 ^ word.value2 );
-            value1 = (byte) ( value1 ^ word.value3 );
-            value1 = (byte) ( value1 ^ word.value4 );
+            value_1 = (byte) ( value_1 ^ word.value_1 );
+            value_1 = (byte) ( value_1 ^ word.value_2 );
+            value_1 = (byte) ( value_1 ^ word.value_3 );
+            value_1 = (byte) ( value_1 ^ word.value_4 );
         }
 
 
         public Word XorOuter( Word word )
         {
-            return new Word((byte) ( this.value1 ^ word.value1 ), 
-                            (byte) ( this.value2 ^ word.value2 ), 
-                            (byte) ( this.value3 ^ word.value3 ), 
-                            (byte) ( this.value4 ^ word.value4 ));
+            return new Word((byte) ( this.value_1 ^ word.value_1 ), 
+                            (byte) ( this.value_2 ^ word.value_2 ), 
+                            (byte) ( this.value_3 ^ word.value_3 ), 
+                            (byte) ( this.value_4 ^ word.value_4 ));
         }
 
-        public byte value1;
-        public byte value2;
-        public byte value3;
-        public byte value4;
+
+        public byte value_1;
+        public byte value_2;
+        public byte value_3;
+        public byte value_4;
     }
 }
 
