@@ -20,27 +20,7 @@ namespace SteganographyEncryption
         
         private byte[][] ExpandKey( byte[] initialKey )
         {
-            int numOfAllWords = WordsInKey * NumOfRounds; 
-            Word[] words = new Word[numOfAllWords];            
-            Word tempWord;
-
-            createKeysForFirstRound( words, initialKey );
-            
-            // Keys for the rest rounds
-            for ( int word = 4; word < numOfAllWords; word++ )
-            {
-                // An action for each part of expanded key to calculate its first word
-                if ( word % 4 == 0 )
-                {
-                    tempWord = new Word( words[word - 1] );
-                    CalculateTemporaryWord( word / WordsInKey, tempWord );
-                    words[word] = words[word - WordsInKey].XorOuter( tempWord );
-                }
-                else
-                {
-                    words[word] = words[word - 4].XorOuter( words[word - 1] );
-                }
-            }
+            Word[] words = createKeysAsWords( initialKey );
             
             // Create two-dimensional jagged array and move there keys
             byte[][] roundKeys = new byte[NumOfRounds][];
@@ -50,7 +30,7 @@ namespace SteganographyEncryption
                 roundKeys[i] = new byte[16];
             }
 
-            for ( int word = 0, j = 0; word < numOfAllWords; word++ )
+            for ( int word = 0, j = 0; word < WordsInKey * NumOfRounds; word++ )
             {
                 if ( word % WordsInKey == 0 )
                 {
@@ -69,15 +49,35 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void createKeysForFirstRound( Word[] words, byte[] initialKey )
+        private Word[] createKeysAsWords( byte[] initialKey )
         {
-            for ( int word = 0; word < 4; word++ )
-            {
-                words[word] = new Word( initialKey[word * WordsInKey], initialKey[word * WordsInKey + 1],
-                                        initialKey[word * WordsInKey + 2], initialKey[word * WordsInKey + 3] );
-            }
-        }
+            int wordsCount = WordsInKey * NumOfRounds; 
+            Word[] words = new Word[wordsCount]; 
 
+            for ( int wordNum = 0; wordNum < 4; wordNum++ )
+            {
+                words[wordNum] = new Word( initialKey[wordNum * WordsInKey], initialKey[wordNum * WordsInKey + 1],
+                                           initialKey[wordNum * WordsInKey + 2], initialKey[wordNum * WordsInKey + 3] );
+            }
+
+            Word word;
+            for ( int wordNum = 4; wordNum < wordsCount; wordNum++ )
+            {
+                if ( wordNum % 4 == 0 )
+                {
+                    word = new Word( words[wordNum - 1] );
+                    CalculateTemporaryWord( wordNum / WordsInKey, word );
+                    words[wordNum] = words[wordNum - WordsInKey].XorOuter( word );
+                }
+                else
+                {
+                    words[wordNum] = words[wordNum - 4].XorOuter( words[wordNum - 1] );
+                }
+            }
+
+            return words;
+        }
+        
         /**************************************************************************************/
         /**************************************************************************************/
 
