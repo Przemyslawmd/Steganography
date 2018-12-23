@@ -1,66 +1,8 @@
 ﻿
-using System.Collections.Generic;
-
 namespace SteganographyEncryption
 {
     class BaseCryptography
     {
-        protected void InputIntoState( Stack< byte > stack, byte[,] state )
-        {
-            for ( int i = 0; i < stateArraySize; i++ )
-            {
-                for ( int j = 0; j < stateArraySize; j++ )
-                {
-                    state[j, i] = stack.Pop();
-                }
-            }
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        protected void StateIntoOutput( List< byte > output, byte[,] state )
-        {
-            for ( int i = 0; i < stateArraySize; i++ )
-            {
-                for ( int j = 0; j < stateArraySize; j++ )
-                {
-                    output.Add( state[j, i] );
-                }
-            }
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        protected void AddRoundKey( byte[,] state, byte[] key )
-        {            
-            for ( int i = 0; i < stateArraySize; i++ )
-            {
-                for ( int j = 0; j < stateArraySize; j++ )
-                {
-                    state[i, j] ^= key[i + j * stateArraySize];
-                }
-            }           
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        protected static void GetGeneralSbox( DelegateBox delegateBox, byte[,] state )
-        {
-            for ( int i = 0; i < stateArraySize; i++ )
-            {
-                for ( int j = 0; j < stateArraySize; j++ )
-                {
-                    state[i, j] = delegateBox.Invoke( state[i, j] );
-                }
-            }            
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
         public static byte GetSbox( byte value )
         {
             return sbox[value >> stateArraySize, value & 0xF];

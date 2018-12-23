@@ -1,0 +1,72 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SteganographyEncryption
+{
+    class Utils
+    {
+        public void InputIntoState( Stack< byte > stack, byte[,] state )
+        {
+            for ( int i = 0; i < stateArraySize; i++ )
+            {
+                for ( int j = 0; j < stateArraySize; j++ )
+                {
+                    state[j, i] = stack.Pop();
+                }
+            }
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        public void StateIntoOutput( List< byte > output, byte[,] state )
+        {
+            for ( int i = 0; i < stateArraySize; i++ )
+            {
+                for ( int j = 0; j < stateArraySize; j++ )
+                {
+                    output.Add( state[j, i] );
+                }
+            }
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+        
+        public void AddRoundKey( byte[,] state, byte[] key )
+        {            
+            for ( int i = 0; i < stateArraySize; i++ )
+            {
+                for ( int j = 0; j < stateArraySize; j++ )
+                {
+                    state[i, j] ^= key[i + j * stateArraySize];
+                }
+            }           
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        public void GetGeneralSbox( DelegateBox delegateBox, byte[,] state )
+        {
+            for ( int i = 0; i < stateArraySize; i++ )
+            {
+                for ( int j = 0; j < stateArraySize; j++ )
+                {
+                    state[i, j] = delegateBox.Invoke( state[i, j] );
+                }
+            }            
+        }
+        
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private readonly int stateArraySize = 4; 
+        public delegate byte DelegateBox( byte value );
+    }
+}
+

@@ -265,7 +265,7 @@ namespace Tests
                                                       0x23, 0xA3, 0x39, 0x39,
                                                       0x2A, 0x6C, 0x76, 0x05 };
 
-            PrivateObject type = new PrivateObject( new BaseCryptography() );                 
+            PrivateObject type = new PrivateObject( new Utils() );                 
             type.Invoke( "AddRoundKey", initialBlock, key );            
             CollectionAssert.AreEqual( initialBlock, expectedBlock );
         }

@@ -8,6 +8,14 @@ namespace SteganographyEncryption
 {
     class Encryption : BaseCryptography
     {
+        public Encryption()
+        {
+            utils = new Utils();
+        }
+        
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         public List< byte > Encrypt( List< byte > dataToEncrypt, String password )
         {
             byte[,] state = new byte[4, 4];
@@ -20,9 +28,9 @@ namespace SteganographyEncryption
 
             for ( int i = 0; i < dataToEncrypt.Count; i += 16 )
             {
-                InputIntoState( stack , state );
+                utils.InputIntoState( stack , state );
                 EncryptBlockData( state, key );
-                StateIntoOutput( dataEncrypted, state );
+                utils.StateIntoOutput( dataEncrypted, state );
             }
 
             dataEncrypted.Add( (byte) alignment );
@@ -34,19 +42,19 @@ namespace SteganographyEncryption
 
         private void EncryptBlockData( byte[,] state, byte[][] key )
         {
-            AddRoundKey( state, key[0] );
+            utils.AddRoundKey( state, key[0] );
                                  
             for ( int round = 1; round < NumOfRounds - 1; round++ )
             {
                 SubBytes( state );
                 ShiftRows( state );
                 MixColumns( state );                
-                AddRoundKey( state, key[round] );
+                utils.AddRoundKey( state, key[round] );
             } 
             
             SubBytes( state );
             ShiftRows( state );            
-            AddRoundKey( state, key[NumOfRounds - 1] );
+            utils.AddRoundKey( state, key[NumOfRounds - 1] );
         }
 
         /**************************************************************************************/
@@ -100,7 +108,7 @@ namespace SteganographyEncryption
 
         private void SubBytes( byte[,] state )
         {
-            GetGeneralSbox( GetSbox, state );            
+            utils.GetGeneralSbox( GetSbox, state );            
         }
 
         /**************************************************************************************/
@@ -125,7 +133,12 @@ namespace SteganographyEncryption
 
                 state[3, i] = (byte)( Multiply( val0, 3 ) ^ val1 ^ val2 ^ Multiply( val3, 2 ));
             }
-        }        
+        }
+        
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private Utils utils;
     }
 }
 
