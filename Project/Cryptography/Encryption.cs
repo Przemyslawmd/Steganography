@@ -125,13 +125,13 @@ namespace SteganographyEncryption
                 val2 = state[2, i];
                 val3 = state[3, i];
                 
-                state[0, i] = (byte)( Multiply( val0, 2 ) ^ Multiply( val1, 3 ) ^ val2 ^ val3 );
+                state[0, i] = (byte)( utils.Multiply( val0, 2 ) ^ utils.Multiply( val1, 3 ) ^ val2 ^ val3 );
 
-                state[1, i] = (byte)( val0 ^ Multiply( val1, 2 ) ^ Multiply( val2, 3 ) ^ val3 );
+                state[1, i] = (byte)( val0 ^ utils.Multiply( val1, 2 ) ^ utils.Multiply( val2, 3 ) ^ val3 );
 
-                state[2, i] = (byte)( val0 ^ val1 ^ Multiply( val2, 2 ) ^ Multiply( val3, 3 ));
+                state[2, i] = (byte)( val0 ^ val1 ^ utils.Multiply( val2, 2 ) ^ utils.Multiply( val3, 3 ));
 
-                state[3, i] = (byte)( Multiply( val0, 3 ) ^ val1 ^ val2 ^ Multiply( val3, 2 ));
+                state[3, i] = (byte)( utils.Multiply( val0, 3 ) ^ val1 ^ val2 ^ utils.Multiply( val3, 2 ));
             }
         }
         

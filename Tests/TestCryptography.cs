@@ -402,7 +402,7 @@ namespace Tests
         [TestMethod]
         public void TestAESMultiply()
         {
-            PrivateObject type = new PrivateObject( new Encryption() );
+            PrivateObject type = new PrivateObject( new Utils() );
 
             byte result = (byte) type.Invoke( "Multiply", (byte)0xd4, (byte)0x02 );
             byte expected = 0xb3;
