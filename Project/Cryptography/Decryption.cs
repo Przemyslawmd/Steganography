@@ -5,7 +5,7 @@ using Steganography;
 
 namespace SteganographyEncryption
 {
-    class Decryption : BaseCryptography
+    class Decryption
     {
         public Decryption()
         {
@@ -68,23 +68,20 @@ namespace SteganographyEncryption
 
         private void InvShiftRows( byte[,] state )
         {
-            // Second row
             byte temp = state[1, 3];
             state[1, 3] = state[1, 2];
             state[1, 2] = state[1, 1];
             state[1, 1] = state[1, 0];
             state[1, 0] = temp;
 
-            // Third row - swap two pairs of columns 
             state[2, 0] += state[2, 2];
-            state[2, 2] = (byte)(state[2, 0] - state[2, 2]);
+            state[2, 2] = (byte) (state[2, 0] - state[2, 2]);
             state[2, 0] -= state[2, 2];
 
             state[2, 1] += state[2, 3];
-            state[2, 3] = (byte)(state[2, 1] - state[2, 3]);
+            state[2, 3] = (byte) (state[2, 1] - state[2, 3]);
             state[2, 1] -= state[2, 3];
 
-            // Fourth row
             temp = state[3, 0];
             state[3, 0] = state[3, 1];
             state[3, 1] = state[3, 2];
@@ -97,7 +94,7 @@ namespace SteganographyEncryption
 
         private void InvSubBytes( byte[,] state )
         {
-            utils.GetGeneralSbox( GetInvSbox, state );            
+            utils.GetGeneralSbox( Sbox.GetInvSbox, state );            
         }
 
         /**************************************************************************************/
@@ -105,29 +102,34 @@ namespace SteganographyEncryption
 
         private void InvMixColumns( byte[,] state )
         {
-            byte val0, val1, val2, val3;
+            byte byte_0, byte_1, byte_2, byte_3;
 
             for ( int i = 0; i < 4; i++ )
             {
-                val0 = state[0, i];
-                val1 = state[1, i];
-                val2 = state[2, i];
-                val3 = state[3, i];
+                byte_0 = state[0, i];
+                byte_1 = state[1, i];
+                byte_2 = state[2, i];
+                byte_3 = state[3, i];
 
-                state[0, i] = (byte)( utils.Multiply( val0, 0x0e ) ^ utils.Multiply( val1, 0x0b ) ^ 
-                                      utils.Multiply( val2, 0x0d ) ^ utils.Multiply( val3, 0x09 ));
+                state[0, i] = (byte)( utils.Multiply( byte_0, 0x0e ) ^ utils.Multiply( byte_1, 0x0b ) ^ 
+                                      utils.Multiply( byte_2, 0x0d ) ^ utils.Multiply( byte_3, 0x09 ));
 
-                state[1, i] = (byte)( utils.Multiply( val0, 0x09 ) ^ utils.Multiply( val1, 0x0e ) ^
-                                      utils.Multiply( val2, 0x0b ) ^ utils.Multiply( val3, 0x0d ));
+                state[1, i] = (byte)( utils.Multiply( byte_0, 0x09 ) ^ utils.Multiply( byte_1, 0x0e ) ^
+                                      utils.Multiply( byte_2, 0x0b ) ^ utils.Multiply( byte_3, 0x0d ));
 
-                state[2, i] = (byte)( utils.Multiply( val0, 0x0d ) ^ utils.Multiply( val1, 0x09 ) ^
-                                      utils.Multiply( val2, 0x0e ) ^ utils.Multiply( val3, 0x0b ));
+                state[2, i] = (byte)( utils.Multiply( byte_0, 0x0d ) ^ utils.Multiply( byte_1, 0x09 ) ^
+                                      utils.Multiply( byte_2, 0x0e ) ^ utils.Multiply( byte_3, 0x0b ));
 
-                state[3, i] = (byte)( utils.Multiply( val0, 0x0b ) ^ utils.Multiply( val1, 0x0d ) ^ 
-                                      utils.Multiply( val2, 0x09 ) ^ utils.Multiply( val3, 0x0e ));
+                state[3, i] = (byte)( utils.Multiply( byte_0, 0x0b ) ^ utils.Multiply( byte_1, 0x0d ) ^ 
+                                      utils.Multiply( byte_2, 0x09 ) ^ utils.Multiply( byte_3, 0x0e ));
             }
         }
 
+        /**************************************************************************************/
+        /**************************************************************************************/
+
         private Utils utils;
+        private readonly int NumOfRounds = 11;
     }
 }
+

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SteganographyEncryption
 {
-    class Encryption : BaseCryptography
+    class Encryption
     {
         public Encryption()
         {
@@ -59,7 +59,7 @@ namespace SteganographyEncryption
 
         /**************************************************************************************/
         /**************************************************************************************/
-        // Add additional bytes because data to be encrypted has to be divided by block size (16) 
+        // Add additional bytes because data to be encrypted must be divided by block size (16) 
 
         private int AlignData( List< byte > source )
         {
@@ -79,23 +79,20 @@ namespace SteganographyEncryption
 
         private void ShiftRows( byte[,] state )
         {            
-            // Second row
             byte temp = state[1, 0];
             state[1, 0] = state[1, 1];
             state[1, 1] = state[1, 2];
             state[1, 2] = state[1, 3];
             state[1, 3] = temp;
 
-            // Third row - swap two pairs of columns 
             state[2, 0] += state[2, 2];
-            state[2, 2] = (byte)( state[2, 0] - state[2, 2] );
+            state[2, 2] = (byte) ( state[2, 0] - state[2, 2] );
             state[2, 0] -= state[2, 2];
 
             state[2, 1] += state[2, 3];
-            state[2, 3] = (byte)( state[2, 1] - state[2, 3] );
+            state[2, 3] = (byte) ( state[2, 1] - state[2, 3] );
             state[2, 1] -= state[2, 3];
 
-            // Fourth row
             temp = state[3, 3];
             state[3, 3] = state[3, 2];
             state[3, 2] = state[3, 1];
@@ -108,7 +105,7 @@ namespace SteganographyEncryption
 
         private void SubBytes( byte[,] state )
         {
-            utils.GetGeneralSbox( GetSbox, state );            
+            utils.GetGeneralSbox( Sbox.GetSbox, state );            
         }
 
         /**************************************************************************************/
@@ -116,22 +113,22 @@ namespace SteganographyEncryption
 
         private void MixColumns( byte[,] state )
         {
-            byte val0, val1, val2, val3;
+            byte byte_0, byte_1, byte_2, byte_3;
             
             for ( int i = 0; i < 4; i++ )
             {
-                val0 = state[0, i];
-                val1 = state[1, i];
-                val2 = state[2, i];
-                val3 = state[3, i];
+                byte_0 = state[0, i];
+                byte_1 = state[1, i];
+                byte_2 = state[2, i];
+                byte_3 = state[3, i];
                 
-                state[0, i] = (byte)( utils.Multiply( val0, 2 ) ^ utils.Multiply( val1, 3 ) ^ val2 ^ val3 );
+                state[0, i] = (byte)( utils.Multiply( byte_0, 2 ) ^ utils.Multiply( byte_1, 3 ) ^ byte_2 ^ byte_3 );
 
-                state[1, i] = (byte)( val0 ^ utils.Multiply( val1, 2 ) ^ utils.Multiply( val2, 3 ) ^ val3 );
+                state[1, i] = (byte)( byte_0 ^ utils.Multiply( byte_1, 2 ) ^ utils.Multiply( byte_2, 3 ) ^ byte_3 );
 
-                state[2, i] = (byte)( val0 ^ val1 ^ utils.Multiply( val2, 2 ) ^ utils.Multiply( val3, 3 ));
+                state[2, i] = (byte)( byte_0 ^ byte_1 ^ utils.Multiply( byte_2, 2 ) ^ utils.Multiply( byte_3, 3 ));
 
-                state[3, i] = (byte)( utils.Multiply( val0, 3 ) ^ val1 ^ val2 ^ utils.Multiply( val3, 2 ));
+                state[3, i] = (byte)( utils.Multiply( byte_0, 3 ) ^ byte_1 ^ byte_2 ^ utils.Multiply( byte_3, 2 ));
             }
         }
         
@@ -139,6 +136,7 @@ namespace SteganographyEncryption
         /**************************************************************************************/
 
         private Utils utils;
+        private readonly int NumOfRounds = 11;
     }
 }
 

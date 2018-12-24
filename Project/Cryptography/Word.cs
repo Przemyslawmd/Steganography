@@ -33,10 +33,10 @@ namespace SteganographyEncryption
 
         public void SubByte()
         {
-            value_1 = BaseCryptography.GetSbox( value_1 );
-            value_2 = BaseCryptography.GetSbox( value_2 );
-            value_3 = BaseCryptography.GetSbox( value_3 );
-            value_4 = BaseCryptography.GetSbox( value_4 );
+            value_1 = Sbox.GetSbox( value_1 );
+            value_2 = Sbox.GetSbox( value_2 );
+            value_3 = Sbox.GetSbox( value_3 );
+            value_4 = Sbox.GetSbox( value_4 );
         }
 
 
