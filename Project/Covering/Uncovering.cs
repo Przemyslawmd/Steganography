@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Steganography
 {
     class Uncovering
-    {        
+    {
         public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Messages.MessageCode code )
         {
             bitIterator = new BitIterator();
@@ -17,14 +17,13 @@ namespace Steganography
                 return null;
             }
 
+            compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
+
             byteValue = 0;
             bitIterator.Reset();
-            countDataToProcessed = 0;
-
-            List< byte >buffer = IteratePictureAndUncoverData( Image, 0, constData.DataSizePixel, 1, 2 );
-            countDataToProcessed = new Containers().CreateIntegerFromByteList( buffer );
-
-            compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
+            countDataToProcess = 0;
+            List< byte >buffer = IteratePictureAndUncoverData( Image, 0, constData.PixelCountForDataSize, 1, 2 );
+            countDataToProcess = new Containers().CreateIntegerFromByteList( buffer );
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
         }
@@ -34,7 +33,7 @@ namespace Steganography
 
         private List< byte > IteratePictureAndUncoverData( Bitmap image, int startX, int stopX, int startY, int stopY )
         {
-            List< byte > buffer = new List< byte >( countDataToProcessed );
+            List< byte > buffer = new List< byte >( countDataToProcess );
             Color color;
 
             for ( int y = startY; y < stopY; y++ )
@@ -79,7 +78,7 @@ namespace Steganography
             {
                 buffer.Add( byteValue );
 
-                if ( buffer.Count == countDataToProcessed )
+                if ( buffer.Count == countDataToProcess )
                 {
                     return UncoverState.Completed;
                 }
@@ -99,8 +98,8 @@ namespace Steganography
 
         private bool CheckCoveringMark( Bitmap bitmap )
         {
-            countDataToProcessed = 2;
-            List< byte > buffer = IteratePictureAndUncoverData( bitmap, 0, constData.DataSizePixel, 0, 1 );
+            countDataToProcess = 2;
+            List< byte > buffer = IteratePictureAndUncoverData( bitmap, 0, constData.PixelCountForDataSize, 0, 1 );
 
             return buffer[0] == constData.CoverMark[1] && buffer[1] == constData.CoverMark[0];
         }
@@ -110,7 +109,7 @@ namespace Steganography
 
         private CoveringConst constData;
         private BitIterator bitIterator;
-        private int countDataToProcessed;
+        private int countDataToProcess;
         private byte byteValue;
 
         private enum UncoverState { Completed, Uncompleted };

@@ -9,17 +9,17 @@ namespace Steganography
     {        
         public void CoverData( Bitmap Image, List< byte > inputStream, Boolean isCompress ) 
         {
-            inputStream.Reverse();
             constData = new CoveringConst();
             bitIterator = new BitIterator();
 
             bytesToCover = new Stack< byte >(  constData.CoverMark );
-            IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, 0, 1 );
+            IteratePictureAndCoverData( Image, 0, constData.PixelCountForDataSize, 0, 1 );
 
+            inputStream.Reverse();
             bytesToCover = new Containers().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
-            IteratePictureAndCoverData( Image, 0, constData.DataSizePixel, constData.SecondRow, 2 );
+            IteratePictureAndCoverData( Image, 0, constData.PixelCountForDataSize, constData.SecondRow, 2 );
 
             Color color = Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow );
             int red = ( isCompress ) ? ( color.R | constData.MaskOne ) : ( color.R & MaskZero );
@@ -49,7 +49,7 @@ namespace Steganography
                         return;
                     }
 
-                    red = AdjustRGBComponent( color.R, currentProcessedByte );           
+                    red = AdjustRGBComponent( color.R, currentByte );           
                                
                     if ( AllBytesCompleted() )
                     {
@@ -57,7 +57,7 @@ namespace Steganography
                         return;
                     }
 
-                    green = AdjustRGBComponent( color.G, currentProcessedByte );         
+                    green = AdjustRGBComponent( color.G, currentByte );         
                                       
                     if ( AllBytesCompleted() )
                     {
@@ -65,7 +65,7 @@ namespace Steganography
                         return;
                     }
 
-                    blue = AdjustRGBComponent( color.B, currentProcessedByte );                    
+                    blue = AdjustRGBComponent( color.B, currentByte );                    
                     image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
             }            
@@ -83,7 +83,7 @@ namespace Steganography
                     return true;
                 }
 
-                currentProcessedByte = bytesToCover.Pop();
+                currentByte = bytesToCover.Pop();
             }
             return false;
         }
@@ -109,7 +109,7 @@ namespace Steganography
         private const byte MaskZero = 0xFE;
         private CoveringConst constData;
         private BitIterator bitIterator;
-        private byte currentProcessedByte;
+        private byte currentByte;
     }
 }
 
