@@ -76,10 +76,10 @@ namespace SteganographyEncryption
                     j = 0;
                 }
 
-                keys[word / WordsInKey][j++] = words[word].value_1;
-                keys[word / WordsInKey][j++] = words[word].value_2;
-                keys[word / WordsInKey][j++] = words[word].value_3;
-                keys[word / WordsInKey][j++] = words[word].value_4;                
+                keys[word / WordsInKey][j++] = words[word].byte_1;
+                keys[word / WordsInKey][j++] = words[word].byte_2;
+                keys[word / WordsInKey][j++] = words[word].byte_3;
+                keys[word / WordsInKey][j++] = words[word].byte_4;                
             }
 
             return keys;
