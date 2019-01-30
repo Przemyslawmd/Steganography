@@ -27,12 +27,13 @@ namespace Tests
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void PrepareData()
+        private void PrepareData( bool isCompression )
         {          
             emptyBitmap = new Bitmap( 50, 50 );
             colorBitmap = new Bitmap( bitmapPath );
             longData = new List< byte >( referenceLongData );
             shortData = new List< byte >( referenceShortData );
+            compression = isCompression;
         }
 
         /**************************************************************************************/
@@ -41,8 +42,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInEmptyBitmapByCheckingPixels()
         {            
-            PrepareData();
-
+            PrepareData( false );
             new Covering().CoverData( emptyBitmap, shortData, false );
             
             // Test size of data covever in first eight pixels
@@ -70,9 +70,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInEmptyBitmap()
         {
-            PrepareData();
-            bool compression = false;
-
+            PrepareData( false );
             new Covering().CoverData( emptyBitmap, shortData, false );
             List< byte > data = new Uncovering().UncoverData( emptyBitmap, ref compression, ref code );
 
@@ -85,9 +83,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInColorBitmap()
         {
-            PrepareData();
-            bool compression = false;
-
+            PrepareData( false );
             new Covering().CoverData( colorBitmap, longData, compression );
             List< byte > unCoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
                         
@@ -100,9 +96,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInColorBitmapWithCompression()
         {
-            PrepareData();
-            bool compression = true;
-
+            PrepareData( true );
             List< byte > compressedData = new Compression().MakeCompressedStream( longData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
@@ -117,9 +111,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInColorBitmapWithEncryption()
         {
-            PrepareData();
-            bool compression = false;
-
+            PrepareData( false );
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             new Covering().CoverData( colorBitmap, encryptedData, false );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
@@ -134,9 +126,7 @@ namespace Tests
         [TestMethod]
         public void TestCoveringInColorBitmapWithCompressionAndEncryption()
         {
-            PrepareData();
-            bool compression = true;
-
+            PrepareData( true );
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             List< byte > compressedData = new Compression().MakeCompressedStream( encryptedData );
             new Covering().CoverData( colorBitmap, compressedData, compression );
@@ -162,6 +152,7 @@ namespace Tests
         Bitmap colorBitmap;
         List< byte > shortData;
         List< byte > longData;
+        bool compression;
     }
 }
 

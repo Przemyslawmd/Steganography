@@ -1,10 +1,10 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Steganography;
+using SteganographyCompression;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using Steganography;
-using SteganographyCompression;
 
 namespace Tests
 {
@@ -21,9 +21,12 @@ namespace Tests
 
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
-            
-            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref code );
+
+            Messages.MessageCode messageCode = Messages.MessageCode.OK;
+            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref messageCode );
+
             CollectionAssert.AreEqual( dataToCompress, dataDecompressed );
+            Assert.AreEqual( messageCode, Messages.MessageCode.OK );
         }
 
         /**************************************************************************************/
@@ -57,7 +60,7 @@ namespace Tests
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
             List< byte > data = new List< byte > { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
-            nodes = ( List<NodeCompress> )( obj.Invoke( "CreateNodes", data ));
+            List< NodeCompress > nodes = ( List< NodeCompress > )( obj.Invoke( "CreateNodes", data ));
             nodes = nodes.OrderBy( x => x.Count ).ToList();
 
             Assert.AreEqual( nodes.Count, 7 );
@@ -74,8 +77,8 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            // Create a list of NodeCompress objects sorted by count
-            nodes = new List< NodeCompress >();
+            // List to be built is sorted by count
+            List< NodeCompress > nodes = new List< NodeCompress >();
             nodes.Add( new NodeCompress( 1, 0x10 ) );
             nodes.Add( new NodeCompress( 1, 0x11 ) );
             nodes.Add( new NodeCompress( 2, 0x12 ) );
@@ -108,8 +111,8 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            // Create a list of NodeCompress objects sorted by count
-            nodes = new List< NodeCompress >();
+            // list to be built is sorted by count
+            List< NodeCompress > nodes = new List< NodeCompress >();
             nodes.Add( new NodeCompress( 1, 0x10 ) );
             nodes.Add( new NodeCompress( 1, 0x11 ) );
             nodes.Add( new NodeCompress( 2, 0x12 ) );
@@ -133,11 +136,5 @@ namespace Tests
             codesDictionary.TryGetValue( 0x10, out code );
             CollectionAssert.AreEqual( code, new List< bool > { true, true, false, false } );
         }
-        
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        static List< NodeCompress > nodes;
-        static Messages.MessageCode code = Messages.MessageCode.OK;
     }
 }
