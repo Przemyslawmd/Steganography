@@ -31,7 +31,7 @@ namespace SteganographyCompression
 
         private Dictionary< byte, List< bool >> GetCodesDictionaryFromStream( IEnumerator< byte > iter )
         {
-            int codesDictionarySize = GetIntegerFromStream( iter );
+            GetIntegerFromStream( iter );
             iter.MoveNext();
             int codesCount = iter.Current == 0 ? 256 : iter.Current;
 
@@ -119,7 +119,7 @@ namespace SteganographyCompression
                         node = node.Right;                                                                  
                     }
 
-                    if ( node.isLeaf() )
+                    if ( node.IsLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
                         

@@ -34,13 +34,12 @@ namespace Steganography
         private List< byte > IteratePictureAndUncoverData( Bitmap image, int startX, int stopX, int startY, int stopY )
         {
             List< byte > buffer = new List< byte >( countDataToProcess );
-            Color color;
 
             for ( int y = startY; y < stopY; y++ )
             {
                 for ( int x = startX; x < stopX; x++ )
                 {
-                    color = image.GetPixel( x, y );
+                    Color color = image.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, buffer ) == UncoverState.Completed )
                     {

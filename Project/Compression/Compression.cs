@@ -28,7 +28,7 @@ namespace SteganographyCompression
         private List< byte > Compress( List< byte > source )
         {
             byte temp = 0;
-            bitIterator = new BitIterator();
+            BitIterator bitIterator = new BitIterator();
             List< byte > compressedData = new List< byte >();
 
             foreach ( byte value in source )
@@ -52,7 +52,7 @@ namespace SteganographyCompression
             }     
             
             // Some data remains, add an alignment
-            if ( bitIterator.IsInitialIndex() == false )
+            if ( bitIterator.IsInitialIndex() is false )
             {
                 temp <<= ( BitsInByte - bitIterator.Index );
                 compressedData.Add( temp );
@@ -74,7 +74,7 @@ namespace SteganographyCompression
             }
 
             byte temp = 0;
-            bitIterator = new BitIterator();
+            BitIterator bitIterator = new BitIterator();
 
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
@@ -116,7 +116,6 @@ namespace SteganographyCompression
         /**************************************************************************************/
 
         private Dictionary< byte, List< bool >> codes;
-        private BitIterator bitIterator;
         private readonly int BitsInByte = 8;
     }
 }

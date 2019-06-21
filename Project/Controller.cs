@@ -52,7 +52,7 @@ namespace Steganography
             bool compression = false;
             List< byte > data = new Uncovering().UncoverData( bitmap, ref compression, ref code );
 
-            if ( data == null )
+            if ( data is null )
             {
                 return null;
             }
@@ -67,13 +67,9 @@ namespace Steganography
                     return null;
                 }
 
-                try
+                data = new Decryption().Decrypt( data, password, ref code );
+                if ( data is null )
                 {
-                    data = new Decryption().Decrypt( data, password );
-                }
-                catch ( ExceptionEncryption exc )
-                {
-                    code = exc.code;
                     return null;
                 }
             }
@@ -81,7 +77,7 @@ namespace Steganography
             if ( compression )
             {
                 data = new Decompression().Decompress( data, ref code );
-                if ( data == null )
+                if ( data is null )
                 {
                     return null;
                 }

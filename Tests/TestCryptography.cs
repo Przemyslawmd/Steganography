@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Steganography;
 using SteganographyEncryption;
 using System.IO;
 using System;
@@ -23,7 +24,8 @@ namespace Tests
             data = new Encryption().Encrypt( data, password );
             CollectionAssert.AreNotEqual( data, dataCopy );
 
-            List< byte > decompressedData = new Decryption().Decrypt( data, password );
+            Messages.MessageCode code = Messages.MessageCode.OK;
+            List< byte > decompressedData = new Decryption().Decrypt( data, password, ref code );
             CollectionAssert.AreEqual( decompressedData, dataCopy );
         } 
                   
@@ -422,7 +424,7 @@ namespace Tests
             result = (byte) type.Invoke( "Multiply", (byte) 0x57, (byte) 0x13 );
             expected = 0xFE;
             Assert.AreEqual( result, expected );
-        }       
+        } 
     }
 }
 

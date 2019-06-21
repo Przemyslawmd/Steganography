@@ -29,9 +29,9 @@ namespace SteganographyCompression
 
                 foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ))
                 {
-                    if ( token == false )
+                    if ( token is false )
                     {
-                        if ( node.Left == null )
+                        if ( node.Left is null )
                         {
                             node.Left = new Node( 0 );
                         }
@@ -39,7 +39,7 @@ namespace SteganographyCompression
                     }
                     else
                     {
-                        if ( node.Right == null )
+                        if ( node.Right is null )
                         {
                             node.Right = new Node( 0 );
                         }
@@ -47,7 +47,7 @@ namespace SteganographyCompression
                     }
                 }
 
-                if ( code.Value.Last() == false )
+                if ( code.Value.Last() is false )
                 {
                     node.Left = new Node( code.Key );
                 }

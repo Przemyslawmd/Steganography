@@ -94,11 +94,11 @@ namespace Tests
             Assert.AreEqual( ((NodeCompress) node).Count, 2 );
 
             node = root.Right.Left;
-            Assert.AreEqual( node.isLeaf(), false );
+            Assert.AreEqual( node.IsLeaf(), false );
             Assert.AreEqual( ((NodeCompress) node).Count, 2 );
 
             node = root.Right.Left.Right;
-            Assert.AreEqual( node.isLeaf(), true );
+            Assert.AreEqual( node.IsLeaf(), true );
             Assert.AreEqual( ((NodeCompress) node).Count, 1 );
             Assert.AreEqual( node.ByteValue, 0x11 );
         }

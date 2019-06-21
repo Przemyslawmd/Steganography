@@ -35,21 +35,18 @@ namespace Steganography
 
         private void IteratePictureAndCoverData( Bitmap image, int startX, int stopX, int startY, int stopY )
         {
-            Color color;
-            int red, green, blue;
-
             for ( int y = startY; y < stopY; y++ )
             {
                 for ( int x = startX; x < stopX; x++ )
                 {
-                    color = image.GetPixel( x, y );
+                    Color color = image.GetPixel( x, y );
 
                     if ( AllBytesCompleted() )
                     {
                         return;
                     }
 
-                    red = AdjustRGBComponent( color.R, currentByte );           
+                    int red = AdjustRGBComponent( color.R, currentByte );           
                                
                     if ( AllBytesCompleted() )
                     {
@@ -57,7 +54,7 @@ namespace Steganography
                         return;
                     }
 
-                    green = AdjustRGBComponent( color.G, currentByte );         
+                    int green = AdjustRGBComponent( color.G, currentByte );         
                                       
                     if ( AllBytesCompleted() )
                     {
@@ -65,7 +62,7 @@ namespace Steganography
                         return;
                     }
 
-                    blue = AdjustRGBComponent( color.B, currentByte );                    
+                    int blue = AdjustRGBComponent( color.B, currentByte );                    
                     image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
             }            

@@ -115,7 +115,7 @@ namespace Tests
             List< byte > encryptedData = new Encryption().Encrypt( longData, password );
             new Covering().CoverData( colorBitmap, encryptedData, false );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
-            List< byte > decryptedData = new Decryption().Decrypt( uncoveredData, password );
+            List< byte > decryptedData = new Decryption().Decrypt( uncoveredData, password, ref code );
 
             CollectionAssert.AreEqual( decryptedData, referenceLongData );
         }
@@ -132,7 +132,7 @@ namespace Tests
             new Covering().CoverData( colorBitmap, compressedData, compression );
             List< byte > uncoveredData = new Uncovering().UncoverData( colorBitmap, ref compression, ref code );
             List< byte > decompressedData = new Decompression().Decompress( uncoveredData, ref code );
-            List< byte > decryptedData = new Decryption().Decrypt( decompressedData, password );
+            List< byte > decryptedData = new Decryption().Decrypt( decompressedData, password, ref code );
 
             CollectionAssert.AreEqual( decryptedData, referenceLongData );
         }

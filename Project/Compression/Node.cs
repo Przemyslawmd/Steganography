@@ -20,9 +20,9 @@ namespace SteganographyCompression
 
         public byte ByteValue { get; set; }
 
-        public bool isLeaf()
+        public bool IsLeaf()
         {
-            return ( Left == null ) && ( Right == null );
+            return ( Left is null ) && ( Right is null );
         }
     }
 }

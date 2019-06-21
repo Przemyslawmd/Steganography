@@ -15,7 +15,7 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public List< byte > Decrypt( List< byte > data, String password )
+        public List< byte > Decrypt( List< byte > data, String password, ref Messages.MessageCode code )
         {
             byte[][] key = new Key().CreateKeys( password );
             byte[,] state = new byte[4, 4];
@@ -25,7 +25,8 @@ namespace SteganographyEncryption
 
             if ( data.Count % 16 != 0 )
             {
-                throw new ExceptionEncryption( Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT );
+                code = Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT;
+                return null;
             }
 
             data.Reverse();
