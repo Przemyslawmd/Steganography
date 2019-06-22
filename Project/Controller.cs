@@ -22,20 +22,16 @@ namespace Steganography
 
             if ( Settings.Encryption )
             {
-                string password = Settings.Password;
-
-                if ( password.Equals( "" ) )
+                if ( Settings.Password.Equals( "" ) )
                 {
                     return Messages.MessageCode.NO_PASSWORD;
                 }
 
-                data = new Encryption().Encrypt( data, password );
+                data = new Encryption().Encrypt( data, Settings.Password );
             }
 
             int BitsInByte = 8;
-
-            // Condition without a first row of bitmap because it's intented for metadata
-            if ( ( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
+            if (( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
             {
                 return Messages.MessageCode.TOO_MANY_DATA;
             }
@@ -59,31 +55,20 @@ namespace Steganography
 
             if ( Settings.Encryption )
             {
-                string password = Settings.Password;
-
-                if ( password.Equals( "" ) )
+                if ( Settings.Password.Equals( "" ) )
                 {
                     code = Messages.MessageCode.NO_PASSWORD;
                     return null;
                 }
 
-                data = new Decryption().Decrypt( data, password, ref code );
+                data = new Decryption().Decrypt( data, Settings.Password, ref code );
                 if ( data is null )
                 {
                     return null;
                 }
             }
 
-            if ( compression )
-            {
-                data = new Decompression().Decompress( data, ref code );
-                if ( data is null )
-                {
-                    return null;
-                }
-            }
-
-            return data;
+            return ( compression ) ? new Decompression().Decompress( data, ref code ) : data;
         }
     }    
 }

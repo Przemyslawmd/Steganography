@@ -70,7 +70,6 @@
     <Compile Include="Cryptography\Sbox.cs" />
     <Compile Include="Cryptography\Decryption.cs" />
     <Compile Include="Cryptography\Encryption.cs" />
-    <Compile Include="Cryptography\ExceptionEncryption.cs" />
     <Compile Include="Cryptography\Key.cs" />
     <Compile Include="Cryptography\Word.cs" />
     <Compile Include="Messages.cs" />
