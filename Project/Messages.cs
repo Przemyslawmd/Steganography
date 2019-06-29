@@ -9,7 +9,6 @@ namespace Steganography
         public enum MessageCode
         {
             OK,
-            NO_PASSWORD,
             ERROR_DECRYPTION_ALIGNMENT,
             TOO_MANY_DATA,
             NOT_ENOUGH_BITMAP_WIDTH,
@@ -20,7 +19,6 @@ namespace Steganography
         {
             messages = new Dictionary< MessageCode, string >();
 
-            messages.Add( MessageCode.NO_PASSWORD,                  "Encryption is choosen with no password provided." );
             messages.Add( MessageCode.ERROR_DECRYPTION_ALIGNMENT,   "Size of data to be decrypted must be divided by 16." );
             messages.Add( MessageCode.TOO_MANY_DATA,                "Too many data to be hidden into a loaded picture." );
             messages.Add( MessageCode.NOT_ENOUGH_BITMAP_WIDTH,      "Width of a picture must contains at least seven pixels.");

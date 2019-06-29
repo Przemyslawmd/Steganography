@@ -22,11 +22,6 @@ namespace Steganography
 
             if ( Settings.Encryption )
             {
-                if ( Settings.Password.Equals( "" ) )
-                {
-                    return Messages.MessageCode.NO_PASSWORD;
-                }
-
                 data = new Encryption().Encrypt( data, Settings.Password );
             }
 
@@ -46,8 +41,7 @@ namespace Steganography
         public static List< byte > UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
         {
             bool compression = false;
-            List< byte > data = new Uncovering().UncoverData( bitmap, ref compression, ref code );
-
+            var data = new Uncovering().UncoverData( bitmap, ref compression, ref code );
             if ( data is null )
             {
                 return null;
@@ -55,12 +49,6 @@ namespace Steganography
 
             if ( Settings.Encryption )
             {
-                if ( Settings.Password.Equals( "" ) )
-                {
-                    code = Messages.MessageCode.NO_PASSWORD;
-                    return null;
-                }
-
                 data = new Decryption().Decrypt( data, Settings.Password, ref code );
                 if ( data is null )
                 {
