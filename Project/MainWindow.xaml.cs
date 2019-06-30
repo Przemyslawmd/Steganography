@@ -27,26 +27,20 @@ namespace Steganography
             open.Title = MenuLoadGraphic.Header.ToString();
             open.Filter = "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png";
 
-            if ( open.ShowDialog() == false )
+            if ( open.ShowDialog() is false )
             {
                 return;
             }
 
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri( open.FileName );
-            bitmapImage.EndInit();
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri( open.FileName );
+            bitmap.EndInit();
 
-            if ( bitmapImage.Width > imageBorder.ActualWidth || bitmapImage.Height > imageBorder.ActualHeight )
-            {
-                ControlImage.Stretch = Stretch.Uniform;
-            }
-            else
-            {
-                ControlImage.Stretch = Stretch.None;
-            }
+            ControlImage.Stretch = bitmap.Width > imageBorder.ActualWidth || bitmap.Height > imageBorder.ActualHeight ?
+                                   Stretch.Uniform : Stretch.None;
 
-            ControlImage.Source = bitmapImage;
+            ControlImage.Source = bitmap;
             ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, 
                                       MenuUncoverText, MenuUncoverFile, MenuSaveFile );
             ChangeControlState( false, MenuLoadGraphic );
@@ -67,15 +61,8 @@ namespace Steganography
                 return;
             }
 
-            BitmapEncoder encoder;
-            if ( saveDialog.FilterIndex == 1 )
-            {
-                encoder = new PngBitmapEncoder();
-            }
-            else
-            {
-                encoder = new BmpBitmapEncoder();
-            }
+            BitmapEncoder encoder = ( saveDialog.FilterIndex == 1 ) ? (BitmapEncoder) new PngBitmapEncoder() : 
+                                                                                      new BmpBitmapEncoder();
 
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, encoder );
             bitmap.Save( saveDialog.FileName );
@@ -100,7 +87,7 @@ namespace Steganography
             OpenFileDialog open = new OpenFileDialog();
             open.Title = MenuLoadFile.HeaderStringFormat;
 
-            if ( open.ShowDialog() == false )
+            if ( open.ShowDialog() is false )
             {
                 return;
             }
@@ -160,7 +147,7 @@ namespace Steganography
                 return;
             }
 
-            List< byte > data = new List<byte>( System.Text.Encoding.Unicode.GetBytes( ControlText.Text ) );
+            var data = new List< byte >( System.Text.Encoding.Unicode.GetBytes( ControlText.Text ));
             CoverData( data );
         }
 
@@ -172,7 +159,7 @@ namespace Steganography
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
             List< byte > data = Controller.UncoverData( bitmap, ref code );
 
-            if ( data == null )
+            if ( data is null )
             {
                 MessageBox.Show( messages.GetMessageText( code ) );
                 return;
