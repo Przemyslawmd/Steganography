@@ -1,5 +1,5 @@
 ﻿
-using SteganographyEncryption;
+using Steganography.Cryptography;
 using System.Collections.Generic;
 using System.Drawing;
 

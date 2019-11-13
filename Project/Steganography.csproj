@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Covering\Utils.cs" />
     <Compile Include="Cryptography\Utils.cs" />
     <Compile Include="Utils\BitIterator.cs" />
     <Compile Include="Compression\Compression.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Cryptography\Word.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Utils\Containers.cs" />
     <Compile Include="WindowSettings.xaml.cs">
       <DependentUpon>WindowSettings.xaml</DependentUpon>
     </Compile>

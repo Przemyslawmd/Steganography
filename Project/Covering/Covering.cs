@@ -13,7 +13,7 @@ namespace Steganography
             IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
 
             inputStream.Reverse();
-            bytesToCover = new Containers().CreateByteStackFromInteger( inputStream.Count );
+            bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
             IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, ConstValues.SecondRow, 2 );

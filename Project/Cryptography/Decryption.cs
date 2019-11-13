@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Steganography;
 
-namespace SteganographyEncryption
+namespace Steganography.Cryptography
 {
     class Decryption
     {

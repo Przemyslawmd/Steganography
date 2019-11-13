@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Steganography
 {
-    class Containers
+    class Utils
     {
         public Stack< byte > CreateByteStackFromInteger( int number )  
         {

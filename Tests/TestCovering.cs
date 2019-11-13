@@ -1,6 +1,6 @@
 ﻿
 using Steganography;
-using SteganographyEncryption;
+using Steganography.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Drawing;

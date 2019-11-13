@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
 
-namespace SteganographyEncryption
-{
+namespace Steganography.Cryptography
+{ 
     class Utils
     {
         public void InputIntoState( Stack< byte > stack, byte[,] state )

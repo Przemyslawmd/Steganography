@@ -20,7 +20,7 @@ namespace Steganography
             bitIterator.Reset();
             countDataToProcess = 0;
             List< byte >buffer = IteratePictureAndUncoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
-            countDataToProcess = new Containers().CreateIntegerFromByteList( buffer );
+            countDataToProcess = new Utils().CreateIntegerFromByteList( buffer );
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
         }

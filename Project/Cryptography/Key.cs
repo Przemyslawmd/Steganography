@@ -2,7 +2,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace SteganographyEncryption
+namespace Steganography.Cryptography
 {
     class Key
     {

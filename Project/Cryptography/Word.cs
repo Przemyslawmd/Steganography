@@ -1,5 +1,5 @@
 ﻿
-namespace SteganographyEncryption
+namespace Steganography.Cryptography
 {
     class Word
     {
