@@ -1,12 +1,11 @@
 ﻿
 using System.Collections.Generic;
-using Steganography;
 
-namespace SteganographyCompression
+namespace Steganography
 {
     class Decompression
     {
-        public List< byte > Decompress( List< byte > source, ref Messages.MessageCode code )
+        public List< byte > Decompress( List< byte > source, ref Result result )
         {
             IEnumerator< byte > iter = source.GetEnumerator();
             int dataSizeBeforeCompression = GetIntegerFromStream( iter );
@@ -18,7 +17,7 @@ namespace SteganographyCompression
             }
             catch ( System.ArgumentException )
             {
-                code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
+                result = Result.IMPROPER_DATA_IN_PICTURE;
                 return null;
             }
 
@@ -98,7 +97,7 @@ namespace SteganographyCompression
 
         private List< byte > Decode( IEnumerator< byte > iter, Node root, int dataSizeBeforeCompression )
         {                        
-            List< byte > decompressedData = new List< byte >();
+            var decompressedData = new List< byte >();
             Node node = null;
 
             while ( iter.MoveNext() )
@@ -123,7 +122,6 @@ namespace SteganographyCompression
                     {
                         decompressedData.Add( node.ByteValue );
                         
-                        // Some last left bits were used as an alignment
                         if ( decompressedData.Count == dataSizeBeforeCompression )
                         {
                             return decompressedData;

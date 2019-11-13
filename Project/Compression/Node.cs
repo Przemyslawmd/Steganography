@@ -1,5 +1,5 @@
 ﻿
-namespace SteganographyCompression
+namespace Steganography
 { 
     class Node
     {

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Tests" )]
 
-namespace SteganographyCompression
+namespace Steganography
 {
     class HuffmanCodesGenerator
     {
         public Dictionary< byte, List< bool >> CreateCodesDictionary( NodeCompress root )
         {
-            codesDictionary = new Dictionary< byte, List< bool >>();
-            code = new List< bool >();
             GenerateCodes( root, true );
             return codesDictionary;
         }
@@ -41,8 +39,8 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< bool > code;
-        private Dictionary< byte, List< bool >> codesDictionary;
+        private readonly List< bool > code = new List< bool >();
+        private readonly Dictionary< byte, List< bool >> codesDictionary = new Dictionary< byte, List< bool >>();
     }
 }
 

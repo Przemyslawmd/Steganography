@@ -1,25 +1,24 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Steganography;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
-namespace SteganographyCompression
+namespace Steganography
 {
     class Compression
     {
         public List< byte > MakeCompressedStream( List< byte > source )
         {
-            List< byte > resultStream = new List< byte >( BitConverter.GetBytes( source.Count ));
-
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
             codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
-            List< byte > compressedData = Compress( source );
+            var dataCompressed = Compress( source );
 
-            resultStream.AddRange( CreateCodesDictionaryStream() );
-            resultStream.AddRange( compressedData );
-            return resultStream;
+            var dataFinal = new List< byte >( BitConverter.GetBytes( source.Count ));
+            var dataWithCodes = CreateCodesDictionaryStream();
+            dataFinal.AddRange( dataWithCodes );
+            dataFinal.AddRange( dataCompressed );
+            return dataFinal;
         }
 
         /**************************************************************************************/
@@ -27,35 +26,34 @@ namespace SteganographyCompression
 
         private List< byte > Compress( List< byte > source )
         {
-            byte temp = 0;
+            byte compressedDataPortion = 0;
             BitIterator bitIterator = new BitIterator();
-            List< byte > compressedData = new List< byte >();
+            var compressedData = new List< byte >();
 
             foreach ( byte value in source )
             {
                 foreach ( bool token in codes[value] )
                 {
-                    temp <<= 1;
+                    compressedDataPortion <<= 1;
                     if ( token )
                     {
-                        temp += 1;
+                        compressedDataPortion += 1;
                     }
 
                     bitIterator.IncrementIndex();
 
                     if ( bitIterator.IsInitialIndex() )
                     {
-                        compressedData.Add( temp );
-                        temp = 0;
+                        compressedData.Add( compressedDataPortion );
+                        compressedDataPortion = 0;
                     }
                 }
             }     
             
-            // Some data remains, add an alignment
             if ( bitIterator.IsInitialIndex() is false )
             {
-                temp <<= ( BitsInByte - bitIterator.Index );
-                compressedData.Add( temp );
+                compressedDataPortion <<= ( ConstValues.BitsInByte - bitIterator.Index );
+                compressedData.Add( compressedDataPortion );
             }
             return compressedData;
         }
@@ -65,7 +63,7 @@ namespace SteganographyCompression
                     
         private List< byte > CreateCodesDictionaryStream()
         {
-            List< byte > codesStream = new List< byte >();
+            var codesStream = new List< byte >();
 
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
@@ -73,37 +71,34 @@ namespace SteganographyCompression
                 codesStream.Add( (byte) code.Value.Count );
             }
 
-            byte temp = 0;
+            byte codesStreamPortion = 0;
             BitIterator bitIterator = new BitIterator();
 
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
                 foreach ( bool token in code.Value )
                 {
-                    if ( bitIterator.Index > 0 )
-                    {
-                        temp <<= 1;
-                    }
+                    codesStreamPortion <<= bitIterator.Index > 0 ? 1 : 0;
 
                     if ( token )
                     {
-                        temp += 1;
+                        codesStreamPortion += 1;
                     }
 
                     bitIterator.IncrementIndex();
 
                     if ( bitIterator.IsInitialIndex() )
                     {
-                        codesStream.Add( temp );
-                        temp = 0;
+                        codesStream.Add( codesStreamPortion );
+                        codesStreamPortion = 0;
                     }
                 }
             }
 
             if ( bitIterator.IsInitialIndex() == false )
             {
-                temp <<= ( BitsInByte - bitIterator.Index );
-                codesStream.Add( temp );
+                codesStreamPortion <<= ( ConstValues.BitsInByte - bitIterator.Index );
+                codesStream.Add( codesStreamPortion );
             }
 
             int codesCount = ( codes.Count == 256 ) ? 0 : codes.Count;
@@ -116,7 +111,6 @@ namespace SteganographyCompression
         /**************************************************************************************/
 
         private Dictionary< byte, List< bool >> codes;
-        private readonly int BitsInByte = 8;
     }
 }
 

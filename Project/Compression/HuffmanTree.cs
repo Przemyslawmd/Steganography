@@ -1,9 +1,8 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SteganographyCompression
+namespace Steganography
 {
     class HuffmanTree
     {
@@ -21,11 +20,10 @@ namespace SteganographyCompression
         public Node BuildTreeDecompression( Dictionary< byte, List< bool >> codes )
         {
             Node root = new Node( 0 );
-            Node node;
 
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
-                node = root;
+                Node node = root;
 
                 foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ))
                 {
@@ -67,7 +65,6 @@ namespace SteganographyCompression
             List< NodeCompress > nodes = new List< NodeCompress >();
             nodes.Add( new NodeCompress( 1, sourceData[0] ));
             bool isFound = false;
-            int index;
 
             foreach ( byte symbol in sourceData.Skip( 1 ))
             {
@@ -82,7 +79,7 @@ namespace SteganographyCompression
 
                     if ( symbol < node.ByteValue )
                     {
-                        index = nodes.IndexOf( node );
+                        int index = nodes.IndexOf( node );
                         nodes.Insert( index, new NodeCompress( 1, symbol ) );
                         isFound = true;
                         break;
@@ -120,21 +117,15 @@ namespace SteganographyCompression
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void InsertNodeIntoTree( NodeCompress newNode, List<NodeCompress> listNodes )
+        private void InsertNodeIntoTree( NodeCompress newNode, List< NodeCompress > listNodes )
         {
-            Boolean isInserted = false;
-
-            for ( int i = 0; i < listNodes.Count; i++ )
+            int index = listNodes.FindIndex( node => node.Count > newNode.Count );
+            
+            if ( index >= 0 )
             {
-                if ( listNodes[i].Count > newNode.Count )
-                {
-                    listNodes.Insert( i, newNode );
-                    isInserted = true;
-                    break;
-                }
+                listNodes.Insert( index, newNode );
             }
-
-            if ( isInserted == false )
+            else
             {
                 listNodes.Add( newNode );
             }
