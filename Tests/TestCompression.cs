@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Steganography;
-using SteganographyCompression;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -16,17 +15,17 @@ namespace Tests
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
-            List< byte > dataToCompress = new List< byte >( File.ReadAllBytes( filePath ) );
+            var dataToCompress = new List< byte >( File.ReadAllBytes( filePath ) );
             List< byte > dataCompressed = new Compression().MakeCompressedStream( dataToCompress );
 
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
 
-            Messages.MessageCode messageCode = Messages.MessageCode.OK;
-            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref messageCode );
+            Result result = Result.OK;
+            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref result );
 
             CollectionAssert.AreEqual( dataToCompress, dataDecompressed );
-            Assert.AreEqual( messageCode, Messages.MessageCode.OK );
+            Assert.AreEqual( result, Result.OK );
         }
 
         /**************************************************************************************/
@@ -35,18 +34,17 @@ namespace Tests
         [TestMethod]
         public void TestCompressionShortTextWithoutDictionaryCodes()
         {
-            List< byte > dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
+            var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
             objectCompression.SetField( "codes", codes );
 
-            List< byte > dataCompressed = (List< byte >) objectCompression.Invoke( "Compress", dataToCompress );
+            var dataCompressed = (List< byte >) objectCompression.Invoke( "Compress", dataToCompress );
 
-            List< byte > expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED,
-                                                          0xDC, 0x5C, 0xD9, 0x65, 0xAB,
-                                                          0xEB, 0xBB, 0xCB, 0xD8 };
+            var expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED, 0xDC, 0x5C, 
+                                                 0xD9, 0x65, 0xAB, 0xEB, 0xBB, 0xCB, 0xD8 };
 
             CollectionAssert.AreEqual( dataCompressed, expectedData );
         }
@@ -58,9 +56,9 @@ namespace Tests
         public void TestCompressionCreatingNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
-            List< byte > data = new List< byte > { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
+            var data = new List< byte > { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
 
-            List< NodeCompress > nodes = ( List< NodeCompress > )( obj.Invoke( "CreateNodes", data ));
+            var nodes = ( List< NodeCompress > )( obj.Invoke( "CreateNodes", data ));
             nodes = nodes.OrderBy( x => x.Count ).ToList();
 
             Assert.AreEqual( nodes.Count, 7 );

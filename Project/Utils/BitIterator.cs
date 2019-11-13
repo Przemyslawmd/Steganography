@@ -3,11 +3,6 @@ namespace Steganography
 {
     class BitIterator
     {
-        public BitIterator()
-        {
-            Index = 0;
-        }
-
         public int Index { get; private set; }
 
         public void DecrementIndex()

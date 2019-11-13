@@ -157,11 +157,11 @@ namespace Steganography
         private void ActionUncoverText( object sender, RoutedEventArgs e )
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
-            List< byte > data = Controller.UncoverData( bitmap, ref code );
+            List< byte > data = Controller.UncoverData( bitmap, ref result );
 
             if ( data is null )
             {
-                MessageBox.Show( messages.GetMessageText( code ) );
+                MessageBox.Show( messages.GetMessageText( result ) );
                 return;
             }
 
@@ -188,11 +188,11 @@ namespace Steganography
         private void ActionUncoverFile( object sender, RoutedEventArgs e )
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder());
-            dataBuffer = Controller.UncoverData( bitmap, ref code );
+            dataBuffer = Controller.UncoverData( bitmap, ref result );
 
             if ( dataBuffer == null )
             {
-                MessageBox.Show( messages.GetMessageText( code ) );
+                MessageBox.Show( messages.GetMessageText( result ) );
                 return;
             }
 
@@ -214,15 +214,15 @@ namespace Steganography
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
 
-            code = Controller.CoverData( data, bitmap );
-            if ( code == Messages.MessageCode.OK )
+            result = Controller.CoverData( data, bitmap );
+            if ( result == Result.OK )
             {
                 ControlImage.Source = GetBitmapSourceFromBitmap( bitmap );
                 MessageBox.Show( "Data was covered in a graphic file successfully" );
             }
             else
             {
-                MessageBox.Show( messages.GetMessageText( code ) );
+                MessageBox.Show( messages.GetMessageText( result ) );
             }
         }
 
@@ -307,7 +307,7 @@ namespace Steganography
         /**************************************************************************************/
 
         private Messages messages;
-        private Messages.MessageCode code;
+        private Result result;
         private List< byte > dataBuffer;
     }
 }

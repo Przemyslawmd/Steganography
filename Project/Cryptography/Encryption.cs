@@ -8,14 +8,6 @@ namespace SteganographyEncryption
 {
     class Encryption
     {
-        public Encryption()
-        {
-            utils = new Utils();
-        }
-        
-        /**************************************************************************************/
-        /**************************************************************************************/
-
         public List< byte > Encrypt( List< byte > dataToEncrypt, String password )
         {
             byte[,] state = new byte[4, 4];
@@ -23,8 +15,8 @@ namespace SteganographyEncryption
             int alignment = AlignData( dataToEncrypt );
 
             dataToEncrypt.Reverse();
-            Stack< byte > stack = new Stack< byte >( dataToEncrypt );
-            List< byte > dataEncrypted = new List< byte >();
+            var stack = new Stack< byte >( dataToEncrypt );
+            var dataEncrypted = new List< byte >();
 
             for ( int i = 0; i < dataToEncrypt.Count; i += 16 )
             {
@@ -135,7 +127,7 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Utils utils;
+        private readonly Utils utils = new Utils();
         private readonly int NumOfRounds = 11;
     }
 }

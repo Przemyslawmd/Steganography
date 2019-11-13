@@ -7,11 +7,11 @@ namespace Steganography
     {
         public Stack< byte > CreateByteStackFromInteger( int number )  
         {
-            Stack< byte > stack = new Stack< byte >();
+            var stack = new Stack< byte >();
 
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < sizeof( int ); i++ )
             {
-                stack.Push( (byte) ( number >> ( i * BitsInByte )));
+                stack.Push( (byte) ( number >> ( i * ConstValues.BitsInByte )));
             }
 
             return stack;
@@ -26,16 +26,11 @@ namespace Steganography
             
             foreach ( byte byteValue in byteList )
             {
-                number <<= BitsInByte;
+                number <<= ConstValues.BitsInByte;
                 number += byteValue;
             }
             return number;
         }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        private readonly int BitsInByte = 8;
     }
 }
 

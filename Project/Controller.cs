@@ -1,5 +1,4 @@
 ﻿
-using SteganographyCompression;
 using SteganographyEncryption;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,11 +7,11 @@ namespace Steganography
 {
     class Controller
     {
-        public static Messages.MessageCode CoverData( List< byte > data, Bitmap bitmap )
+        public static Result CoverData( List< byte > data, Bitmap bitmap )
         {
             if ( bitmap.Width < 7 )
             {
-                return Messages.MessageCode.NOT_ENOUGH_BITMAP_WIDTH;
+                return Result.NOT_ENOUGH_BITMAP_WIDTH;
             }
 
             if ( Settings.Compression )
@@ -25,23 +24,22 @@ namespace Steganography
                 data = new Encryption().Encrypt( data, Settings.Password );
             }
 
-            int BitsInByte = 8;
-            if (( data.Count * BitsInByte ) > ( ( bitmap.Height - 1 ) * bitmap.Width ))
+            if (( data.Count * ConstValues.BitsInByte ) > (( bitmap.Height - 1 ) * bitmap.Width ))
             {
-                return Messages.MessageCode.TOO_MANY_DATA;
+                return Result.TOO_MANY_DATA;
             }
            
             new Covering().CoverData( bitmap, data, Settings.Compression );
-            return Messages.MessageCode.OK;
+            return Result.OK;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public static List< byte > UncoverData( Bitmap bitmap, ref Messages.MessageCode code )
+        public static List< byte > UncoverData( Bitmap bitmap, ref Result result )
         {
             bool compression = false;
-            var data = new Uncovering().UncoverData( bitmap, ref compression, ref code );
+            var data = new Uncovering().UncoverData( bitmap, ref compression, ref result );
             if ( data is null )
             {
                 return null;
@@ -49,14 +47,14 @@ namespace Steganography
 
             if ( Settings.Encryption )
             {
-                data = new Decryption().Decrypt( data, Settings.Password, ref code );
+                data = new Decryption().Decrypt( data, Settings.Password, ref result );
                 if ( data is null )
                 {
                     return null;
                 }
             }
 
-            return ( compression ) ? new Decompression().Decompress( data, ref code ) : data;
+            return ( compression ) ? new Decompression().Decompress( data, ref result ) : data;
         }
     }    
 }

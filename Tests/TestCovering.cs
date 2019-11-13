@@ -1,6 +1,5 @@
 ﻿
 using Steganography;
-using SteganographyCompression;
 using SteganographyEncryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -146,7 +145,7 @@ namespace Tests
         static List< byte > referenceShortData;
         static List< byte > referenceLongData;
         static string password = "de3@JH^@";
-        static Messages.MessageCode code = Messages.MessageCode.OK;
+        static Result code = Result.OK;
 
         Bitmap emptyBitmap;
         Bitmap colorBitmap;

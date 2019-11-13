@@ -7,15 +7,7 @@ namespace SteganographyEncryption
 {
     class Decryption
     {
-        public Decryption()
-        {
-            utils = new Utils();
-        }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        public List< byte > Decrypt( List< byte > data, String password, ref Messages.MessageCode code )
+        public List< byte > Decrypt( List< byte > data, String password, ref Result code )
         {
             byte[][] key = new Key().CreateKeys( password );
             byte[,] state = new byte[4, 4];
@@ -25,13 +17,13 @@ namespace SteganographyEncryption
 
             if ( data.Count % 16 != 0 )
             {
-                code = Messages.MessageCode.ERROR_DECRYPTION_ALIGNMENT;
+                code = Result.ERROR_DECRYPTION_ALIGNMENT;
                 return null;
             }
 
             data.Reverse();
-            Stack< byte > stack = new Stack< byte >( data );
-            List< byte > decryptedData = new List< byte >();
+            var stack = new Stack< byte >( data );
+            var decryptedData = new List< byte >();
 
             for ( int i = 0; i < data.Count; i += 16 )
             {
@@ -129,7 +121,7 @@ namespace SteganographyEncryption
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Utils utils;
+        private readonly Utils utils = new Utils();
         private readonly int NumOfRounds = 11;
     }
 }

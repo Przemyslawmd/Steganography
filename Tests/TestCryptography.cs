@@ -24,8 +24,8 @@ namespace Tests
             data = new Encryption().Encrypt( data, password );
             CollectionAssert.AreNotEqual( data, dataCopy );
 
-            Messages.MessageCode code = Messages.MessageCode.OK;
-            List< byte > decompressedData = new Decryption().Decrypt( data, password, ref code );
+            Result result = Result.OK;
+            List< byte > decompressedData = new Decryption().Decrypt( data, password, ref result );
             CollectionAssert.AreEqual( decompressedData, dataCopy );
         } 
                   

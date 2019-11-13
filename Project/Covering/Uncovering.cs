@@ -6,23 +6,20 @@ namespace Steganography
 {
     class Uncovering
     {
-        public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Messages.MessageCode code )
+        public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Result code )
         {
-            bitIterator = new BitIterator();
-            constData = new CoveringConst();
-
-            if ( CheckCoveringMark( Image ) == false )
+            if ( CheckCoveringMark( Image ) is false )
             {
-                code = Messages.MessageCode.IMPROPER_DATA_IN_PICTURE;
+                code = Result.IMPROPER_DATA_IN_PICTURE;
                 return null;
             }
 
-            compression = (( Image.GetPixel( constData.NumberCompressPixel, constData.SecondRow ).R % 2 ) == 1 ) ? true : false;
+            compression = (( Image.GetPixel( ConstValues.CompressionPixel, ConstValues.SecondRow ).R % 2 ) == 1 ) ? true : false;
 
-            byteValue = 0;
+            currentByte = 0;
             bitIterator.Reset();
             countDataToProcess = 0;
-            List< byte >buffer = IteratePictureAndUncoverData( Image, 0, constData.PixelCountForDataSize, 1, 2 );
+            List< byte >buffer = IteratePictureAndUncoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
             countDataToProcess = new Containers().CreateIntegerFromByteList( buffer );
 
             return IteratePictureAndUncoverData( Image, 0, Image.Width, 2, Image.Height );
@@ -68,25 +65,25 @@ namespace Steganography
         {
             if (( componentRGB % 2 ) == 1 )
             {
-                byteValue |= constData.MaskOne;
+                currentByte |= ConstValues.MaskOne;
             }
 
             bitIterator.IncrementIndex();
 
             if ( bitIterator.Index == 0 )
             {
-                buffer.Add( byteValue );
+                buffer.Add( currentByte );
 
                 if ( buffer.Count == countDataToProcess )
                 {
                     return UncoverState.Completed;
                 }
 
-                byteValue = 0;
+                currentByte = 0;
             }
             else
             {
-                byteValue <<= 1;
+                currentByte <<= 1;
             }
 
             return UncoverState.Uncompleted;
@@ -98,18 +95,17 @@ namespace Steganography
         private bool CheckCoveringMark( Bitmap bitmap )
         {
             countDataToProcess = 2;
-            List< byte > buffer = IteratePictureAndUncoverData( bitmap, 0, constData.PixelCountForDataSize, 0, 1 );
+            List< byte > buffer = IteratePictureAndUncoverData( bitmap, 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
 
-            return buffer[0] == constData.CoverMark[1] && buffer[1] == constData.CoverMark[0];
+            return buffer[0] == ConstValues.CoverMark[1] && buffer[1] == ConstValues.CoverMark[0];
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private CoveringConst constData;
-        private BitIterator bitIterator;
+        private readonly BitIterator bitIterator = new BitIterator();
         private int countDataToProcess;
-        private byte byteValue;
+        private byte currentByte;
 
         private enum UncoverState { Completed, Uncompleted };
     }
