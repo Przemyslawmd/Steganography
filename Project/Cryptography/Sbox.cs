@@ -63,7 +63,6 @@ namespace Steganography.Cryptography
         
 
         protected readonly static int stateArraySize = 4;
-        protected delegate byte DelegateBox( byte value );
     }
 }
 

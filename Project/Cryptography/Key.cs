@@ -20,41 +20,40 @@ namespace Steganography.Cryptography
         
         private byte[][] ExpandKey( byte[] initialKey )
         {
-            Word[] words = createKeysAsWords( initialKey );
-            return MovedKeysFromWordIntoByteArray( words );
+            Word[] keyWords = CreateKeysAsWords( initialKey );
+            return MovedKeysFromWordIntoByteArray( keyWords );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
 
-        private Word[] createKeysAsWords( byte[] initialKey )
+        private Word[] CreateKeysAsWords( byte[] initialKey )
         {
-            int wordsCount = WordsInKey * NumOfRounds; 
-            Word[] words = new Word[wordsCount]; 
+            int keyWordsCount = KeySize * NumOfRounds; 
+            Word[] keyWords = new Word[keyWordsCount]; 
 
             for ( int wordNum = 0; wordNum < 4; wordNum++ )
             {
-                words[wordNum] = new Word( initialKey[wordNum * WordsInKey], initialKey[wordNum * WordsInKey + 1],
-                                           initialKey[wordNum * WordsInKey + 2], initialKey[wordNum * WordsInKey + 3] );
+                keyWords[wordNum] = new Word( initialKey[wordNum * KeySize], initialKey[wordNum * KeySize + 1],
+                                              initialKey[wordNum * KeySize + 2], initialKey[wordNum * KeySize + 3] );
             }
 
-            Word word;
-            for ( int wordNum = 4; wordNum < wordsCount; wordNum++ )
+            for ( int wordNum = 4; wordNum < keyWordsCount; wordNum++ )
             {
                 if ( wordNum % 4 == 0 )
                 {
-                    word = new Word( words[wordNum - 1] );
-                    CalculateWord( wordNum / WordsInKey, word );
-                    words[wordNum] = words[wordNum - WordsInKey].XorOuter( word );
+                    Word word = new Word( keyWords[wordNum - 1] );
+                    CalculateWord( wordNum / KeySize, word );
+                    keyWords[wordNum] = keyWords[wordNum - KeySize].XorOuter( word );
                 }
                 else
                 {
-                    words[wordNum] = words[wordNum - 4].XorOuter( words[wordNum - 1] );
+                    keyWords[wordNum] = keyWords[wordNum - 4].XorOuter( keyWords[wordNum - 1] );
                 }
             }
 
-            return words;
+            return keyWords;
         }
         
         /**************************************************************************************/
@@ -69,17 +68,17 @@ namespace Steganography.Cryptography
                 keys[i] = new byte[16];
             }
 
-            for ( int word = 0, j = 0; word < WordsInKey * NumOfRounds; word++ )
+            for ( int word = 0, j = 0; word < KeySize * NumOfRounds; word++ )
             {
-                if ( word % WordsInKey == 0 )
+                if ( word % KeySize == 0 )
                 {
                     j = 0;
                 }
 
-                keys[word / WordsInKey][j++] = words[word].byte_1;
-                keys[word / WordsInKey][j++] = words[word].byte_2;
-                keys[word / WordsInKey][j++] = words[word].byte_3;
-                keys[word / WordsInKey][j++] = words[word].byte_4;                
+                keys[word / KeySize][j++] = words[word].byte_1;
+                keys[word / KeySize][j++] = words[word].byte_2;
+                keys[word / KeySize][j++] = words[word].byte_3;
+                keys[word / KeySize][j++] = words[word].byte_4;                
             }
 
             return keys;
@@ -98,14 +97,14 @@ namespace Steganography.Cryptography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private byte[] rcon = new byte[10]
+        private readonly byte[] rcon = new byte[10]
         {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
         };
 
 
         private readonly int NumOfRounds = 11;
-        private readonly int WordsInKey = 4;
+        private readonly int KeySize = 4;
     }
 }
 

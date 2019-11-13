@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Steganography.Cryptography
@@ -47,13 +48,13 @@ namespace Steganography.Cryptography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public void GetGeneralSbox( DelegateBox delegateBox, byte[,] state )
+        public void GetGeneralSbox( Func< byte, byte > func, byte[,] state )
         {
             for ( int i = 0; i < stateArraySize; i++ )
             {
                 for ( int j = 0; j < stateArraySize; j++ )
                 {
-                    state[i, j] = delegateBox.Invoke( state[i, j] );
+                    state[i, j] = func.Invoke( state[i, j] );
                 }
             }            
         }
@@ -90,7 +91,6 @@ namespace Steganography.Cryptography
         /**************************************************************************************/
 
         private readonly int stateArraySize = 4; 
-        public delegate byte DelegateBox( byte value );
     }
 }
 
