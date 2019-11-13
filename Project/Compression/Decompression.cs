@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Steganography
+namespace Steganography.Huffman
 {
     class Decompression
     {

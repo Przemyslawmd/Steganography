@@ -1,6 +1,7 @@
 ﻿
 using Steganography;
 using Steganography.Cryptography;
+using Steganography.Huffman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Drawing;

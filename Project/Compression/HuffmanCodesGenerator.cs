@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Tests" )]
 
-namespace Steganography
+namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {

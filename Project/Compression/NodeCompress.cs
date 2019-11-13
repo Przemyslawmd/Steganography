@@ -1,5 +1,5 @@
 ﻿
-namespace Steganography
+namespace Steganography.Huffman
 {
     class NodeCompress : Node
     {
