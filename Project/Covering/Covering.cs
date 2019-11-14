@@ -16,11 +16,11 @@ namespace Steganography
             bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
-            IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, ConstValues.SecondRow, 2 );
+            IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
 
-            Color color = Image.GetPixel( ConstValues.CompressionPixel, ConstValues.SecondRow );
+            Color color = Image.GetPixel( ConstValues.CompressionPixel, 1 );
             int red = ( isCompress ) ? ( color.R | ConstValues.MaskOne ) : ( color.R & MaskZero );
-            Image.SetPixel( ConstValues.CompressionPixel, ConstValues.SecondRow, Color.FromArgb( red, color.G, color.B ));
+            Image.SetPixel( ConstValues.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
 
             bytesToCover = new Stack< byte >( inputStream );
             bitIterator.Reset();
