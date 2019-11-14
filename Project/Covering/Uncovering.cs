@@ -6,28 +6,28 @@ namespace Steganography
 {
     class Uncovering
     {
-        public List< byte > UncoverData( Bitmap Image, ref bool compression, ref Result code )
+        public List< byte > UncoverData( Bitmap bitmap, ref bool compression, ref Result code )
         {
-            if ( CheckCoveringMark( Image ) is false )
+            if ( CheckCoveringMark( bitmap ) is false )
             {
                 code = Result.IMPROPER_DATA_IN_PICTURE;
                 return null;
             }
-
-            compression = (( Image.GetPixel( ConstValues.CompressionPixel, 1 ).R % 2 ) == 1 ) ? true : false;
+                        
+            compression = (( bitmap.GetPixel( ConstValues.CompressionPixel, 1 ).R % 2 ) == 1 ) ? true : false;
 
             bitIterator.Reset();
             BitmapRange range = new BitmapRange(  0, ConstValues.CountOfPixelsForDataSize, 1, 2 ); 
-            List< byte >buffer = IteratePictureAndUncoverData( Image, range, 0 );
+            List< byte >buffer = IteratePictureAndUncoverData( bitmap, range, 0 );
             int bytesToProcess = new Utils().CreateIntegerFromByteList( buffer );
-            range = new BitmapRange(  0, Image.Width, 2, Image.Height );
-            return IteratePictureAndUncoverData( Image, range, bytesToProcess );
+            range = new BitmapRange(  0, bitmap.Width, 2, bitmap.Height );
+            return IteratePictureAndUncoverData( bitmap, range, bytesToProcess );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< byte > IteratePictureAndUncoverData( Bitmap image, BitmapRange range, int bytesToProcess )
+        private List< byte > IteratePictureAndUncoverData( Bitmap bitmap, BitmapRange range, int bytesToProcess )
         {
             var buffer = new List< byte >( bytesToProcess );
 
@@ -35,7 +35,7 @@ namespace Steganography
             {
                 for ( int x = range.StartX; x < range.StopX; x++ )
                 {
-                    Color color = image.GetPixel( x, y );
+                    Color color = bitmap.GetPixel( x, y );
 
                     if ( UncoverDataFromPixel( color.R, buffer, bytesToProcess ) == UncoverState.Completed )
                     {

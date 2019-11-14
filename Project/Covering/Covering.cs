@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Drawing;
 using System.Collections.Generic;
 
@@ -7,36 +6,36 @@ namespace Steganography
 {     
     class Covering
     {        
-        public void CoverData( Bitmap Image, List< byte > inputStream, Boolean isCompress ) 
+        public void CoverData( Bitmap bitmap, List< byte > inputStream, bool isCompress ) 
         {
             bytesToCover = new Stack< byte >( ConstValues.CoverMark );
-            IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
+            IteratePictureAndCoverData( bitmap, 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
 
             inputStream.Reverse();
             bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
-            IteratePictureAndCoverData( Image, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
+            IteratePictureAndCoverData( bitmap, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
 
-            Color color = Image.GetPixel( ConstValues.CompressionPixel, 1 );
+            Color color = bitmap.GetPixel( ConstValues.CompressionPixel, 1 );
             int red = ( isCompress ) ? ( color.R | ConstValues.MaskOne ) : ( color.R & MaskZero );
-            Image.SetPixel( ConstValues.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
+            bitmap.SetPixel( ConstValues.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
 
             bytesToCover = new Stack< byte >( inputStream );
             bitIterator.Reset();
-            IteratePictureAndCoverData( Image, 0, Image.Width, 2, Image.Height );
+            IteratePictureAndCoverData( bitmap, 0, bitmap.Width, 2, bitmap.Height );
         }
         
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void IteratePictureAndCoverData( Bitmap image, int startX, int stopX, int startY, int stopY )
+        private void IteratePictureAndCoverData( Bitmap bitmap, int startX, int stopX, int startY, int stopY )
         {
             for ( int y = startY; y < stopY; y++ )
             {
                 for ( int x = startX; x < stopX; x++ )
                 {
-                    Color color = image.GetPixel( x, y );
+                    Color color = bitmap.GetPixel( x, y );
 
                     if ( AllBytesCompleted() )
                     {
@@ -47,7 +46,7 @@ namespace Steganography
                                
                     if ( AllBytesCompleted() )
                     {
-                        image.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ));
+                        bitmap.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ));
                         return;
                     }
 
@@ -55,12 +54,12 @@ namespace Steganography
                                       
                     if ( AllBytesCompleted() )
                     {
-                        image.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
+                        bitmap.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
                     }
 
                     int blue = AdjustRGBComponent( color.B, currentByte );                    
-                    image.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
+                    bitmap.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
                 }            
             }            
         }

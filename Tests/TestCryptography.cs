@@ -18,8 +18,8 @@ namespace Tests
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;            
             string filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
 
-            List< byte > data = new List<byte>( File.ReadAllBytes( filePath ) );
-            List< byte > dataCopy = new List<byte>( data );
+            var data = new List< byte >( File.ReadAllBytes( filePath ) );
+            var dataCopy = new List<byte>( data );
                         
             data = new Encryption().Encrypt( data, password );
             CollectionAssert.AreNotEqual( data, dataCopy );
@@ -141,7 +141,7 @@ namespace Tests
         public void TestAESDataAlignment()
         {                                
             PrivateObject encryption = new PrivateObject( new Encryption() );
-            List< byte > data = new List<byte>();
+            List< byte > data = new List< byte >();
 
             for ( int i = 0; i < 5; i++ )
             {
