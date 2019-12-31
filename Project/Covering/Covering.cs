@@ -9,13 +9,15 @@ namespace Steganography
         public void CoverData( Bitmap bitmap, List< byte > inputStream, bool isCompress ) 
         {
             bytesToCover = new Stack< byte >( ConstValues.CoverMark );
-            IteratePictureAndCoverData( bitmap, 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
+            Utils.BitmapRange range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 0, 1 ); 
+            IteratePictureAndCoverData( bitmap, range );
 
             inputStream.Reverse();
             bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
             bitIterator.Reset();
-            IteratePictureAndCoverData( bitmap, 0, ConstValues.CountOfPixelsForDataSize, 1, 2 );
+            range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 1, 2 ); 
+            IteratePictureAndCoverData( bitmap, range );
 
             Color color = bitmap.GetPixel( ConstValues.CompressionPixel, 1 );
             int red = ( isCompress ) ? ( color.R | ConstValues.MaskOne ) : ( color.R & MaskZero );
@@ -23,17 +25,18 @@ namespace Steganography
 
             bytesToCover = new Stack< byte >( inputStream );
             bitIterator.Reset();
-            IteratePictureAndCoverData( bitmap, 0, bitmap.Width, 2, bitmap.Height );
+            range = new Utils.BitmapRange( 0, bitmap.Width, 2, bitmap.Height ); 
+            IteratePictureAndCoverData( bitmap, range );
         }
         
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void IteratePictureAndCoverData( Bitmap bitmap, int startX, int stopX, int startY, int stopY )
+        private void IteratePictureAndCoverData( Bitmap bitmap, Utils.BitmapRange range )
         {
-            for ( int y = startY; y < stopY; y++ )
+            for ( int y = range.StartY; y < range.StopY; y++ )
             {
-                for ( int x = startX; x < stopX; x++ )
+                for ( int x = range.StartX; x < range.StopX; x++ )
                 {
                     Color color = bitmap.GetPixel( x, y );
 

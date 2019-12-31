@@ -31,6 +31,25 @@ namespace Steganography
             }
             return number;
         }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        public struct BitmapRange
+        {
+            public BitmapRange( int startX, int stopX, int startY, int stopY )
+            {
+                StartX = startX;
+                StartY = startY;
+                StopX = stopX;
+                StopY = stopY;
+            }
+            
+            public int StartX { get; }
+            public int StartY { get; }
+            public int StopX { get; }
+            public int StopY { get; }
+        }
     }
 }
 
