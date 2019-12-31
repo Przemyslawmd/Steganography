@@ -8,46 +8,46 @@ namespace Steganography
     {        
         public void CoverData( Bitmap bitmap, List< byte > inputStream, bool isCompress ) 
         {
-            bytesToCover = new Stack< byte >( ConstValues.CoverMark );
+            var bytesToCover = new Stack< byte >( ConstValues.CoverMark );
             Utils.BitmapRange range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 0, 1 ); 
-            IteratePictureAndCoverData( bitmap, range );
+            IteratePictureAndCoverData( bitmap, range, bytesToCover );
 
             inputStream.Reverse();
             bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
-            bitIterator.Reset();
             range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 1, 2 ); 
-            IteratePictureAndCoverData( bitmap, range );
+            IteratePictureAndCoverData( bitmap, range, bytesToCover );
 
             Color color = bitmap.GetPixel( ConstValues.CompressionPixel, 1 );
             int red = ( isCompress ) ? ( color.R | ConstValues.MaskOne ) : ( color.R & MaskZero );
             bitmap.SetPixel( ConstValues.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
 
             bytesToCover = new Stack< byte >( inputStream );
-            bitIterator.Reset();
             range = new Utils.BitmapRange( 0, bitmap.Width, 2, bitmap.Height ); 
-            IteratePictureAndCoverData( bitmap, range );
+            IteratePictureAndCoverData( bitmap, range, bytesToCover );
         }
         
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void IteratePictureAndCoverData( Bitmap bitmap, Utils.BitmapRange range )
+        private void IteratePictureAndCoverData( Bitmap bitmap, Utils.BitmapRange range, Stack< byte > bytesToCover )
         {
+            bitIterator.Reset();
+            
             for ( int y = range.StartY; y < range.StopY; y++ )
             {
                 for ( int x = range.StartX; x < range.StopX; x++ )
                 {
                     Color color = bitmap.GetPixel( x, y );
 
-                    if ( AllBytesCompleted() )
+                    if ( AllBytesCompleted( bytesToCover ) )
                     {
                         return;
                     }
 
                     int red = AdjustRGBComponent( color.R, currentByte );           
                                
-                    if ( AllBytesCompleted() )
+                    if ( AllBytesCompleted( bytesToCover ) )
                     {
                         bitmap.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ));
                         return;
@@ -55,7 +55,7 @@ namespace Steganography
 
                     int green = AdjustRGBComponent( color.G, currentByte );         
                                       
-                    if ( AllBytesCompleted() )
+                    if ( AllBytesCompleted( bytesToCover ) )
                     {
                         bitmap.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
@@ -70,7 +70,7 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool AllBytesCompleted()
+        private bool AllBytesCompleted( Stack< byte > bytesToCover )
         {
             if ( bitIterator.Index == 0 )
             {
@@ -101,7 +101,6 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Stack< byte > bytesToCover;
         private const byte MaskZero = 0xFE;
         private readonly BitIterator bitIterator = new BitIterator();
         private byte currentByte;
