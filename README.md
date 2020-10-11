@@ -1,2 +1,2 @@
 
-More information on a website: http://www.przemeknet.pl/Steganography 
+http://www.przemeknet.pl/steganography 
