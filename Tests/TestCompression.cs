@@ -40,9 +40,8 @@ namespace Tests
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
-            objectCompression.SetField( "codes", codes );
 
-            var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress );
+            var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
 
             var expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED, 0xDC, 0x5C, 
                                                  0xD9, 0x65, 0xAB, 0xEB, 0xBB, 0xCB, 0xD8 };

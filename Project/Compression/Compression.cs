@@ -11,11 +11,11 @@ namespace Steganography.Huffman
         public List< byte > MakeCompressedStream( List< byte > source )
         {
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
-            codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
-            var dataCompressed = Compress( source );
+            var codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            var dataCompressed = Compress( source, codes );
 
             var dataFinal = new List< byte >( BitConverter.GetBytes( source.Count ));
-            var dataWithCodes = CreateCodesDictionaryStream();
+            var dataWithCodes = CreateCodesDictionaryStream(codes);
             dataFinal.AddRange( dataWithCodes );
             dataFinal.AddRange( dataCompressed );
             return dataFinal;
@@ -24,7 +24,7 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< byte > Compress( List< byte > source )
+        private List< byte > Compress( List< byte > source, Dictionary< byte, List< bool >> codes )
         {
             byte compressedDataPortion = 0;
             BitIterator bitIterator = new BitIterator();
@@ -61,7 +61,7 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
                     
-        private List< byte > CreateCodesDictionaryStream()
+        private List< byte > CreateCodesDictionaryStream( Dictionary< byte, List< bool >> codes )
         {
             var codesStream = new List< byte >();
 
@@ -106,11 +106,6 @@ namespace Steganography.Huffman
             codesStream.InsertRange( 0, BitConverter.GetBytes( codesStream.Count ));
             return codesStream;
         }
-
-        /**************************************************************************************/
-        /**************************************************************************************/
-
-        private Dictionary< byte, List< bool >> codes;
     }
 }
 
