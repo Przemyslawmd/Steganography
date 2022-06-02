@@ -1,2 +1,2 @@
 
-http://www.przemeknet.pl/steganography 
+http://www.przemeknet.pl/steganography.html 
