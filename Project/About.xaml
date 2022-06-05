@@ -6,31 +6,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Steganography"
         mc:Ignorable="d"
-        Height="200" Width="450" MaxHeight="200" MaxWidth="450" Background="#F5F5F5" >
+        Height="200" Width="500" MaxHeight="200" MaxWidth="450" Background="#F5F5F5" >
     <Grid Margin="15, 30, 20, 15">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="6*" />
         </Grid.ColumnDefinitions>
-
-        <Label Grid.Column="0" Grid.Row="0" Content="Version"/>
-        <Label Grid.Column="1" Grid.Row="0" Content="1.5"/>
         
-        <Label Grid.Column="0" Grid.Row="1" Content="Author"/>
-        <Label Grid.Column="1" Grid.Row="1" Content="Przemyslaw Madej, Warsaw 2018"/>
+        <Label Grid.Column="0" Grid.Row="0" Content="Author"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="Przemyslaw Madej"/>
         
-        <Label Grid.Column="0" Grid.Row="2" Content="Email"/>
-        <Label Grid.Column="1" Grid.Row="2" Content="przemyslawmd@gmail.com"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Email"/>
+        <Label Grid.Column="1" Grid.Row="1" Content="przemyslawmd@gmail.com"/>
         
-        <Label Grid.Column="0" Grid.Row="3" Content="Home page" />
-        <Label Grid.Column="1" Grid.Row="3" Content="www.przemeknet.pl/Steganography" />
+        <Label Grid.Column="0" Grid.Row="2" Content="Home page" />
+        <Label Grid.Column="1" Grid.Row="2" Content="www.przemeknet.pl/steganography.html" />
 
     </Grid>
 </Window>
