@@ -25,7 +25,7 @@ namespace Steganography
                 data = new Encryption().Encrypt( data, Settings.Password );
             }
 
-            if (( data.Count * ConstValues.BitsInByte ) > (( bitmap.Height - 1 ) * bitmap.Width ))
+            if (( data.Count * Constants.BitsInByte ) > (( bitmap.Height - 1 ) * bitmap.Width ))
             {
                 return Result.TOO_MANY_DATA;
             }

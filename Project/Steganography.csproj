@@ -66,7 +66,7 @@
     <Compile Include="Compression\Node.cs" />
     <Compile Include="Compression\NodeCompress.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="ConstValues.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Covering\Covering.cs" />
     <Compile Include="Covering\Uncovering.cs" />
     <Compile Include="Cryptography\Sbox.cs" />

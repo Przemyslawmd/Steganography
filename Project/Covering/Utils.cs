@@ -11,7 +11,7 @@ namespace Steganography
 
             for ( int i = 0; i < sizeof( int ); i++ )
             {
-                stack.Push( (byte) ( number >> ( i * ConstValues.BitsInByte )));
+                stack.Push( (byte) ( number >> ( i * Constants.BitsInByte )));
             }
 
             return stack;
@@ -26,7 +26,7 @@ namespace Steganography
             
             foreach ( byte byteValue in byteList )
             {
-                number <<= ConstValues.BitsInByte;
+                number <<= Constants.BitsInByte;
                 number += byteValue;
             }
             return number;

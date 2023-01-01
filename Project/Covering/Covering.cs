@@ -8,19 +8,19 @@ namespace Steganography
     {        
         public void CoverData( Bitmap bitmap, List< byte > inputStream, bool isCompress ) 
         {
-            var bytesToCover = new Stack< byte >( ConstValues.CoverMark );
-            Utils.BitmapRange range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 0, 1 ); 
+            var bytesToCover = new Stack< byte >( Constants.CoverMark );
+            Utils.BitmapRange range = new Utils.BitmapRange( 0, Constants.CountOfPixelsForDataSize, 0, 1 );
             IteratePictureAndCoverData( bitmap, range, bytesToCover );
 
             inputStream.Reverse();
             bytesToCover = new Utils().CreateByteStackFromInteger( inputStream.Count );
             bytesToCover.Pop();
-            range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 1, 2 ); 
+            range = new Utils.BitmapRange( 0, Constants.CountOfPixelsForDataSize, 1, 2 );
             IteratePictureAndCoverData( bitmap, range, bytesToCover );
 
-            Color color = bitmap.GetPixel( ConstValues.CompressionPixel, 1 );
-            int red = ( isCompress ) ? ( color.R | ConstValues.MaskOne ) : ( color.R & MaskZero );
-            bitmap.SetPixel( ConstValues.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
+            Color color = bitmap.GetPixel( Constants.CompressionPixel, 1 );
+            int red = ( isCompress ) ? ( color.R | Constants.MaskOne ) : ( color.R & MaskZero );
+            bitmap.SetPixel( Constants.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
 
             bytesToCover = new Stack< byte >( inputStream );
             range = new Utils.BitmapRange( 0, bitmap.Width, 2, bitmap.Height ); 
@@ -95,7 +95,7 @@ namespace Steganography
                 return componentRGB & MaskZero;
             }
             
-            return componentRGB | ConstValues.MaskOne;
+            return componentRGB | Constants.MaskOne;
         }
 
         /**************************************************************************************/

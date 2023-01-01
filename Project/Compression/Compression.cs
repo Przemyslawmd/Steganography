@@ -52,7 +52,7 @@ namespace Steganography.Huffman
             
             if ( bitIterator.IsInitialIndex() is false )
             {
-                compressedDataPortion <<= ( ConstValues.BitsInByte - bitIterator.Index );
+                compressedDataPortion <<= ( Constants.BitsInByte - bitIterator.Index );
                 compressedData.Add( compressedDataPortion );
             }
             return compressedData;
@@ -97,7 +97,7 @@ namespace Steganography.Huffman
 
             if ( bitIterator.IsInitialIndex() == false )
             {
-                codesStreamPortion <<= ( ConstValues.BitsInByte - bitIterator.Index );
+                codesStreamPortion <<= ( Constants.BitsInByte - bitIterator.Index );
                 codesStream.Add( codesStreamPortion );
             }
 

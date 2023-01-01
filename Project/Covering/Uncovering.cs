@@ -14,10 +14,10 @@ namespace Steganography
                 return null;
             }
                         
-            compression = (( bitmap.GetPixel( ConstValues.CompressionPixel, 1 ).R % 2 ) == 1 ) ? true : false;
+            compression = bitmap.GetPixel( Constants.CompressionPixel, 1 ).R % 2 == 1;
 
             bitIterator.Reset();
-            Utils.BitmapRange range = new Utils.BitmapRange(  0, ConstValues.CountOfPixelsForDataSize, 1, 2 ); 
+            Utils.BitmapRange range = new Utils.BitmapRange(  0, Constants.CountOfPixelsForDataSize, 1, 2 );
             List< byte > buffer = IteratePictureAndUncoverData( bitmap, range, 0 );
             int bytesToProcess = new Utils().CreateIntegerFromByteList( buffer );
             range = new Utils.BitmapRange(  0, bitmap.Width, 2, bitmap.Height );
@@ -37,17 +37,17 @@ namespace Steganography
                 {
                     Color color = bitmap.GetPixel( x, y );
 
-                    if ( UncoverDataFromPixel( color.R, buffer, bytesToProcess ) == UncoverState.Completed )
+                    if ( UncoverDataFromPixel( color.R, buffer, bytesToProcess ) == State.Completed )
                     {
                         return buffer;
                     }
 
-                    if ( UncoverDataFromPixel( color.G, buffer, bytesToProcess ) == UncoverState.Completed )
+                    if ( UncoverDataFromPixel( color.G, buffer, bytesToProcess ) == State.Completed )
                     {
                         return buffer;
                     }
 
-                    if ( UncoverDataFromPixel( color.B, buffer, bytesToProcess ) == UncoverState.Completed )
+                    if ( UncoverDataFromPixel( color.B, buffer, bytesToProcess ) == State.Completed )
                     {
                         return buffer;
                     }
@@ -60,11 +60,11 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private UncoverState UncoverDataFromPixel( byte componentRGB, List< byte > buffer, int bytesToProcess )
+        private State UncoverDataFromPixel( byte componentRGB, List< byte > buffer, int bytesToProcess )
         {
             if (( componentRGB % 2 ) == 1 )
             {
-                currentByte |= ConstValues.MaskOne;
+                currentByte |= Constants.MaskOne;
             }
 
             bitIterator.IncrementIndex();
@@ -76,7 +76,7 @@ namespace Steganography
 
                 if ( buffer.Count == bytesToProcess )
                 {
-                    return UncoverState.Completed;
+                    return State.Completed;
                 }
             }
             else
@@ -84,7 +84,7 @@ namespace Steganography
                 currentByte <<= 1;
             }
 
-            return UncoverState.Uncompleted;
+            return State.Uncompleted;
         }
 
         /**************************************************************************************/
@@ -92,10 +92,10 @@ namespace Steganography
 
         private bool CheckCoveringMark( Bitmap bitmap )
         {
-            Utils.BitmapRange range = new Utils.BitmapRange( 0, ConstValues.CountOfPixelsForDataSize, 0, 1 );
+            Utils.BitmapRange range = new Utils.BitmapRange( 0, Constants.CountOfPixelsForDataSize, 0, 1 );
             List< byte > buffer = IteratePictureAndUncoverData( bitmap, range, 2 );
 
-            return buffer[0] == ConstValues.CoverMark[1] && buffer[1] == ConstValues.CoverMark[0];
+            return buffer[0] == Constants.CoverMark[1] && buffer[1] == Constants.CoverMark[0];
         }
 
         /**************************************************************************************/
@@ -103,7 +103,7 @@ namespace Steganography
 
         private readonly BitIterator bitIterator = new BitIterator();
         private byte currentByte = 0;
-        private enum UncoverState { Completed, Uncompleted };
+        private enum State { Completed, Uncompleted };
     }
 }
 
