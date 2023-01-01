@@ -23,28 +23,32 @@ namespace Steganography
 
         private void ActionOpenGraphic( object sender, RoutedEventArgs e )
         {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Title = MenuLoadGraphic.Header.ToString();
-            open.Filter = "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png";
-
-            if ( open.ShowDialog() is false )
+            OpenFileDialog openFile = new OpenFileDialog()
+            {
+                Title = MenuLoadGraphic.Header.ToString(),
+                Filter = "Graphical file|*.jpg; *.jpeg; *.gif; *.bmp; *.png"
+            };
+            if ( openFile.ShowDialog() is false )
             {
                 return;
             }
 
             BitmapImage bitmap = new BitmapImage();
             bitmap.BeginInit();
-            bitmap.UriSource = new Uri( open.FileName );
+            bitmap.UriSource = new Uri( openFile.FileName );
             bitmap.EndInit();
 
             ControlImage.Stretch = bitmap.Width > imageBorder.ActualWidth || bitmap.Height > imageBorder.ActualHeight ?
                                    Stretch.Uniform : Stretch.None;
 
             ControlImage.Source = bitmap;
-            ChangeControlState( true, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, 
-                                      MenuUncoverText, MenuUncoverFile, MenuSaveFile );
+            ChangeControlState( true, MenuSaveGraphic,
+                                      MenuRemoveGraphic,
+                                      MenuCoverText,
+                                      MenuUncoverText,
+                                      MenuUncoverFile,
+                                      MenuSaveFile );
             ChangeControlState( false, MenuLoadGraphic );
-            MenuSaveGraphic.IsEnabled = true;
         }
 
         /**************************************************************************************/
@@ -52,10 +56,11 @@ namespace Steganography
 
         private void ActionSaveGraphic( object sender, RoutedEventArgs e )
         {
-            SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.Filter = "PNG|*.png|BMP|*.bmp";
-            saveDialog.Title = "Save Graphic File";
-
+            SaveFileDialog saveDialog = new SaveFileDialog
+            {
+                Filter = "PNG|*.png|BMP|*.bmp",
+                Title = "Save Graphic File"
+            };
             if ( saveDialog.ShowDialog() == false || saveDialog.FileName == "" )
             {
                 return;
@@ -74,8 +79,12 @@ namespace Steganography
         private void ActionRemoveGraphic( object sender, RoutedEventArgs e )
         {
             ControlImage.Source = null;
-            ChangeControlState( false, MenuSaveGraphic, MenuRemoveGraphic, MenuCoverText, 
-                                       MenuCoverFile, MenuUncoverText, MenuUncoverFile );
+            ChangeControlState( false, MenuSaveGraphic,
+                                       MenuRemoveGraphic,
+                                       MenuCoverText,
+                                       MenuCoverFile,
+                                       MenuUncoverText,
+                                       MenuUncoverFile );
             ChangeControlState( true, MenuLoadGraphic );
         }
 
@@ -84,9 +93,10 @@ namespace Steganography
 
         private void ActionLoadFile( object sender, RoutedEventArgs e )
         {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Title = MenuLoadFile.HeaderStringFormat;
-
+            OpenFileDialog open = new OpenFileDialog()
+            {
+                Title = MenuLoadFile.HeaderStringFormat
+            };
             if ( open.ShowDialog() is false )
             {
                 return;
@@ -161,7 +171,7 @@ namespace Steganography
 
             if ( data is null )
             {
-                MessageBox.Show( messages.GetMessageText( result ) );
+                MessageBox.Show( messages.GetMessageText( result ));
                 return;
             }
 
@@ -187,7 +197,7 @@ namespace Steganography
 
         private void ActionUncoverFile( object sender, RoutedEventArgs e )
         {
-            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder());
+            Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
             dataBuffer = Controller.UncoverData( bitmap, ref result );
 
             if ( dataBuffer == null )
@@ -218,7 +228,7 @@ namespace Steganography
             if ( result == Result.OK )
             {
                 ControlImage.Source = GetBitmapSourceFromBitmap( bitmap );
-                MessageBox.Show( "Data was covered in a graphic file successfully" );
+                MessageBox.Show( "Data has been covered in a graphic file successfully" );
             }
             else
             {
@@ -270,7 +280,7 @@ namespace Steganography
 
         private void ChangeControlState( bool state, params System.Windows.Controls.MenuItem[] menus )
         {
-            foreach ( System.Windows.Controls.MenuItem menu in menus )
+            foreach ( var menu in menus )
             {
                 menu.IsEnabled = state;
             }
