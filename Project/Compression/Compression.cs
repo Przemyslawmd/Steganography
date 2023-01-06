@@ -24,18 +24,18 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< byte > Compress( List< byte > source, Dictionary< byte, List< bool >> codes )
+        private List< byte > Compress( List< byte > source, Dictionary< byte, List< Token >> codes )
         {
             byte compressByte = 0;
-            var compressStream = new List<byte>();
+            var compressStream = new List< byte >();
             BitIterator bitIterator = new BitIterator();
 
             foreach ( byte value in source )
             {
-                foreach ( bool token in codes[value] )
+                foreach ( Token token in codes[value] )
                 {
                     compressByte <<= 1;
-                    if ( token )
+                    if ( token == Token.One )
                     {
                         compressByte += 1;
                     }
@@ -61,11 +61,11 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
                     
-        private List< byte > CreateCodesStream( Dictionary< byte, List< bool >> codes )
+        private List< byte > CreateCodesStream( Dictionary< byte, List< Token >> codes )
         {
             var codesStream = new List< byte >();
 
-            foreach ( KeyValuePair< byte, List< bool >> code in codes )
+            foreach ( KeyValuePair< byte, List< Token >> code in codes )
             {
                 codesStream.Add( code.Key );
                 codesStream.Add( (byte) code.Value.Count );
@@ -74,13 +74,13 @@ namespace Steganography.Huffman
             byte codesStreamPortion = 0;
             BitIterator bitIterator = new BitIterator();
 
-            foreach ( KeyValuePair< byte, List< bool >> code in codes )
+            foreach ( KeyValuePair< byte, List< Token >> code in codes )
             {
-                foreach ( bool token in code.Value )
+                foreach ( Token token in code.Value )
                 {
                     codesStreamPortion <<= bitIterator.Index > 0 ? 1 : 0;
 
-                    if ( token )
+                    if ( token == Token.One )
                     {
                         codesStreamPortion += 1;
                     }

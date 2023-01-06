@@ -17,16 +17,16 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public Node BuildTreeDecompression( Dictionary< byte, List< bool >> codes )
+        public Node BuildTreeDecompression( Dictionary< byte, List< Token >> codes )
         {
             Node root = new Node( 0 );
 
-            foreach ( KeyValuePair< byte, List< bool >> code in codes )
+            foreach ( KeyValuePair< byte, List< Token >> code in codes )
             {
                 Node node = root;
-                foreach ( bool token in code.Value.Take( code.Value.Count - 1 ))
+                foreach ( Token token in code.Value.Take( code.Value.Count - 1 ))
                 {
-                    if ( token is false )
+                    if ( token == Token.Zero )
                     {
                         if ( node.Left is null )
                         {
@@ -44,7 +44,7 @@ namespace Steganography.Huffman
                     }
                 }
 
-                if ( code.Value.Last() is false )
+                if ( code.Value.Last() is Token.Zero )
                 {
                     node.Left = new Node( code.Key );
                 }

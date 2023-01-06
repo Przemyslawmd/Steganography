@@ -36,7 +36,7 @@ namespace Tests
         {
             var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             Node root = new HuffmanTree().BuildTreeCompression( dataToCompress );
-            Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            Dictionary< byte, List< Token >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
             var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
@@ -149,19 +149,19 @@ namespace Tests
             obj.Invoke( "BuildTree", nodes );
 
             Node root = nodes[0];
-            Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
-            List< bool > code;
+            Dictionary< byte, List< Token >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            List< Token > code;
 
             codes.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { false, true } );
+            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.One } );
             codes.TryGetValue( 0x13, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false } );
+            CollectionAssert.AreEqual( code, new List< Token > { Token.One, Token.Zero } );
             codes.TryGetValue( 0x14, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true } );
+            CollectionAssert.AreEqual( code, new List< Token > { Token.One, Token.One } );
             codes.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { false, false, true } );
+            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.Zero, Token.One } );
             codes.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { false, false, false } );
+            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.Zero, Token.Zero } );
         }
 
         /**************************************************************************************/

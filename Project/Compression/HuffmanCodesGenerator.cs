@@ -7,16 +7,16 @@ namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {
-        public Dictionary< byte, List< bool >> CreateCodesDictionary( Node root )
+        public Dictionary< byte, List< Token >> CreateCodesDictionary( Node root )
         {
-            GenerateCodes( root, true, true );
+            GenerateCodes( root, Token.One, true );
             return codesDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, bool token, bool isRoot )
+        private void GenerateCodes( Node node, Token token, bool isRoot )
         {
             if ( isRoot == false )
             {
@@ -25,15 +25,15 @@ namespace Steganography.Huffman
 
             if ( node.Left != null )
             {
-                GenerateCodes( node.Left, false, false );
+                GenerateCodes( node.Left, Token.Zero, false );
             }
             if ( node.Right != null )
             {
-                GenerateCodes( node.Right, true, false );
+                GenerateCodes( node.Right, Token.One, false );
             }
             else
             {
-                codesDictionary.Add( node.ByteValue, new List< bool >( code ) );
+                codesDictionary.Add( node.ByteValue, new List< Token >( code ) );
             }
 
             if ( isRoot == false )
@@ -45,8 +45,8 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private readonly List< bool > code = new List< bool >();
-        private readonly Dictionary< byte, List< bool >> codesDictionary = new Dictionary< byte, List< bool >>();
+        private readonly List< Token > code = new List< Token >();
+        private readonly Dictionary< byte, List< Token >> codesDictionary = new Dictionary< byte, List< Token >>();
     }
 }
 
