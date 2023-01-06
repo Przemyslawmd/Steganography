@@ -64,7 +64,6 @@
     <Compile Include="Compression\HuffmanCodesGenerator.cs" />
     <Compile Include="Compression\HuffmanTree.cs" />
     <Compile Include="Compression\Node.cs" />
-    <Compile Include="Compression\NodeCompress.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Covering\Covering.cs" />
