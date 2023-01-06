@@ -60,13 +60,13 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< NodeCompress > CreateNodes( List< byte > sourceData )
+        private List< NodeCompress > CreateNodes( List< byte > source )
         {
-            List< NodeCompress > nodes = new List< NodeCompress >();
-            nodes.Add( new NodeCompress( 1, sourceData[0] ));
+            var nodes = new List< NodeCompress >();
+            nodes.Add( new NodeCompress( 1, source[0] ));
             bool isFound = false;
 
-            foreach ( byte symbol in sourceData.Skip( 1 ))
+            foreach ( byte symbol in source.Skip( 1 ))
             {
                 foreach ( NodeCompress node in nodes )
                 {
@@ -76,7 +76,6 @@ namespace Steganography.Huffman
                         isFound = true;
                         break;
                     }
-
                     if ( symbol < node.ByteValue )
                     {
                         int index = nodes.IndexOf( node );
@@ -99,35 +98,34 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void BuildTree( List< NodeCompress > listNodes )
+        private void BuildTree( List< NodeCompress > nodes )
         {
-            NodeCompress newNode;
+            NodeCompress internalNode;
 
-            while ( listNodes.Count >= 2 )
+            while ( nodes.Count >= 2 )
             {
-                newNode = new NodeCompress( listNodes[0].Count + listNodes[1].Count, listNodes[0], listNodes[1] );
-                listNodes[0].Parent = newNode;
-                listNodes[1].Parent = newNode;
-                listNodes.RemoveAt( 0 );
-                listNodes.RemoveAt( 0 );
-                InsertNodeIntoTree( newNode, listNodes );
+                internalNode = new NodeCompress( nodes[0].Count + nodes[1].Count, nodes[0], nodes[1] );
+                nodes[0].Parent = internalNode;
+                nodes[1].Parent = internalNode;
+                nodes.RemoveRange( 0, 2 );
+                InsertInternalNode( internalNode, nodes );
             }
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void InsertNodeIntoTree( NodeCompress newNode, List< NodeCompress > listNodes )
+        private void InsertInternalNode( NodeCompress newNode, List< NodeCompress > nodes )
         {
-            int index = listNodes.FindIndex( node => node.Count > newNode.Count );
+            int index = nodes.FindIndex( node => node.Count >= newNode.Count );
             
             if ( index >= 0 )
             {
-                listNodes.Insert( index, newNode );
+                nodes.Insert( index, newNode );
             }
             else
             {
-                listNodes.Add( newNode );
+                nodes.Add( newNode );
             }
         }
     }

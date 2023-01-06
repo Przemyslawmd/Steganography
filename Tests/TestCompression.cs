@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Steganography;
 using Steganography.Huffman;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 
 namespace Tests
@@ -12,7 +11,7 @@ namespace Tests
     public class TestCompression
     {
         [TestMethod]
-        public void TestCompressionMain()
+        public void FullCompression()
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
@@ -33,7 +32,7 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionShortTextWithoutDictionaryCodes()
+        public void CompressWithoutDictionaryCodes()
         {
             var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
@@ -43,8 +42,8 @@ namespace Tests
 
             var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
 
-            var expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED, 0xDC, 0x5C, 
-                                                 0xD9, 0x65, 0xAB, 0xEB, 0xBB, 0xCB, 0xD8 };
+            var expectedData = new List< byte >{ 0x97, 0x6f, 0x47, 0x1c, 0xf9, 0xf5, 0x75, 
+                                                 0xf1, 0xc7, 0x2e, 0xce, 0x9e, 0xee, 0xfc };
 
             CollectionAssert.AreEqual( dataCompressed, expectedData );
         }
@@ -80,46 +79,68 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionBuildingTree()
+        public void BuildCompressionTree()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            List< NodeCompress > nodes = new List< NodeCompress >
+            var nodes = new List< NodeCompress >
             {
-                new NodeCompress( 1, 0x10 ),
-                new NodeCompress( 1, 0x11 ),
-                new NodeCompress( 2, 0x12 ),
-                new NodeCompress( 2, 0x13 ),
-                new NodeCompress( 3, 0x14 )
+                new NodeCompress( 1, 0x57 ),
+                new NodeCompress( 2, 0x41 ),
+                new NodeCompress( 2, 0x56 ),
+                new NodeCompress( 3, 0x65 ),
+                new NodeCompress( 3, 0x6f ),
+                new NodeCompress( 4, 0x72 ),
+                new NodeCompress( 5, 0x64 ),
+                new NodeCompress( 5, 0x6c ),
+                new NodeCompress( 8, 0x4f ),
+                new NodeCompress( 10, 0x4b )
+
             };
 
             obj.Invoke( "BuildTree", nodes );
-
             NodeCompress root = nodes[0];
 
-            Node node = root.Left.Left;
-            Assert.AreEqual( node.ByteValue, 0x12 );
-            Assert.AreEqual( ((NodeCompress) node).Count, 2 );
+            Assert.IsNotNull( root.Left.Left.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Left, 0x72, 4 ));
 
-            node = root.Right.Left;
-            Assert.AreEqual( node.IsLeaf(), false );
-            Assert.AreEqual( ((NodeCompress) node).Count, 2 );
+            Assert.IsNotNull( root.Left.Left.Right.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Left, 0x56, 2 ));
 
-            node = root.Right.Left.Right;
-            Assert.AreEqual( node.IsLeaf(), true );
-            Assert.AreEqual( ((NodeCompress) node).Count, 1 );
-            Assert.AreEqual( node.ByteValue, 0x11 );
+            Assert.IsNotNull( root.Left.Left.Right.Right.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Right.Left, 0x57, 1 ));
+
+            Assert.IsNotNull( root.Left.Left.Right.Right.Right );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Right.Right, 0x41, 2 ));
+
+            Assert.IsNotNull( root.Left.Right.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Right.Left, 0x64, 5 ));
+
+            Assert.IsNotNull( root.Left.Right.Right );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Right.Right, 0x6c, 5 ));
+
+            Assert.IsNotNull( root.Right.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Left, 0x4b, 10 ));
+
+            Assert.IsNotNull( root.Right.Right.Left.Left );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Left.Left, 0x65, 3 ));
+
+            Assert.IsNotNull( root.Right.Right.Left.Right );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Left.Right, 0x6f, 3 ));
+
+            Assert.IsNotNull( root.Right.Right.Right );
+            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Right, 0x4f, 8 ));
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionGeneratingCodes()
+        public void GenerateCodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            List< NodeCompress > nodes = new List< NodeCompress >
+            var nodes = new List< NodeCompress >
             {
                 new NodeCompress( 1, 0x10 ),
                 new NodeCompress( 1, 0x11 ),
@@ -135,15 +156,15 @@ namespace Tests
             List< bool > code;
 
             codesDictionary.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, false } );
-            codesDictionary.TryGetValue( 0x13, out code );
             CollectionAssert.AreEqual( code, new List< bool > { true, false, true } );
+            codesDictionary.TryGetValue( 0x13, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true, false } );
             codesDictionary.TryGetValue( 0x14, out code );
-            CollectionAssert.AreNotEqual( code, new List< bool > { true, false, false } );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true, true } );
             codesDictionary.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, true } );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false, false, true } );
             codesDictionary.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, false } );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false, false, false } );
         }
 
         /**************************************************************************************/
@@ -152,6 +173,14 @@ namespace Tests
         private bool CheckNode( NodeCompress node, byte value, int count )
         {
             return node.ByteValue == value && node.Count == count;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private bool CheckLeaf( NodeCompress node, byte value, int count )
+        {
+            return CheckNode( node, value, count ) && node.IsLeaf();
         }
     }
 }
