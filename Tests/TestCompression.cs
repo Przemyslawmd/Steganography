@@ -35,7 +35,7 @@ namespace Tests
         public void CompareRawCompressedStream()
         {
             var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
-            NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
+            Node root = new HuffmanTree().BuildTreeCompression( dataToCompress );
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
@@ -57,7 +57,7 @@ namespace Tests
                 0x4b, 0x6c, 0x64, 0x65, 0x6c, 0x41, 0x4b, 0x72, 0x4b, 0x4b, 0x65, 0x6c, 0x4b, 0x4b, 0x4f, 
                 0x4b,0x4f,  0x56, 0x56, 0x64, 0x4b, 0x41, 0x6c, 0x64, 0x4b, 0x6f, 0x4f, 0x4f };
 
-            var nodes = ( List< NodeCompress > )obj.Invoke( "CreateNodes", data );
+            var nodes = ( List< Node > )obj.Invoke( "CreateNodes", data );
 
             Assert.AreEqual( nodes.Count, 10 );
             Assert.IsTrue( CheckNode( nodes[0], 0x41, 2 ));
@@ -80,53 +80,53 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            var nodes = new List< NodeCompress >
+            var nodes = new List< Node >
             {
-                new NodeCompress( 1, 0x57 ),
-                new NodeCompress( 2, 0x41 ),
-                new NodeCompress( 2, 0x56 ),
-                new NodeCompress( 3, 0x65 ),
-                new NodeCompress( 3, 0x6f ),
-                new NodeCompress( 4, 0x72 ),
-                new NodeCompress( 5, 0x64 ),
-                new NodeCompress( 5, 0x6c ),
-                new NodeCompress( 8, 0x4f ),
-                new NodeCompress( 10, 0x4b )
+                new Node( 1, 0x57 ),
+                new Node( 2, 0x41 ),
+                new Node( 2, 0x56 ),
+                new Node( 3, 0x65 ),
+                new Node( 3, 0x6f ),
+                new Node( 4, 0x72 ),
+                new Node( 5, 0x64 ),
+                new Node( 5, 0x6c ),
+                new Node( 8, 0x4f ),
+                new Node( 10, 0x4b )
 
             };
 
             obj.Invoke( "BuildTree", nodes );
-            NodeCompress root = nodes[0];
+            Node root = nodes[0];
 
             Assert.IsNotNull( root.Left.Left.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Left, 0x72, 4 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Left, 0x72, 4 ));
 
             Assert.IsNotNull( root.Left.Left.Right.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Left, 0x56, 2 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Left, 0x56, 2 ));
 
             Assert.IsNotNull( root.Left.Left.Right.Right.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Right.Left, 0x57, 1 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Right.Left, 0x57, 1 ));
 
             Assert.IsNotNull( root.Left.Left.Right.Right.Right );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Left.Right.Right.Right, 0x41, 2 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Right.Right, 0x41, 2 ));
 
             Assert.IsNotNull( root.Left.Right.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Right.Left, 0x64, 5 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Right.Left, 0x64, 5 ));
 
             Assert.IsNotNull( root.Left.Right.Right );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Left.Right.Right, 0x6c, 5 ));
+            Assert.IsTrue( CheckLeaf( root.Left.Right.Right, 0x6c, 5 ));
 
             Assert.IsNotNull( root.Right.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Left, 0x4b, 10 ));
+            Assert.IsTrue( CheckLeaf( root.Right.Left, 0x4b, 10 ));
 
             Assert.IsNotNull( root.Right.Right.Left.Left );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Left.Left, 0x65, 3 ));
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Left.Left, 0x65, 3 ));
 
             Assert.IsNotNull( root.Right.Right.Left.Right );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Left.Right, 0x6f, 3 ));
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Left.Right, 0x6f, 3 ));
 
             Assert.IsNotNull( root.Right.Right.Right );
-            Assert.IsTrue( CheckLeaf( (NodeCompress) root.Right.Right.Right, 0x4f, 8 ));
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Right, 0x4f, 8 ));
         }
 
         /**************************************************************************************/
@@ -137,18 +137,18 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            var nodes = new List< NodeCompress >
+            var nodes = new List< Node >
             {
-                new NodeCompress( 1, 0x10 ),
-                new NodeCompress( 1, 0x11 ),
-                new NodeCompress( 2, 0x12 ),
-                new NodeCompress( 2, 0x13 ),
-                new NodeCompress( 3, 0x14 )
+                new Node( 1, 0x10 ),
+                new Node( 1, 0x11 ),
+                new Node( 2, 0x12 ),
+                new Node( 2, 0x13 ),
+                new Node( 3, 0x14 )
             };
 
             obj.Invoke( "BuildTree", nodes );
 
-            NodeCompress root = nodes[0];
+            Node root = nodes[0];
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< bool > code;
 
@@ -167,7 +167,7 @@ namespace Tests
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool CheckNode( NodeCompress node, byte value, int count )
+        private bool CheckNode( Node node, byte value, int count )
         {
             return node.ByteValue == value && node.Count == count;
         }
@@ -175,7 +175,7 @@ namespace Tests
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool CheckLeaf( NodeCompress node, byte value, int count )
+        private bool CheckLeaf( Node node, byte value, int count )
         {
             return CheckNode( node, value, count ) && node.IsLeaf();
         }

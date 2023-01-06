@@ -7,7 +7,7 @@ namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {
-        public Dictionary< byte, List< bool >> CreateCodesDictionary( NodeCompress root )
+        public Dictionary< byte, List< bool >> CreateCodesDictionary( Node root )
         {
             GenerateCodes( root, true, true );
             return codesDictionary;

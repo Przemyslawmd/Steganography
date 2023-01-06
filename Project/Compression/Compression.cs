@@ -10,7 +10,7 @@ namespace Steganography.Huffman
     {
         public List< byte > MakeCompressedStream( List< byte > source )
         {
-            NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
+            Node root = new HuffmanTree().BuildTreeCompression( source );
             var codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             var compressedData = Compress( source, codes );
             var codesData = CreateCodesStream( codes );
