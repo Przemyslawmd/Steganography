@@ -5,12 +5,12 @@ namespace Steganography
     {
         public int Index { get; private set; }
 
-        public void DecrementIndex()
+        public void Decrement()
         {
             Index = ( Index == 0 ) ? LastIndex : Index - 1;
         }
 
-        public void IncrementIndex()
+        public void Increment()
         {
             Index = ( Index == LastIndex ) ? 0 : Index + 1;
         }
@@ -20,7 +20,7 @@ namespace Steganography
             Index = 0;
         }
 
-        public bool IsInitialIndex()
+        public bool IsInitial()
         {
             return Index == 0;
         }

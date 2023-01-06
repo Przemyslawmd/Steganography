@@ -67,7 +67,7 @@ namespace Steganography
                 currentByte |= Constants.MaskOne;
             }
 
-            bitIterator.IncrementIndex();
+            bitIterator.Increment();
 
             if ( bitIterator.Index == 0 )
             {

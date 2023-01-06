@@ -65,13 +65,13 @@ namespace Steganography.Huffman
         {
             for ( int i = 0; i < codeLenght; i++ )
             {
-                if ( bitIterator.IsInitialIndex() )
+                if ( bitIterator.IsInitial() )
                 {
                     iter.MoveNext();
                 }
 
                 code.Add((( iter.Current >> ( 7 - bitIterator.Index )) % 2 ) != 0 ? Token.One : Token.Zero );
-                bitIterator.IncrementIndex();
+                bitIterator.Increment();
             }
         }
 

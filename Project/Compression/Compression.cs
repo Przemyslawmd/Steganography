@@ -40,9 +40,9 @@ namespace Steganography.Huffman
                         compressByte += 1;
                     }
 
-                    bitIterator.IncrementIndex();
+                    bitIterator.Increment();
 
-                    if ( bitIterator.IsInitialIndex() )
+                    if ( bitIterator.IsInitial() )
                     {
                         compressStream.Add( compressByte );
                         compressByte = 0;
@@ -50,7 +50,7 @@ namespace Steganography.Huffman
                 }
             }     
             
-            if ( bitIterator.IsInitialIndex() is false )
+            if ( bitIterator.IsInitial() is false )
             {
                 compressByte <<= ( Constants.BitsInByte - bitIterator.Index );
                 compressStream.Add( compressByte );
@@ -85,9 +85,9 @@ namespace Steganography.Huffman
                         codesStreamPortion += 1;
                     }
 
-                    bitIterator.IncrementIndex();
+                    bitIterator.Increment();
 
-                    if ( bitIterator.IsInitialIndex() )
+                    if ( bitIterator.IsInitial() )
                     {
                         codesStream.Add( codesStreamPortion );
                         codesStreamPortion = 0;
@@ -95,7 +95,7 @@ namespace Steganography.Huffman
                 }
             }
 
-            if ( bitIterator.IsInitialIndex() == false )
+            if ( bitIterator.IsInitial() == false )
             {
                 codesStreamPortion <<= ( Constants.BitsInByte - bitIterator.Index );
                 codesStream.Add( codesStreamPortion );
