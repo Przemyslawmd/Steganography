@@ -24,8 +24,7 @@ namespace Steganography.Huffman
             foreach ( KeyValuePair< byte, List< bool >> code in codes )
             {
                 Node node = root;
-
-                foreach ( bool token in code.Value.Skip( 1 ).Take( code.Value.Count - 2 ))
+                foreach ( bool token in code.Value.Take( code.Value.Count - 1 ))
                 {
                     if ( token is false )
                     {

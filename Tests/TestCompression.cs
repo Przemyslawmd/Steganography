@@ -32,18 +32,15 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void CompressWithoutDictionaryCodes()
+        public void CompareRawCompressedStream()
         {
             var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
-
             var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
-
-            var expectedData = new List< byte >{ 0x97, 0x6f, 0x47, 0x1c, 0xf9, 0xf5, 0x75, 
-                                                 0xf1, 0xc7, 0x2e, 0xce, 0x9e, 0xee, 0xfc };
+            var expectedData = new List< byte >{ 0x2b, 0x68, 0x89, 0xce, 0xaa, 0xe2, 0x25, 0x65, 0x37, 0x5f };
 
             CollectionAssert.AreEqual( dataCompressed, expectedData );
         }
@@ -152,19 +149,19 @@ namespace Tests
             obj.Invoke( "BuildTree", nodes );
 
             NodeCompress root = nodes[0];
-            Dictionary< byte, List< bool >> codesDictionary = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< bool > code;
 
-            codesDictionary.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, true } );
-            codesDictionary.TryGetValue( 0x13, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, false } );
-            codesDictionary.TryGetValue( 0x14, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, true } );
-            codesDictionary.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, false, true } );
-            codesDictionary.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, false, false } );
+            codes.TryGetValue( 0x12, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, true } );
+            codes.TryGetValue( 0x13, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false } );
+            codes.TryGetValue( 0x14, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true } );
+            codes.TryGetValue( 0x11, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, false, true } );
+            codes.TryGetValue( 0x10, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, false, false } );
         }
 
         /**************************************************************************************/
