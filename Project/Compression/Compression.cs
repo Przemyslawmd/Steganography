@@ -12,13 +12,13 @@ namespace Steganography.Huffman
         {
             NodeCompress root = new HuffmanTree().BuildTreeCompression( source );
             var codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
-            var dataCompressed = Compress( source, codes );
+            var compressedData = Compress( source, codes );
+            var codesData = CreateCodesStream( codes );
 
-            var dataFinal = new List< byte >( BitConverter.GetBytes( source.Count ));
-            var dataWithCodes = CreateCodesDictionaryStream(codes);
-            dataFinal.AddRange( dataWithCodes );
-            dataFinal.AddRange( dataCompressed );
-            return dataFinal;
+            var finalData = new List< byte >( BitConverter.GetBytes( source.Count ));
+            finalData.AddRange( codesData );
+            finalData.AddRange( compressedData );
+            return finalData;
         }
 
         /**************************************************************************************/
@@ -26,42 +26,42 @@ namespace Steganography.Huffman
 
         private List< byte > Compress( List< byte > source, Dictionary< byte, List< bool >> codes )
         {
-            byte compressedDataPortion = 0;
+            byte compressByte = 0;
+            var compressStream = new List<byte>();
             BitIterator bitIterator = new BitIterator();
-            var compressedData = new List< byte >();
 
             foreach ( byte value in source )
             {
                 foreach ( bool token in codes[value] )
                 {
-                    compressedDataPortion <<= 1;
+                    compressByte <<= 1;
                     if ( token )
                     {
-                        compressedDataPortion += 1;
+                        compressByte += 1;
                     }
 
                     bitIterator.IncrementIndex();
 
                     if ( bitIterator.IsInitialIndex() )
                     {
-                        compressedData.Add( compressedDataPortion );
-                        compressedDataPortion = 0;
+                        compressStream.Add( compressByte );
+                        compressByte = 0;
                     }
                 }
             }     
             
             if ( bitIterator.IsInitialIndex() is false )
             {
-                compressedDataPortion <<= ( Constants.BitsInByte - bitIterator.Index );
-                compressedData.Add( compressedDataPortion );
+                compressByte <<= ( Constants.BitsInByte - bitIterator.Index );
+                compressStream.Add( compressByte );
             }
-            return compressedData;
+            return compressStream;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
                     
-        private List< byte > CreateCodesDictionaryStream( Dictionary< byte, List< bool >> codes )
+        private List< byte > CreateCodesStream( Dictionary< byte, List< bool >> codes )
         {
             var codesStream = new List< byte >();
 

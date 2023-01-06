@@ -53,18 +53,27 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionCreatingNodes()
+        public void CreateNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
-            var data = new List< byte > { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
+            var data = new List< byte > { 
+                0x65, 0x4f, 0x64, 0x4f, 0x4f, 0x72, 0x64, 0x72, 0x6c, 0x4f, 0x6f, 0x57, 0x4b, 0x72, 0x6f, 
+                0x4b, 0x6c, 0x64, 0x65, 0x6c, 0x41, 0x4b, 0x72, 0x4b, 0x4b, 0x65, 0x6c, 0x4b, 0x4b, 0x4f, 
+                0x4b,0x4f,  0x56, 0x56, 0x64, 0x4b, 0x41, 0x6c, 0x64, 0x4b, 0x6f, 0x4f, 0x4f };
 
-            var nodes = ( List< NodeCompress > ) obj.Invoke( "CreateNodes", data );
-            nodes = nodes.OrderBy( x => x.Count ).ToList();
+            var nodes = ( List< NodeCompress > )obj.Invoke( "CreateNodes", data );
 
-            Assert.AreEqual( nodes.Count, 7 );
-            Assert.AreEqual( nodes[0].ByteValue, 0x10 );
-            Assert.AreEqual( nodes[3].ByteValue, 0xDA );
-            Assert.AreEqual( nodes[5].ByteValue, 0x12 );
+            Assert.AreEqual( nodes.Count, 10 );
+            Assert.IsTrue( CheckNode( nodes[0], 0x41, 2 ));
+            Assert.IsTrue( CheckNode( nodes[1], 0x4b, 10 ));
+            Assert.IsTrue( CheckNode( nodes[2], 0x4f, 8 ));
+            Assert.IsTrue( CheckNode( nodes[3], 0x56, 2 ));
+            Assert.IsTrue( CheckNode( nodes[4], 0x57, 1 ));
+            Assert.IsTrue( CheckNode( nodes[5], 0x64, 5 ));
+            Assert.IsTrue( CheckNode( nodes[6], 0x65, 3 ));
+            Assert.IsTrue( CheckNode( nodes[7], 0x6c, 5 ));
+            Assert.IsTrue( CheckNode( nodes[8], 0x6f, 3 ));
+            Assert.IsTrue( CheckNode( nodes[9], 0x72, 4 ));
         }
 
         /**************************************************************************************/
@@ -135,6 +144,14 @@ namespace Tests
             CollectionAssert.AreEqual( code, new List< bool > { true, true, false, true } );
             codesDictionary.TryGetValue( 0x10, out code );
             CollectionAssert.AreEqual( code, new List< bool > { true, true, false, false } );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private bool CheckNode( NodeCompress node, byte value, int count )
+        {
+            return node.ByteValue == value && node.Count == count;
         }
     }
 }
