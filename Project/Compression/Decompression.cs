@@ -98,7 +98,7 @@ namespace Steganography.Huffman
         private List< byte > Decode( IEnumerator< byte > iter, Node root, int dataSizeBeforeCompression )
         {                        
             var decompressedData = new List< byte >();
-            Node node = null;
+            Node node = root;
 
             while ( iter.MoveNext() )
             {
@@ -110,11 +110,6 @@ namespace Steganography.Huffman
                     }         
                     else
                     {                        
-                        if ( node == null )
-                        {                                
-                            node = root;
-                            continue;
-                        }
                         node = node.Right;                                                                  
                     }
 
@@ -126,7 +121,7 @@ namespace Steganography.Huffman
                         {
                             return decompressedData;
                         }
-                        node = null;
+                        node = root;
                     }
                 }
             }

@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Steganography;
 using Steganography.Huffman;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 
 namespace Tests
@@ -12,7 +11,7 @@ namespace Tests
     public class TestCompression
     {
         [TestMethod]
-        public void TestCompressionMain()
+        public void FullCompression()
         {                       
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
@@ -33,18 +32,15 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionShortTextWithoutDictionaryCodes()
+        public void CompareRawCompressedStream()
         {
             var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
-            NodeCompress root = new HuffmanTree().BuildTreeCompression( dataToCompress );
+            Node root = new HuffmanTree().BuildTreeCompression( dataToCompress );
             Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
             PrivateObject objectCompression = new PrivateObject( new Compression() );
-
             var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
-
-            var expectedData = new List< byte >{ 0xD5, 0xFD, 0xD5, 0x96, 0xED, 0xDC, 0x5C, 
-                                                 0xD9, 0x65, 0xAB, 0xEB, 0xBB, 0xCB, 0xD8 };
+            var expectedData = new List< byte >{ 0x2b, 0x68, 0x89, 0xce, 0xaa, 0xe2, 0x25, 0x65, 0x37, 0x5f };
 
             CollectionAssert.AreEqual( dataCompressed, expectedData );
         }
@@ -53,88 +49,135 @@ namespace Tests
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionCreatingNodes()
+        public void CreateNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
-            var data = new List< byte > { 0x12, 0xAA, 0xCA, 0xCA, 0xDA, 0x10, 0x00, 0x00, 0x12, 0x34 };
+            var data = new List< byte > { 
+                0x65, 0x4f, 0x64, 0x4f, 0x4f, 0x72, 0x64, 0x72, 0x6c, 0x4f, 0x6f, 0x57, 0x4b, 0x72, 0x6f, 
+                0x4b, 0x6c, 0x64, 0x65, 0x6c, 0x41, 0x4b, 0x72, 0x4b, 0x4b, 0x65, 0x6c, 0x4b, 0x4b, 0x4f, 
+                0x4b,0x4f,  0x56, 0x56, 0x64, 0x4b, 0x41, 0x6c, 0x64, 0x4b, 0x6f, 0x4f, 0x4f };
 
-            var nodes = ( List< NodeCompress > ) obj.Invoke( "CreateNodes", data );
-            nodes = nodes.OrderBy( x => x.Count ).ToList();
+            var nodes = ( List< Node > )obj.Invoke( "CreateNodes", data );
 
-            Assert.AreEqual( nodes.Count, 7 );
-            Assert.AreEqual( nodes[0].ByteValue, 0x10 );
-            Assert.AreEqual( nodes[3].ByteValue, 0xDA );
-            Assert.AreEqual( nodes[5].ByteValue, 0x12 );
+            Assert.AreEqual( nodes.Count, 10 );
+            Assert.IsTrue( CheckNode( nodes[0], 0x41, 2 ));
+            Assert.IsTrue( CheckNode( nodes[1], 0x4b, 10 ));
+            Assert.IsTrue( CheckNode( nodes[2], 0x4f, 8 ));
+            Assert.IsTrue( CheckNode( nodes[3], 0x56, 2 ));
+            Assert.IsTrue( CheckNode( nodes[4], 0x57, 1 ));
+            Assert.IsTrue( CheckNode( nodes[5], 0x64, 5 ));
+            Assert.IsTrue( CheckNode( nodes[6], 0x65, 3 ));
+            Assert.IsTrue( CheckNode( nodes[7], 0x6c, 5 ));
+            Assert.IsTrue( CheckNode( nodes[8], 0x6f, 3 ));
+            Assert.IsTrue( CheckNode( nodes[9], 0x72, 4 ));
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionBuildingTree()
+        public void BuildCompressionTree()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            List< NodeCompress > nodes = new List< NodeCompress >
+            var nodes = new List< Node >
             {
-                new NodeCompress( 1, 0x10 ),
-                new NodeCompress( 1, 0x11 ),
-                new NodeCompress( 2, 0x12 ),
-                new NodeCompress( 2, 0x13 ),
-                new NodeCompress( 3, 0x14 )
+                new Node( 1, 0x57 ),
+                new Node( 2, 0x41 ),
+                new Node( 2, 0x56 ),
+                new Node( 3, 0x65 ),
+                new Node( 3, 0x6f ),
+                new Node( 4, 0x72 ),
+                new Node( 5, 0x64 ),
+                new Node( 5, 0x6c ),
+                new Node( 8, 0x4f ),
+                new Node( 10, 0x4b )
+
             };
 
             obj.Invoke( "BuildTree", nodes );
+            Node root = nodes[0];
 
-            NodeCompress root = nodes[0];
+            Assert.IsNotNull( root.Left.Left.Left );
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Left, 0x72, 4 ));
 
-            Node node = root.Left.Left;
-            Assert.AreEqual( node.ByteValue, 0x12 );
-            Assert.AreEqual( ((NodeCompress) node).Count, 2 );
+            Assert.IsNotNull( root.Left.Left.Right.Left );
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Left, 0x56, 2 ));
 
-            node = root.Right.Left;
-            Assert.AreEqual( node.IsLeaf(), false );
-            Assert.AreEqual( ((NodeCompress) node).Count, 2 );
+            Assert.IsNotNull( root.Left.Left.Right.Right.Left );
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Right.Left, 0x57, 1 ));
 
-            node = root.Right.Left.Right;
-            Assert.AreEqual( node.IsLeaf(), true );
-            Assert.AreEqual( ((NodeCompress) node).Count, 1 );
-            Assert.AreEqual( node.ByteValue, 0x11 );
+            Assert.IsNotNull( root.Left.Left.Right.Right.Right );
+            Assert.IsTrue( CheckLeaf( root.Left.Left.Right.Right.Right, 0x41, 2 ));
+
+            Assert.IsNotNull( root.Left.Right.Left );
+            Assert.IsTrue( CheckLeaf( root.Left.Right.Left, 0x64, 5 ));
+
+            Assert.IsNotNull( root.Left.Right.Right );
+            Assert.IsTrue( CheckLeaf( root.Left.Right.Right, 0x6c, 5 ));
+
+            Assert.IsNotNull( root.Right.Left );
+            Assert.IsTrue( CheckLeaf( root.Right.Left, 0x4b, 10 ));
+
+            Assert.IsNotNull( root.Right.Right.Left.Left );
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Left.Left, 0x65, 3 ));
+
+            Assert.IsNotNull( root.Right.Right.Left.Right );
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Left.Right, 0x6f, 3 ));
+
+            Assert.IsNotNull( root.Right.Right.Right );
+            Assert.IsTrue( CheckLeaf( root.Right.Right.Right, 0x4f, 8 ));
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
         [TestMethod]
-        public void TestCompressionGeneratingCodes()
+        public void GenerateCodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            List< NodeCompress > nodes = new List< NodeCompress >
+            var nodes = new List< Node >
             {
-                new NodeCompress( 1, 0x10 ),
-                new NodeCompress( 1, 0x11 ),
-                new NodeCompress( 2, 0x12 ),
-                new NodeCompress( 2, 0x13 ),
-                new NodeCompress( 3, 0x14 )
+                new Node( 1, 0x10 ),
+                new Node( 1, 0x11 ),
+                new Node( 2, 0x12 ),
+                new Node( 2, 0x13 ),
+                new Node( 3, 0x14 )
             };
 
             obj.Invoke( "BuildTree", nodes );
 
-            NodeCompress root = nodes[0];
-            Dictionary< byte, List< bool >> codesDictionary = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            Node root = nodes[0];
+            Dictionary< byte, List< bool >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< bool > code;
 
-            codesDictionary.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, false } );
-            codesDictionary.TryGetValue( 0x13, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, false, true } );
-            codesDictionary.TryGetValue( 0x14, out code );
-            CollectionAssert.AreNotEqual( code, new List< bool > { true, false, false } );
-            codesDictionary.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, true } );
-            codesDictionary.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< bool > { true, true, false, false } );
+            codes.TryGetValue( 0x12, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, true } );
+            codes.TryGetValue( 0x13, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, false } );
+            codes.TryGetValue( 0x14, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { true, true } );
+            codes.TryGetValue( 0x11, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, false, true } );
+            codes.TryGetValue( 0x10, out code );
+            CollectionAssert.AreEqual( code, new List< bool > { false, false, false } );
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private bool CheckNode( Node node, byte value, int count )
+        {
+            return node.ByteValue == value && node.Count == count;
+        }
+
+        /**************************************************************************************/
+        /**************************************************************************************/
+
+        private bool CheckLeaf( Node node, byte value, int count )
+        {
+            return CheckNode( node, value, count ) && node.IsLeaf();
         }
     }
 }

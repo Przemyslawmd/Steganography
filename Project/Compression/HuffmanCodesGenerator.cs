@@ -7,33 +7,39 @@ namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {
-        public Dictionary< byte, List< bool >> CreateCodesDictionary( NodeCompress root )
+        public Dictionary< byte, List< bool >> CreateCodesDictionary( Node root )
         {
-            GenerateCodes( root, true );
+            GenerateCodes( root, true, true );
             return codesDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, bool token )
+        private void GenerateCodes( Node node, bool token, bool isRoot )
         {
-            code.Add( token );
+            if ( isRoot == false )
+            {
+                code.Add( token );
+            }
 
             if ( node.Left != null )
             {
-                GenerateCodes( node.Left, false );
+                GenerateCodes( node.Left, false, false );
             }
             if ( node.Right != null )
             {
-                GenerateCodes( node.Right, true );
+                GenerateCodes( node.Right, true, false );
             }
             else
             {
                 codesDictionary.Add( node.ByteValue, new List< bool >( code ) );
             }
 
-            code.RemoveAt( code.Count - 1 );
+            if ( isRoot == false )
+            {
+                code.RemoveAt( code.Count - 1 );
+            }
         }
 
         /**************************************************************************************/
