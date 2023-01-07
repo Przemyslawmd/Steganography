@@ -1,42 +1,37 @@
 ﻿
 using System.Collections.Generic;
 
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Tests" )]
-
 namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {
         public Dictionary< byte, List< Token >> CreateCodesDictionary( Node root )
         {
-            GenerateCodes( root, Token.One, true );
+            GenerateCodes( root );
             return codesDictionary;
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void GenerateCodes( Node node, Token token, bool isRoot )
+        private void GenerateCodes( Node node )
         {
-            if ( isRoot == false )
-            {
-                code.Add( token );
-            }
-
             if ( node.Left != null )
             {
-                GenerateCodes( node.Left, Token.Zero, false );
+                code.Add( Token.Zero );
+                GenerateCodes( node.Left );
             }
             if ( node.Right != null )
             {
-                GenerateCodes( node.Right, Token.One, false );
+                code.Add( Token.One );
+                GenerateCodes( node.Right );
             }
             else
             {
-                codesDictionary.Add( node.ByteValue, new List< Token >( code ) );
+                codesDictionary.Add( node.ByteValue, new List< Token >( code ));
             }
 
-            if ( isRoot == false )
+            if ( code.Count > 0 )
             {
                 code.RemoveAt( code.Count - 1 );
             }
