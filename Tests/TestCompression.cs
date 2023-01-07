@@ -149,7 +149,7 @@ namespace Tests
             obj.Invoke( "BuildTree", nodes );
 
             Node root = nodes[0];
-            Dictionary< byte, List< Token >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            var codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
             List< Token > code;
 
             codes.TryGetValue( 0x12, out code );

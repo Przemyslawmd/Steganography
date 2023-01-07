@@ -9,6 +9,7 @@ namespace Steganography.Huffman
         {
             IEnumerator< byte > iter = source.GetEnumerator();
             int dataSizeBeforeCompression = GetIntegerFromStream( iter );
+            iter.MoveNext();
 
             Dictionary< byte, List< Token >> codesDictionary;
             try
@@ -30,11 +31,8 @@ namespace Steganography.Huffman
 
         private Dictionary< byte, List< Token >> GetCodesDictionaryFromStream( IEnumerator< byte > iter )
         {
-            GetIntegerFromStream( iter );
-            iter.MoveNext();
             int codesCount = iter.Current == 0 ? 256 : iter.Current;
-
-            Dictionary < byte, byte > codesList = new Dictionary< byte, byte >();
+            var codesList = new Dictionary< byte, byte >();
 
             for ( int i = 0; i < codesCount; i++ )
             {
@@ -44,14 +42,14 @@ namespace Steganography.Huffman
                 codesList.Add( symbol, iter.Current );
             }
 
-            Dictionary< byte, List< Token >> codesDictionary = new Dictionary< byte, List< Token >>();
-            List< Token > code = new List< Token >();
+            var codesDictionary = new Dictionary< byte, List< Token >>();
+            var code = new List< Token >();
             bitIterator = new BitIterator();
 
             foreach ( KeyValuePair< byte, byte > codeSymbol in codesList )
             {
                 GetCodeFromStream( iter, code, codeSymbol.Value );
-                codesDictionary.Add( codeSymbol.Key, new List< Token >( code ) );
+                codesDictionary.Add( codeSymbol.Key, new List< Token >( code ));
                 code.Clear();
             }
 

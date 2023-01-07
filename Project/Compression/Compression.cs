@@ -64,6 +64,7 @@ namespace Steganography.Huffman
         private List< byte > CreateCodesStream( Dictionary< byte, List< Token >> codes )
         {
             var codesStream = new List< byte >();
+            codesStream.Add( codes.Count == 256 ? (byte) 0 : (byte) codes.Count );
 
             foreach ( KeyValuePair< byte, List< Token >> code in codes )
             {
@@ -71,39 +72,35 @@ namespace Steganography.Huffman
                 codesStream.Add( (byte) code.Value.Count );
             }
 
-            byte codesStreamPortion = 0;
+            byte codesStreamByte = 0;
             BitIterator bitIterator = new BitIterator();
 
             foreach ( KeyValuePair< byte, List< Token >> code in codes )
             {
                 foreach ( Token token in code.Value )
                 {
-                    codesStreamPortion <<= bitIterator.Index > 0 ? 1 : 0;
+                    codesStreamByte <<= bitIterator.Index > 0 ? 1 : 0;
 
                     if ( token == Token.One )
                     {
-                        codesStreamPortion += 1;
+                        codesStreamByte += 1;
                     }
 
                     bitIterator.Increment();
 
                     if ( bitIterator.IsInitial() )
                     {
-                        codesStream.Add( codesStreamPortion );
-                        codesStreamPortion = 0;
+                        codesStream.Add( codesStreamByte );
+                        codesStreamByte = 0;
                     }
                 }
             }
 
             if ( bitIterator.IsInitial() == false )
             {
-                codesStreamPortion <<= ( Constants.BitsInByte - bitIterator.Index );
-                codesStream.Add( codesStreamPortion );
+                codesStreamByte <<= ( Constants.BitsInByte - bitIterator.Index );
+                codesStream.Add( codesStreamByte );
             }
-
-            int codesCount = ( codes.Count == 256 ) ? 0 : codes.Count;
-            codesStream.Insert( 0, (byte) codesCount );
-            codesStream.InsertRange( 0, BitConverter.GetBytes( codesStream.Count ));
             return codesStream;
         }
     }
