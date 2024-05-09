@@ -29,10 +29,10 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private Dictionary<byte, List< Token>> GetCodesDictionaryFromStream( IEnumerator< byte > iter )
+        private Dictionary<byte, List<Token>> GetCodesDictionaryFromStream( IEnumerator< byte > iter )
         {
             int codesCount = iter.Current == 0 ? 256 : iter.Current;
-            var codesList = new Dictionary< byte, byte >();
+            var codesList = new Dictionary<byte, byte>();
 
             for ( int i = 0; i < codesCount; i++ )
             {
@@ -42,7 +42,7 @@ namespace Steganography.Huffman
                 codesList.Add( symbol, iter.Current );
             }
 
-            var codesDictionary = new Dictionary< byte, List<Token>>();
+            var codesDictionary = new Dictionary<byte, List<Token>>();
             var code = new List<Token>();
             bitIterator = new BitIterator();
 
@@ -94,7 +94,7 @@ namespace Steganography.Huffman
         /**************************************************************************************/
 
         private List<byte> Decode( IEnumerator<byte> iter, Node root, int dataSizeBeforeCompression )
-        {                        
+        {
             var decompressedData = new List< byte >();
             Node node = root;
 
@@ -114,7 +114,7 @@ namespace Steganography.Huffman
                     if ( node.IsLeaf() )
                     {
                         decompressedData.Add( node.ByteValue );
-                        
+
                         if ( decompressedData.Count == dataSizeBeforeCompression )
                         {
                             return decompressedData;
