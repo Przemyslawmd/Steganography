@@ -6,9 +6,9 @@ namespace Steganography.Huffman
 {
     class HuffmanTree
     {
-        public Node BuildTreeCompression( List< byte > sourceData )
+        public Node BuildTreeCompression( List<byte> sourceData )
         {
-            List< Node > nodes = CreateNodes( sourceData );
+            List<Node> nodes = CreateNodes( sourceData );
             nodes = nodes.OrderBy( x => x.Count ).ToList();
             BuildTree( nodes );
             return nodes.ElementAt( 0 );
@@ -17,11 +17,11 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public Node BuildTreeDecompression( Dictionary< byte, List< Token >> codes )
+        public Node BuildTreeDecompression( Dictionary<byte, List<Token>> codes )
         {
             Node root = new Node( 0 );
 
-            foreach ( KeyValuePair< byte, List< Token >> code in codes )
+            foreach ( KeyValuePair< byte, List<Token>> code in codes )
             {
                 Node node = root;
                 foreach ( Token token in code.Value.Take( code.Value.Count - 1 ))
@@ -59,9 +59,9 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< Node > CreateNodes( List< byte > source )
+        private List<Node> CreateNodes( List<byte> source )
         {
-            var nodes = new List< Node >();
+            var nodes = new List<Node>();
             nodes.Add( new Node( 1, source[0] ));
             bool isFound = false;
 
@@ -97,7 +97,7 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void BuildTree( List< Node > nodes )
+        private void BuildTree( List<Node> nodes )
         {
             Node internalNode;
 
@@ -114,7 +114,7 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void InsertInternalNode( Node newNode, List< Node > nodes )
+        private void InsertInternalNode( Node newNode, List<Node> nodes )
         {
             int index = nodes.FindIndex( node => node.Count >= newNode.Count );
             

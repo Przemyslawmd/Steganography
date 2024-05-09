@@ -5,7 +5,7 @@ namespace Steganography.Huffman
 {
     class HuffmanCodesGenerator
     {
-        public Dictionary< byte, List< Token >> CreateCodesDictionary( Node root )
+        public Dictionary< byte, List<Token>> CreateCodesDictionary( Node root )
         {
             GenerateCodes( root );
             return codesDictionary;
@@ -28,7 +28,7 @@ namespace Steganography.Huffman
             }
             else
             {
-                codesDictionary.Add( node.ByteValue, new List< Token >( code ));
+                codesDictionary.Add( node.ByteValue, new List<Token>( code ));
             }
 
             if ( code.Count > 0 )
@@ -40,8 +40,8 @@ namespace Steganography.Huffman
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private readonly List< Token > code = new List< Token >();
-        private readonly Dictionary< byte, List< Token >> codesDictionary = new Dictionary< byte, List< Token >>();
+        private readonly List<Token> code = new List<Token>();
+        private readonly Dictionary<byte, List<Token>> codesDictionary = new Dictionary<byte, List<Token>>();
     }
 }
 

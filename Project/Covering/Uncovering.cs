@@ -6,19 +6,19 @@ namespace Steganography
 {
     class Uncovering
     {
-        public List< byte > UncoverData( Bitmap bitmap, ref bool compression, ref Result code )
+        public List<byte> UncoverData( Bitmap bitmap, ref bool compression, ref Result code )
         {
             if ( CheckCoveringMark( bitmap ) is false )
             {
                 code = Result.IMPROPER_DATA_IN_PICTURE;
                 return null;
             }
-                        
+
             compression = bitmap.GetPixel( Constants.CompressionPixel, 1 ).R % 2 == 1;
 
             bitIterator.Reset();
             Utils.BitmapRange range = new Utils.BitmapRange(  0, Constants.CountOfPixelsForDataSize, 1, 2 );
-            List< byte > buffer = IteratePictureAndUncoverData( bitmap, range, 0 );
+            List<byte> buffer = IteratePictureAndUncoverData( bitmap, range, 0 );
             int bytesToProcess = new Utils().CreateIntegerFromByteList( buffer );
             range = new Utils.BitmapRange(  0, bitmap.Width, 2, bitmap.Height );
             return IteratePictureAndUncoverData( bitmap, range, bytesToProcess );
@@ -27,9 +27,9 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private List< byte > IteratePictureAndUncoverData( Bitmap bitmap, Utils.BitmapRange range, int bytesToProcess )
+        private List<byte> IteratePictureAndUncoverData( Bitmap bitmap, Utils.BitmapRange range, int bytesToProcess )
         {
-            var buffer = new List< byte >( bytesToProcess );
+            var buffer = new List<byte>( bytesToProcess );
 
             for ( int y = range.StartY; y < range.StopY; y++ )
             {
@@ -60,7 +60,7 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private State UncoverDataFromPixel( byte componentRGB, List< byte > buffer, int bytesToProcess )
+        private State UncoverDataFromPixel( byte componentRGB, List<byte> buffer, int bytesToProcess )
         {
             if (( componentRGB % 2 ) == 1 )
             {

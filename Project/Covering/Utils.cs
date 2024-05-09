@@ -5,9 +5,9 @@ namespace Steganography
 {
     class Utils
     {
-        public Stack< byte > CreateByteStackFromInteger( int number )  
+        public Stack<byte> CreateByteStackFromInteger( int number )  
         {
-            var stack = new Stack< byte >();
+            var stack = new Stack<byte>();
 
             for ( int i = 0; i < sizeof( int ); i++ )
             {
@@ -20,10 +20,10 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public int CreateIntegerFromByteList( List< byte > byteList )  
+        public int CreateIntegerFromByteList( List<byte> byteList )  
         {
             int number = 0;
-            
+
             foreach ( byte byteValue in byteList )
             {
                 number <<= Constants.BitsInByte;
@@ -44,7 +44,7 @@ namespace Steganography
                 StopX = stopX;
                 StopY = stopY;
             }
-            
+
             public int StartX { get; }
             public int StartY { get; }
             public int StopX { get; }

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace Steganography
 {     
     class Covering
-    {        
-        public void CoverData( Bitmap bitmap, List< byte > inputStream, bool isCompress ) 
+    {
+        public void CoverData( Bitmap bitmap, List<byte> inputStream, bool isCompress ) 
         {
-            var bytesToCover = new Stack< byte >( Constants.CoverMark );
+            var bytesToCover = new Stack<byte>( Constants.CoverMark );
             Utils.BitmapRange range = new Utils.BitmapRange( 0, Constants.CountOfPixelsForDataSize, 0, 1 );
             IteratePictureAndCoverData( bitmap, range, bytesToCover );
 
@@ -22,7 +22,7 @@ namespace Steganography
             int red = ( isCompress ) ? ( color.R | Constants.MaskOne ) : ( color.R & MaskZero );
             bitmap.SetPixel( Constants.CompressionPixel, 1, Color.FromArgb( red, color.G, color.B ));
 
-            bytesToCover = new Stack< byte >( inputStream );
+            bytesToCover = new Stack<byte>( inputStream );
             range = new Utils.BitmapRange( 0, bitmap.Width, 2, bitmap.Height ); 
             IteratePictureAndCoverData( bitmap, range, bytesToCover );
         }
@@ -30,10 +30,10 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private void IteratePictureAndCoverData( Bitmap bitmap, Utils.BitmapRange range, Stack< byte > bytesToCover )
+        private void IteratePictureAndCoverData( Bitmap bitmap, Utils.BitmapRange range, Stack<byte> bytesToCover )
         {
             bitIterator.Reset();
-            
+
             for ( int y = range.StartY; y < range.StopY; y++ )
             {
                 for ( int x = range.StartX; x < range.StopX; x++ )
@@ -45,32 +45,30 @@ namespace Steganography
                         return;
                     }
 
-                    int red = AdjustRGBComponent( color.R, currentByte );           
-                               
+                    int red = AdjustRGBComponent( color.R, currentByte );
                     if ( AllBytesCompleted( bytesToCover ) )
                     {
                         bitmap.SetPixel( x, y, Color.FromArgb( red, color.G, color.B ));
                         return;
                     }
 
-                    int green = AdjustRGBComponent( color.G, currentByte );         
-                                      
+                    int green = AdjustRGBComponent( color.G, currentByte );
                     if ( AllBytesCompleted( bytesToCover ) )
                     {
                         bitmap.SetPixel( x, y, Color.FromArgb( red, green, color.B ));
                         return;
                     }
 
-                    int blue = AdjustRGBComponent( color.B, currentByte );                    
-                    bitmap.SetPixel( x, y, Color.FromArgb( red, green, blue ));                 
-                }            
-            }            
+                    int blue = AdjustRGBComponent( color.B, currentByte );
+                    bitmap.SetPixel( x, y, Color.FromArgb( red, green, blue ));
+                }
+            }
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        private bool AllBytesCompleted( Stack< byte > bytesToCover )
+        private bool AllBytesCompleted( Stack<byte> bytesToCover )
         {
             if ( bitIterator.Index == 0 )
             {
@@ -83,7 +81,7 @@ namespace Steganography
             }
             return false;
         }
-        
+
         /**************************************************************************************/
         /**************************************************************************************/
 
@@ -94,7 +92,7 @@ namespace Steganography
             {
                 return componentRGB & MaskZero;
             }
-            
+
             return componentRGB | Constants.MaskOne;
         }
 
