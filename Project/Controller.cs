@@ -8,7 +8,7 @@ namespace Steganography
 {
     class Controller
     {
-        public static Result CoverData( List< byte > data, Bitmap bitmap )
+        public static Result CoverData( List<byte> data, Bitmap bitmap )
         {
             if ( bitmap.Width < 7 )
             {
@@ -37,7 +37,7 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public static List< byte > UncoverData( Bitmap bitmap, ref Result result )
+        public static List<byte> UncoverData( Bitmap bitmap, ref Result result )
         {
             bool compression = false;
             var data = new Uncovering().UncoverData( bitmap, ref compression, ref result );

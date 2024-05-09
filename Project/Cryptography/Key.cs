@@ -11,7 +11,6 @@ namespace Steganography.Cryptography
             const int Iterations = 200;
             byte[] salt = new byte[] { 4, 32, 3, 112, 34, 11, 45, 26, 4, 34 };
             byte[] initialKey = new Rfc2898DeriveBytes( password, salt, Iterations ).GetBytes( 16 );
-            
             return ExpandKey( initialKey );
         }
 
@@ -26,7 +25,6 @@ namespace Steganography.Cryptography
 
         /**************************************************************************************/
         /**************************************************************************************/
-
 
         private Word[] CreateKeysAsWords( byte[] initialKey )
         {
@@ -90,9 +88,9 @@ namespace Steganography.Cryptography
         private void CalculateWord( int i, Word word )
         {
             word.Rotate();
-            word.SubByte();            
+            word.SubByte();
             word.XorInner( new Word( rcon[i - 1], 0, 0, 0 ) );
-        }              
+        }
 
         /**************************************************************************************/
         /**************************************************************************************/
@@ -101,7 +99,6 @@ namespace Steganography.Cryptography
         {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
         };
-
 
         private readonly int NumOfRounds = 11;
         private readonly int KeySize = 4;

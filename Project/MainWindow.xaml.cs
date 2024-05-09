@@ -157,7 +157,7 @@ namespace Steganography
                 return;
             }
 
-            var data = new List< byte >( System.Text.Encoding.Unicode.GetBytes( ControlText.Text ));
+            var data = new List<byte>( System.Text.Encoding.Unicode.GetBytes( ControlText.Text ));
             CoverData( data );
         }
 
@@ -167,7 +167,7 @@ namespace Steganography
         private void ActionUncoverText( object sender, RoutedEventArgs e )
         {
             Bitmap bitmap = GetBitmapFromImageSource( ControlImage.Source, new BmpBitmapEncoder() );
-            List< byte > data = Controller.UncoverData( bitmap, ref result );
+            List<byte> data = Controller.UncoverData( bitmap, ref result );
 
             if ( data is null )
             {

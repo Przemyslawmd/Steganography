@@ -7,7 +7,7 @@ namespace Steganography.Cryptography
 {
     class Decryption
     {
-        public List< byte > Decrypt( List< byte > data, String password, ref Result code )
+        public List<byte> Decrypt( List<byte> data, String password, ref Result code )
         {
             byte[][] key = new Key().CreateKeys( password );
             byte[,] state = new byte[4, 4];
@@ -22,8 +22,8 @@ namespace Steganography.Cryptography
             }
 
             data.Reverse();
-            var stack = new Stack< byte >( data );
-            var decryptedData = new List< byte >();
+            var stack = new Stack<byte>( data );
+            var decryptedData = new List<byte>();
 
             for ( int i = 0; i < data.Count; i += 16 )
             {
@@ -48,7 +48,7 @@ namespace Steganography.Cryptography
                 InvShiftRows( state );
                 InvSubBytes( state );
                 utils.AddRoundKey( state, key[round] );
-                InvMixColumns( state );                
+                InvMixColumns( state );
             }
 
             InvShiftRows( state );
@@ -87,7 +87,7 @@ namespace Steganography.Cryptography
 
         private void InvSubBytes( byte[,] state )
         {
-            utils.GetGeneralSbox( Sbox.GetInvSbox, state );            
+            utils.GetGeneralSbox( Sbox.GetInvSbox, state );
         }
 
         /**************************************************************************************/

@@ -21,7 +21,7 @@ namespace Steganography
         }
 
         
-        private readonly Dictionary< Result, string > messages = new Dictionary< Result, string >()
+        private readonly Dictionary<Result, string> messages = new Dictionary<Result, string>()
         {
             [Result.ERROR_DECRYPTION_ALIGNMENT] = "Size of data to be decrypted must be divided by 16.",
             [Result.TOO_MANY_DATA]              = "Too many data to be hidden into a loaded picture.",

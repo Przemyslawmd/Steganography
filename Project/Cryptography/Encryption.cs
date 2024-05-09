@@ -8,7 +8,7 @@ namespace Steganography.Cryptography
 {
     class Encryption
     {
-        public List< byte > Encrypt( List< byte > dataToEncrypt, String password )
+        public List< byte > Encrypt( List<byte> dataToEncrypt, String password )
         {
             byte[,] state = new byte[4, 4];
             byte[][] key = new Key().CreateKeys( password );
@@ -35,17 +35,17 @@ namespace Steganography.Cryptography
         private void EncryptBlockData( byte[,] state, byte[][] key )
         {
             utils.AddRoundKey( state, key[0] );
-                                 
+
             for ( int round = 1; round < NumOfRounds - 1; round++ )
             {
                 SubBytes( state );
                 ShiftRows( state );
-                MixColumns( state );                
+                MixColumns( state );
                 utils.AddRoundKey( state, key[round] );
             } 
             
             SubBytes( state );
-            ShiftRows( state );            
+            ShiftRows( state );
             utils.AddRoundKey( state, key[NumOfRounds - 1] );
         }
 
@@ -53,7 +53,7 @@ namespace Steganography.Cryptography
         /**************************************************************************************/
         // Add additional bytes because data to be encrypted must be divided by block size (16) 
 
-        private int AlignData( List< byte > source )
+        private int AlignData( List<byte> source )
         {
             int alignment = 16 - ( source.Count % 16 );
 
@@ -97,7 +97,7 @@ namespace Steganography.Cryptography
 
         private void SubBytes( byte[,] state )
         {
-            utils.GetGeneralSbox( Sbox.GetSbox, state );            
+            utils.GetGeneralSbox( Sbox.GetSbox, state );
         }
 
         /**************************************************************************************/
@@ -113,17 +113,14 @@ namespace Steganography.Cryptography
                 byte_1 = state[1, i];
                 byte_2 = state[2, i];
                 byte_3 = state[3, i];
-                
+
                 state[0, i] = (byte)( utils.Multiply( byte_0, 2 ) ^ utils.Multiply( byte_1, 3 ) ^ byte_2 ^ byte_3 );
-
                 state[1, i] = (byte)( byte_0 ^ utils.Multiply( byte_1, 2 ) ^ utils.Multiply( byte_2, 3 ) ^ byte_3 );
-
                 state[2, i] = (byte)( byte_0 ^ byte_1 ^ utils.Multiply( byte_2, 2 ) ^ utils.Multiply( byte_3, 3 ));
-
                 state[3, i] = (byte)( utils.Multiply( byte_0, 3 ) ^ byte_1 ^ byte_2 ^ utils.Multiply( byte_3, 2 ));
             }
         }
-        
+
         /**************************************************************************************/
         /**************************************************************************************/
 

@@ -6,7 +6,7 @@ namespace Steganography.Cryptography
 { 
     class Utils
     {
-        public void InputIntoState( Stack< byte > stack, byte[,] state )
+        public void InputIntoState( Stack<byte> stack, byte[,] state )
         {
             for ( int i = 0; i < stateArraySize; i++ )
             {
@@ -20,7 +20,7 @@ namespace Steganography.Cryptography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public void StateIntoOutput( List< byte > output, byte[,] state )
+        public void StateIntoOutput( List<byte> output, byte[,] state )
         {
             for ( int i = 0; i < stateArraySize; i++ )
             {
@@ -42,13 +42,13 @@ namespace Steganography.Cryptography
                 {
                     state[i, j] ^= key[i + j * stateArraySize];
                 }
-            }           
+            }
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public void GetGeneralSbox( Func< byte, byte > func, byte[,] state )
+        public void GetGeneralSbox( Func<byte, byte> func, byte[,] state )
         {
             for ( int i = 0; i < stateArraySize; i++ )
             {
@@ -65,7 +65,7 @@ namespace Steganography.Cryptography
         public byte Multiply( byte a, byte b )
         {
             byte result = 0; 
-                        
+
             while ( b > 0 )
             {
                 if (( b & 0x01 ) != 0x00 )
@@ -84,7 +84,7 @@ namespace Steganography.Cryptography
                 
                 b >>= 1;
             }
-            return result;            
+            return result;
         }        
 
         /**************************************************************************************/
