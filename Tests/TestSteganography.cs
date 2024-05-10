@@ -8,21 +8,29 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace Tests
 {
     [TestClass]
-    public class TestCovering
+    public class TestSteganography
     {
-        public void Initialize( bool isCompression )
+
+        [ClassInitialize]
+        public static void ClassSetup(TestContext context)
         {
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTest.txt" );
-            string bitmapPath = Path.Combine( projectPath, "Resources\\graphicToTest.jpg" );
-            bitmap = new Bitmap( bitmapPath );
+            bitmapPath = Path.Combine( projectPath, "Resources\\graphicToTest.jpg" );
+            shortData = new List<byte>( Encoding.Unicode.GetBytes( "This text is to be hidden" ));
+            longData = new List<byte>( File.ReadAllBytes(filePath) );
+        }
 
-            referenceShortData = new List< byte >( Encoding.Unicode.GetBytes( "This text is to be hidden" ));
-            referenceLongData = new List< byte >( File.ReadAllBytes(filePath) );
-            compression = isCompression;
+
+        [TestInitialize]
+        public void TestSetup()
+        {
+            bitmap = new Bitmap( bitmapPath );
+            compression = false;
         }
 
         /**************************************************************************************/
@@ -31,11 +39,10 @@ namespace Tests
         [TestMethod]
         public void CoverDataInEmptyBitmapPartialCheck()
         {
-            Initialize( false );
-            var dataToCover = new List< byte >( referenceShortData );
+            var dataToCover = new List<byte>( shortData );
             Bitmap emptyBitmap = new Bitmap( 50, 50 );
             new Covering().CoverData( emptyBitmap, dataToCover, compression );
-            
+
             // Test size of data covever in first eight pixels
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).R % 2, 0 );
             Assert.AreEqual( emptyBitmap.GetPixel( 0, 1 ).G % 2, 0 );
@@ -61,13 +68,12 @@ namespace Tests
         [TestMethod]
         public void CoverDataInEmptyBitmap()
         {
-            Initialize( false );
-            var dataToCover = new List< byte >( referenceShortData );
+            var dataToCover = new List<byte>( shortData );
             Bitmap emptyBitmap = new Bitmap( 50, 50 );
             new Covering().CoverData( emptyBitmap, dataToCover, compression );
             var uncoveredData = new Uncovering().UncoverData( emptyBitmap, ref compression, ref code );
 
-            CollectionAssert.AreEqual( uncoveredData, referenceShortData );
+            CollectionAssert.AreEqual( uncoveredData, shortData );
         }
 
         /**************************************************************************************/
@@ -76,12 +82,11 @@ namespace Tests
         [TestMethod]
         public void CoverData()
         {
-            Initialize( false );
-            var dataToCover = new List< byte >( referenceLongData );
+            var dataToCover = new List<byte>( longData );
             new Covering().CoverData( bitmap, dataToCover, compression );
             var uncoveredData = new Uncovering().UncoverData( bitmap, ref compression, ref code );
-                        
-            CollectionAssert.AreEqual( uncoveredData, referenceLongData );
+
+            CollectionAssert.AreEqual( uncoveredData, longData );
         }
 
         /**************************************************************************************/
@@ -90,14 +95,14 @@ namespace Tests
         [TestMethod]
         public void CoverCompressedData()
         {
-            Initialize( true );
-            var dataToCover = new List< byte >( referenceLongData );
+            compression = true;
+            var dataToCover = new List<byte>( longData );
             var compressedData = new Compression().MakeCompressedStream( dataToCover );
             new Covering().CoverData( bitmap, compressedData, compression );
             var uncoveredData = new Uncovering().UncoverData( bitmap, ref compression, ref code );
             var decompressedData = new Decompression().Decompress( uncoveredData, ref code );
 
-            CollectionAssert.AreEqual( decompressedData, referenceLongData );
+            CollectionAssert.AreEqual( decompressedData, longData );
         }
 
         /**************************************************************************************/
@@ -106,14 +111,13 @@ namespace Tests
         [TestMethod]
         public void CoverEncryptedData()
         {
-            Initialize( false );
-            var dataToCover = new List< byte >( referenceLongData );
+            var dataToCover = new List<byte>( longData );
             var encryptedData = new Encryption().Encrypt( dataToCover, password );
             new Covering().CoverData( bitmap, encryptedData, compression );
             var uncoveredData = new Uncovering().UncoverData( bitmap, ref compression, ref code );
             var decryptedData = new Decryption().Decrypt( uncoveredData, password, ref code );
 
-            CollectionAssert.AreEqual( decryptedData, referenceLongData );
+            CollectionAssert.AreEqual( decryptedData, longData );
         }
 
         /**************************************************************************************/
@@ -122,8 +126,8 @@ namespace Tests
         [TestMethod]
         public void CoverCompressedAndEncryptedData()
         {
-            Initialize( true );
-            var dataToCover = new List< byte >( referenceLongData );
+            bool compression = true;
+            var dataToCover = new List<byte>( longData );
             var encryptedData = new Encryption().Encrypt( dataToCover, password );
             var compressedData = new Compression().MakeCompressedStream( encryptedData );
             new Covering().CoverData( bitmap, compressedData, compression );
@@ -131,14 +135,15 @@ namespace Tests
             var decompressedData = new Decompression().Decompress( uncoveredData, ref code );
             var decryptedData = new Decryption().Decrypt( decompressedData, password, ref code );
 
-            CollectionAssert.AreEqual( decryptedData, referenceLongData );
+            CollectionAssert.AreEqual( decryptedData, longData );
         }
 
         /**************************************************************************************/
         /**************************************************************************************/
 
-        List< byte > referenceShortData;
-        List< byte > referenceLongData;
+        static List<byte> shortData;
+        static List<byte> longData;
+        static string bitmapPath;
         readonly string password = "de3@JH^@";
         Result code = Result.OK;
 

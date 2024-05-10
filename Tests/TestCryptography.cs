@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Tests
 {
     [TestClass]
-    public class TestsCryptography
+    public class TestCryptography
     {
         [TestMethod]
         public void TestAES()
@@ -270,7 +270,7 @@ namespace Tests
                                                       0x23, 0xA3, 0x39, 0x39,
                                                       0x2A, 0x6C, 0x76, 0x05 };
 
-            PrivateObject type = new PrivateObject( new Steganography.Cryptography.Utils() );                 
+            PrivateObject type = new PrivateObject( new global::Steganography.Cryptography.Utils() );                 
             type.Invoke( "AddRoundKey", initialBlock, key );            
             CollectionAssert.AreEqual( initialBlock, expectedBlock );
         }
@@ -407,7 +407,7 @@ namespace Tests
         [TestMethod]
         public void TestAESMultiply()
         {
-            PrivateObject type = new PrivateObject( new Steganography.Cryptography.Utils() );
+            PrivateObject type = new PrivateObject( new global::Steganography.Cryptography.Utils() );
 
             byte result = (byte) type.Invoke( "Multiply", (byte) 0xd4, (byte) 0x02 );
             byte expected = 0xb3;

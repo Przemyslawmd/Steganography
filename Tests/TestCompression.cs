@@ -16,7 +16,7 @@ namespace Tests
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
             var dataToCompress = new List< byte >( File.ReadAllBytes( filePath ) );
-            List< byte > dataCompressed = new Compression().MakeCompressedStream( dataToCompress );
+            List<byte> dataCompressed = new global::Steganography.Huffman.Compression().MakeCompressedStream( dataToCompress );
 
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
@@ -38,7 +38,7 @@ namespace Tests
             Node root = new HuffmanTree().BuildTreeCompression( dataToCompress );
             Dictionary< byte, List< Token >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
-            PrivateObject objectCompression = new PrivateObject( new Compression() );
+            PrivateObject objectCompression = new PrivateObject( new global::Steganography.Huffman.Compression() );
             var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
             var expectedData = new List< byte >{ 0x2b, 0x68, 0x89, 0xce, 0xaa, 0xe2, 0x25, 0x65, 0x37, 0x5f };
 

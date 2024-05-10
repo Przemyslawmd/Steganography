@@ -57,7 +57,7 @@
     <Compile Include="TestCryptography.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCompression.cs" />
-    <Compile Include="TestCovering.cs" />
+    <Compile Include="TestSteganography.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Project\Steganography.csproj">
