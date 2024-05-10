@@ -5,6 +5,7 @@ using Steganography.Huffman;
 using System.Collections.Generic;
 using System.IO;
 
+
 namespace Tests
 {
     [TestClass]
@@ -12,17 +13,17 @@ namespace Tests
     {
         [TestMethod]
         public void FullCompression()
-        {                       
+        {
             string projectPath = Directory.GetParent( Directory.GetCurrentDirectory() ).Parent.FullName;
             string filePath = Path.Combine( projectPath, "Resources\\fileToTestCompression.txt" );
-            var dataToCompress = new List< byte >( File.ReadAllBytes( filePath ) );
-            List<byte> dataCompressed = new global::Steganography.Huffman.Compression().MakeCompressedStream( dataToCompress );
+            var dataToCompress = new List<byte>( File.ReadAllBytes( filePath ) );
+            List<byte> dataCompressed = new Compression().MakeCompressedStream( dataToCompress );
 
             CollectionAssert.AreNotEqual( dataToCompress, dataCompressed );
             Assert.IsTrue( dataCompressed.Count < dataToCompress.Count );
 
             Result result = Result.OK;
-            List< byte > dataDecompressed = new Decompression().Decompress( dataCompressed, ref result );
+            List<byte> dataDecompressed = new Decompression().Decompress( dataCompressed, ref result );
 
             CollectionAssert.AreEqual( dataToCompress, dataDecompressed );
             Assert.AreEqual( result, Result.OK );
@@ -34,13 +35,13 @@ namespace Tests
         [TestMethod]
         public void CompareRawCompressedStream()
         {
-            var dataToCompress = new List< byte >( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
+            var dataToCompress = new List<byte>( System.Text.Encoding.Unicode.GetBytes( "AxC2cc&422Avdfr" ));
             Node root = new HuffmanTree().BuildTreeCompression( dataToCompress );
-            Dictionary< byte, List< Token >> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
+            Dictionary<byte, List<Token>> codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
 
-            PrivateObject objectCompression = new PrivateObject( new global::Steganography.Huffman.Compression() );
-            var dataCompressed = ( List< byte > ) objectCompression.Invoke( "Compress", dataToCompress, codes );
-            var expectedData = new List< byte >{ 0x2b, 0x68, 0x89, 0xce, 0xaa, 0xe2, 0x25, 0x65, 0x37, 0x5f };
+            PrivateObject objectCompression = new PrivateObject( new Compression() );
+            var dataCompressed = ( List<byte> ) objectCompression.Invoke( "Compress", dataToCompress, codes );
+            var expectedData = new List<byte>{ 0x2b, 0x68, 0x89, 0xce, 0xaa, 0xe2, 0x25, 0x65, 0x37, 0x5f };
 
             CollectionAssert.AreEqual( dataCompressed, expectedData );
         }
@@ -52,12 +53,12 @@ namespace Tests
         public void CreateNodes()
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
-            var data = new List< byte > { 
+            var data = new List<byte> { 
                 0x65, 0x4f, 0x64, 0x4f, 0x4f, 0x72, 0x64, 0x72, 0x6c, 0x4f, 0x6f, 0x57, 0x4b, 0x72, 0x6f, 
                 0x4b, 0x6c, 0x64, 0x65, 0x6c, 0x41, 0x4b, 0x72, 0x4b, 0x4b, 0x65, 0x6c, 0x4b, 0x4b, 0x4f, 
                 0x4b,0x4f,  0x56, 0x56, 0x64, 0x4b, 0x41, 0x6c, 0x64, 0x4b, 0x6f, 0x4f, 0x4f };
 
-            var nodes = ( List< Node > )obj.Invoke( "CreateNodes", data );
+            var nodes = ( List<Node> )obj.Invoke( "CreateNodes", data );
 
             Assert.AreEqual( nodes.Count, 10 );
             Assert.IsTrue( CheckNode( nodes[0], 0x41, 2 ));
@@ -80,7 +81,7 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            var nodes = new List< Node >
+            var nodes = new List<Node>
             {
                 new Node( 1, 0x57 ),
                 new Node( 2, 0x41 ),
@@ -92,7 +93,6 @@ namespace Tests
                 new Node( 5, 0x6c ),
                 new Node( 8, 0x4f ),
                 new Node( 10, 0x4b )
-
             };
 
             obj.Invoke( "BuildTree", nodes );
@@ -137,7 +137,7 @@ namespace Tests
         {
             PrivateObject obj = new PrivateObject( new HuffmanTree() );
 
-            var nodes = new List< Node >
+            var nodes = new List<Node>
             {
                 new Node( 1, 0x10 ),
                 new Node( 1, 0x11 ),
@@ -150,18 +150,18 @@ namespace Tests
 
             Node root = nodes[0];
             var codes = new HuffmanCodesGenerator().CreateCodesDictionary( root );
-            List< Token > code;
+            List<Token> code;
 
             codes.TryGetValue( 0x12, out code );
-            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.One } );
+            CollectionAssert.AreEqual( code, new List<Token> { Token.Zero, Token.One } );
             codes.TryGetValue( 0x13, out code );
-            CollectionAssert.AreEqual( code, new List< Token > { Token.One, Token.Zero } );
+            CollectionAssert.AreEqual( code, new List<Token> { Token.One, Token.Zero } );
             codes.TryGetValue( 0x14, out code );
-            CollectionAssert.AreEqual( code, new List< Token > { Token.One, Token.One } );
+            CollectionAssert.AreEqual( code, new List<Token> { Token.One, Token.One } );
             codes.TryGetValue( 0x11, out code );
-            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.Zero, Token.One } );
+            CollectionAssert.AreEqual( code, new List<Token> { Token.Zero, Token.Zero, Token.One } );
             codes.TryGetValue( 0x10, out code );
-            CollectionAssert.AreEqual( code, new List< Token > { Token.Zero, Token.Zero, Token.Zero } );
+            CollectionAssert.AreEqual( code, new List<Token> { Token.Zero, Token.Zero, Token.Zero } );
         }
 
         /**************************************************************************************/
