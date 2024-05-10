@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 
+
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
 namespace Steganography.Cryptography

@@ -4,6 +4,7 @@ using Steganography.Huffman;
 using System.Collections.Generic;
 using System.Drawing;
 
+
 namespace Steganography
 {
     class Controller

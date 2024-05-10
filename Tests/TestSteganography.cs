@@ -1,12 +1,14 @@
 ﻿
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Text;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Steganography;
 using Steganography.Cryptography;
 using Steganography.Huffman;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Drawing;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
 
 
 namespace Tests

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace Steganography.Cryptography
 { 
     class Utils

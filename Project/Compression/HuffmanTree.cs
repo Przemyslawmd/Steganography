@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Steganography.Huffman
 {
     class HuffmanTree

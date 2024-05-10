@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 
+
 namespace Steganography
 {
     class Uncovering
@@ -41,12 +42,10 @@ namespace Steganography
                     {
                         return buffer;
                     }
-
                     if ( UncoverDataFromPixel( color.G, buffer, bytesToProcess ) == State.Completed )
                     {
                         return buffer;
                     }
-
                     if ( UncoverDataFromPixel( color.B, buffer, bytesToProcess ) == State.Completed )
                     {
                         return buffer;
@@ -93,7 +92,7 @@ namespace Steganography
         private bool CheckCoveringMark( Bitmap bitmap )
         {
             Utils.BitmapRange range = new Utils.BitmapRange( 0, Constants.CountOfPixelsForDataSize, 0, 1 );
-            List< byte > buffer = IteratePictureAndUncoverData( bitmap, range, 2 );
+            List<byte> buffer = IteratePictureAndUncoverData( bitmap, range, 2 );
 
             return buffer[0] == Constants.CoverMark[1] && buffer[1] == Constants.CoverMark[0];
         }

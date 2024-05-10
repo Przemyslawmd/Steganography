@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
+
 namespace Steganography
 {
     class Utils
@@ -20,17 +21,16 @@ namespace Steganography
         /**************************************************************************************/
         /**************************************************************************************/
 
-        public int CreateIntegerFromByteList( List<byte> byteList )  
+        public int CreateIntegerFromByteList( List<byte> byteList )
         {
             int number = 0;
-
             foreach ( byte byteValue in byteList )
             {
                 number <<= Constants.BitsInByte;
                 number += byteValue;
             }
             return number;
-        }
+         }
 
         /**************************************************************************************/
         /**************************************************************************************/

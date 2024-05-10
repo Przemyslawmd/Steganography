@@ -1,11 +1,14 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Steganography;
 using Steganography.Cryptography;
-using System.IO;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 namespace Tests
 {

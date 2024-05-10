@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Steganography;
+
 
 namespace Steganography.Cryptography
 {

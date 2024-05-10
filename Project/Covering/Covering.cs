@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 
+
 namespace Steganography
 {     
     class Covering
